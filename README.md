@@ -1,21 +1,21 @@
 [![Docker](https://img.shields.io/docker/pulls/y9ch/bidseq.svg)](https://hub.docker.com/r/y9ch/bidseq)
 
-# &Psi;-SAC-seq
+# &Psi;-BID-seq
 
 ## Overview of the workflow
 
 <p align="center">
-  <a href="https://y9c.github.io/m6A-SACseq/Overall-Workflow#gh-light-mode-only">
+  <a href="https://y9c.github.io/pseudoU-BIDseq/Overall-Workflow#gh-light-mode-only">
     <img src="./docs/scheme.svg" />
   </a>
-  <a href="https://y9c.github.io/m6A-SACseq/Overall-Workflow#gh-dark-mode-only">
+  <a href="https://y9c.github.io/pseudoU-BIDseq/Overall-Workflow#gh-dark-mode-only">
     <img src="./docs/scheme_dark.svg" />
   </a>
 </p>
 
 ## How to use?
 
-A [docker image](https://hub.docker.com/r/y9ch/sacseq) containing the source code and dependencies has been published for reproducibility. You can run it using the [singularity](https://sylabs.io/singularity) container runtime.
+A [docker image](https://hub.docker.com/r/y9ch/bidseq) containing the source code and dependencies has been published for reproducibility. You can run it using the [singularity](https://sylabs.io/singularity) container runtime.
 
 The entire analysis can be completed in just three steps:
 
@@ -79,7 +79,7 @@ _Read the [documentation](https://y9c.github.io/pseudoU-BIDseq/Step-by-step-inst
 2. **Run all the analysis by one command**:
 
 ```bash
-singularity exec docker://y9ch/sacseq:latest sacseq
+singularity exec docker://y9ch/bidseq:latest bidseq
 ```
 
 <details>
@@ -99,7 +99,7 @@ The output of all the steps will be in one folder (`./results`) under the curren
 
 ## Documentation
 
-https://y9c.github.io/m6A-SACseq/
+https://y9c.github.io/pseudoU-BIDseq/
 
 ## Citation
 
