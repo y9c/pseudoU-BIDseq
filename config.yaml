@@ -1,0 +1,26 @@
+srcdir: /opt/bidseq/bin
+
+path:
+  bowtie2: /opt/miniconda/bin/bowtie2
+  star: /opt/miniconda/bin/STAR
+  samtools: /opt/miniconda/bin/samtools
+  bedtools: /opt/miniconda/bin/bedtools
+  rnaseqc: /opt/rnaseqc
+  blast2bam: /opt/blast2bam/bin/blast2bam
+  rnaseqmut: /opt/rnaseqmut/bin/rnaseqmut
+  umicollapse: /opt/UMICollapse/umicollapse.jar
+  featureCounts: /opt/miniconda/bin/featureCounts
+  cpup: /opt/cpup/cpup
+
+barcode:
+  barcode3_r1: AGATCGGAAGAGCACACGTCTG
+  barcode3_r2: AGATCGGAAGAGCGTCGTGT
+  # remove (primer 5->3) on begin of R1, `-g`
+  # remove (primer 5->3) on begin of R2, `-g`
+  RT_primer_F: ACACGACGCTCTTCCGATCT
+  # remove (primer 3->5) on end of R1, `-a`
+  RT_primer_R: AGATCGGAAGAGCGTCGTGT
+
+# other default setting
+workdir: results
+bed_number: 24
