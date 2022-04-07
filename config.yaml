@@ -1,4 +1,4 @@
-srcdir: /opt/bidseq/bin
+srcdir: /opt/pipeline/bin
 
 path:
   bowtie2: /opt/miniconda/bin/bowtie2

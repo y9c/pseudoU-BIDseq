@@ -1,7 +1,7 @@
 FROM ubuntu:20.04
 RUN echo "This is a analysis pipelie for BID-seq data" > /README.md
 
-ENV PATH="/opt/bidseq/bin:/opt/miniconda/bin:$PATH"
+ENV PATH="/opt/pipeline/bin:/opt/miniconda/bin:$PATH"
 
 # install system dependencies
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get -y --no-install-recommends install tzdata apt-utils wget git make cmake xsltproc gcc g++ pkg-config zlib1g-dev python3 python3-distutils default-jre
@@ -26,7 +26,7 @@ RUN rm -rf /var/lib/apt/lists/* && apt-get purge -y wget git make cmake xsltproc
 
 RUN mkdir -p /data
 WORKDIR /data
-ADD ./bin /opt/bidseq/bin
-COPY ./bidseq /opt/bidseq/bin/bidseq
-COPY ./Snakefile /opt/bidseq/Snakefile
-COPY ./config.yaml /opt/bidseq/config.yaml
+ADD ./bin /opt/pipeline/bin
+COPY ./Snakefile /opt/pipeline/Snakefile
+COPY ./config.yaml /opt/pipeline/config.yaml
+COPY ./bidseq /opt/pipeline/bin/bidseq
