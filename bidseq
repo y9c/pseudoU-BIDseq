@@ -59,4 +59,4 @@ if [ "$#" != 0 ]; then
   shift  # $EOL
 fi
 
-FLASK_ENV=development snakemake -j ${jobs} -q --rerun-incomplete -s /opt/bidseq/Snakefile --configfiles /opt/bidseq/config.yaml ${conf}
+FLASK_ENV=development snakemake -j ${jobs} -q --rerun-incomplete -s /opt/pipeline/Snakefile --configfiles /opt/pipeline/config.yaml ${conf}

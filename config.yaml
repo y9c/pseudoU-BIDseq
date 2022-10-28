@@ -1,4 +1,4 @@
-srcdir: /opt/bidseq/bin
+srcdir: /opt/pipeline/bin
 
 path:
   bowtie2: /opt/miniconda/bin/bowtie2
@@ -15,12 +15,7 @@ path:
 barcode:
   barcode3_r1: AGATCGGAAGAGCACACGTCTG
   barcode3_r2: AGATCGGAAGAGCGTCGTGT
-  # remove (primer 5->3) on begin of R1, `-g`
-  # remove (primer 5->3) on begin of R2, `-g`
-  RT_primer_F: ACACGACGCTCTTCCGATCT
-  # remove (primer 3->5) on end of R1, `-a`
-  RT_primer_R: AGATCGGAAGAGCGTCGTGT
 
 # other default setting
 workdir: results
-bed_number: 24
+threads: 24
