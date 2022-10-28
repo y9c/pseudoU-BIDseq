@@ -21,7 +21,7 @@
 
 ## Documentation
 
-https://y9c.github.io/pseudoU-BIDseq/
+(**⚠ Not yet published.**)
 
 ## Citation
 
