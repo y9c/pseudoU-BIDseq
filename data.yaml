@@ -1,9 +1,20 @@
 batch: mouse_demo
 species: mouse
 
-######
-min_group: 1
-tmp_dir: /tmp
+# workdir: ./workspace_mouse_demo
+# tmpdir: /tmp
+# core: 120
+
+# cutoff:
+#   # prefilter sites show >= x gaps in total among all samples in each group
+#   min_group_gap: 5
+#   # prefilter sites show >= x sequencing coverage in total among all samples in each group
+#   min_group_depth: 10
+#   # prefilter sites show >= x deletion ratio among all samples in each group
+#   min_group_ratio: 0.02
+#   # only analysis putative sites that show pass prefilter in >= x groups
+#   min_group_num: 1
+
 # path:
 #   fastp: /tools/bin/fastp
 #   cutadapt: /usr/local/bin/cutadapt
@@ -18,8 +29,6 @@ tmp_dir: /tmp
 #   cpup: ../bin/cpup
 #   adjustGap: ../bin/adjustGap
 #   realignGap: ../bin/realignGap
-
-#####
 
 reference:
   contamination:

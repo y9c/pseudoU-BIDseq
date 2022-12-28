@@ -234,25 +234,38 @@ def split_cigar(cigar, split_points):
     help="Path of output SAM/BAM file.",
     required=True,
 )
-def run_realign(input_fa_name, input_sam_name, output_sam_name):
+@click.option(
+    "--debug/--no-debug",
+    default=False,
+    help="Write error into file for debuging.",
+)
+def run_realign(input_fa_name, input_sam_name, output_sam_name, debug):
     fafile = pysam.FastaFile(input_fa_name)
     if input_sam_name.endswith(".bam"):
         samfile = pysam.AlignmentFile(input_sam_name, "rb")
     elif input_sam_name.endswith(".cram"):
-        samfile = pysam.AlignmentFile(input_sam_name, "rc")
+        samfile = pysam.AlignmentFile(
+            input_sam_name, "rc", reference_filename=input_fa_name
+        )
     else:
         samfile = pysam.AlignmentFile(input_sam_name, "r")
     if output_sam_name.endswith(".bam"):
         outfile = pysam.AlignmentFile(output_sam_name, "wb", template=samfile)
     elif output_sam_name.endswith(".cram"):
-        outfile = pysam.AlignmentFile(output_sam_name, "wc", template=samfile)
+        outfile = pysam.AlignmentFile(
+            output_sam_name,
+            "wc",
+            template=samfile,
+            reference_filename=input_fa_name,
+        )
     else:
         outfile = pysam.AlignmentFile(output_sam_name, "w", template=samfile)
-    debug_output = pysam.AlignmentFile(
-        output_sam_name.rsplit(".", 1)[0] + "_debug.sam",
-        "w",
-        template=samfile,
-    )
+    if debug:
+        debug_output = pysam.AlignmentFile(
+            output_sam_name.rsplit(".", 1)[0] + "_debug.sam",
+            "w",
+            template=samfile,
+        )
 
     pad = 20
     for read in samfile.fetch():
@@ -304,7 +317,8 @@ def run_realign(input_fa_name, input_sam_name, output_sam_name):
                     # update MD tag
                     read.set_tag("MD", generate_md_tag(ref[s:], c))
         if read.infer_query_length() != read.query_length:
-            debug_output.write(read)
+            if debug:
+                debug_output.write(read)
         else:
             outfile.write(read)
 

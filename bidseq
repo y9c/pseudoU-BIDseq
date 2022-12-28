@@ -111,7 +111,7 @@ while true; do
       printf "\033[0;33m\b\b\b\b\b\b\b\b\b\b\b\b\b\033[0m"
       printf "\033[0;31m\xE2\x9D\x8C\033[0m Jobs exit with error!"
     fi
-    rm .panoptes.db
+    # rm .panoptes.db
     kill -s SIGKILL $PANOPTES_PID
     break
   fi

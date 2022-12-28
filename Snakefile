@@ -7,12 +7,9 @@ if sys.version_info < (3, 6):
 min_version("7.0")
 
 
-configfile: "config.yaml"
-
-
 BATCH = config["batch"]
 SPECIES = config["species"]
-WORKSPACE = config.get("workspace", f"workspace_{BATCH}")
+WORKSPACE = config.get("workdir", f"workspace_{BATCH}")
 
 
 workdir: WORKSPACE
@@ -39,19 +36,6 @@ for n2, v2 in config[f"samples"].items():
         RUN2DATA[r] = {k4: os.path.expanduser(v4) for k4, v4 in v3.items()}
     for k, v3 in v2.get("bam", {}).items():
         SAMPLE2BAM[s][k] = os.path.expanduser(v3)
-META_DATA = {
-    "batch": BATCH,
-    "species": SPECIES,
-    "ref": REF,
-    "REFTYPE": REFTYPE_ALL,
-    "sample_ids": list(SAMPLE2RUN.keys()),
-    "run_ids": list(RUN2DATA.keys()),
-    "groups": GROUP2SAMPLE,
-}
-META_FILE = "meta.json"
-if not os.path.exists(META_FILE) or json.load(open(META_FILE, "r")) != META_DATA:
-    with open(META_FILE, "w") as f:
-        json.dump(META_DATA, f, indent=4)
 
 
 rule all:
@@ -209,31 +193,14 @@ rule map_to_genome_by_star:
         """
 
 
-rule mapping_sam_to_cram:
+rule gap_realign:
     input:
         "mapping_unsort/{rn}_{reftype}.sam",
     output:
-        "mapping_sorted/{rn}_{reftype}.cram",
-    params:
-        ref_fa=REF["genome"]["fa"],
-        path_samtools=config["path"]["samtools"],
-    threads: 12
-    shell:
-        "{params.path_samtools} sort -@ {threads} --write-index --reference {params.ref_fa} -O CRAM -o {output} {input}"
-
-
-rule gap_realign:
-    input:
-        "mapping_sorted/{rn}_{reftype}.cram",
-    output:
-        temp("mapping_realigned_tmp/{rn}_{reftype}.bam"),
+        temp("mapping_realigned_unsorted/{rn}_{reftype}.cram"),
     params:
         path_realignGap=config["path"]["realignGap"],
-        ref_fa=(
-            lambda wildcards: REF[wildcards.reftype]["fa"]
-            if wildcards.reftype in REF
-            else config[f"ref_{wildcards.reftype}"]["fa"]
-        ),
+        ref_fa=lambda wildcards: REF[wildcards.reftype]["fa"],
     shell:
         """
         {params.path_realignGap} -r {params.ref_fa} -i {input} -o {output}
@@ -242,7 +209,7 @@ rule gap_realign:
 
 rule sort_and_filter_bam:
     input:
-        "mapping_realigned_tmp/{rn}_{reftype}.bam",
+        "mapping_realigned_unsorted/{rn}_{reftype}.cram",
     output:
         cram="mapping_realigned/{rn}_{reftype}.cram",
         crai="mapping_realigned/{rn}_{reftype}.cram.crai",
@@ -260,7 +227,7 @@ rule sort_and_filter_bam:
 rule combine_runs:
     input:
         lambda wildcards: [
-            os.path.join("mapping_realigned", f"{r}_{wildcards.reftype}.cram")
+            f"mapping_realigned/{r}_{wildcards.reftype}.cram"
             for r in SAMPLE2RUN[wildcards.sample]
         ],
     output:
@@ -268,9 +235,17 @@ rule combine_runs:
         bai=temp("combined_mapping/{sample}_{reftype}.bam.bai"),
     params:
         path_samtools=config["path"]["samtools"],
-    threads: 4
-    shell:
-        "{params.path_samtools} merge -@ {threads} --write-index -O BAM -o {output.bam}##idx##{output.bai} {input}"
+        ref_fa=lambda wildcards: REF[wildcards.reftype]["fa"],
+    threads: 8
+    run:
+        if len(input) > 1:
+            shell(
+                "{params.path_samtools} merge -@ {threads} --reference {params.ref_fa} --write-index -O BAM -o {output.bam}##idx##{output.bai} {input}"
+            )
+        else:
+            shell(
+                "{params.path_samtools} view -@ {threads} --reference {params.ref_fa} --write-index -O BAM -o {output.bam}##idx##{output.bai} {input}"
+            )
 
 
 rule drop_duplicates:
@@ -282,7 +257,7 @@ rule drop_duplicates:
         log="drop_duplicates/{sample}_{reftype}.log",
     params:
         path_umicollapse=config["path"]["umicollapse"],
-        tmpdir=config["tmp_dir"],
+        tmpdir=config["tmpdir"],
     threads: 4
     shell:
         """
@@ -338,10 +313,13 @@ rule perbase_count_pre:
         temp("selected_region_by_group/{group}_{reftype}.bed"),
     params:
         path_delfilter=config["path"]["delfilter"],
+        min_group_gap=config["cutoff"]["min_group_gap"],
+        min_group_depth=config["cutoff"]["min_group_depth"],
+        min_group_ratio=config["cutoff"]["min_group_ratio"],
     threads: 1
     shell:
         """
-        {params.path_delfilter} -i {input.bam} -g 5 -d 10 -r 0.02 > {output}
+        {params.path_delfilter} -i {input.bam} -g {params.min_group_gap} -d {params.min_group_depth} -r {params.min_group_ratio} > {output}
         """
 
 
@@ -353,18 +331,18 @@ rule prepare_bed_file:
         ),
     output:
         tmp=temp("selected_region/picked_{reftype}_tmp.bed"),
-        fwd="selected_region/picked_{reftype}_fwd.bed",
-        rev="selected_region/picked_{reftype}_rev.bed",
+        fwd=temp("selected_region/picked_{reftype}_fwd.bed"),
+        rev=temp("selected_region/picked_{reftype}_rev.bed"),
     params:
         fai=lambda wildcards: REF[wildcards.reftype]["fai"],
         path_bedtools=config["path"]["bedtools"],
-        min_group=config["min_group"],
+        min_group_num=config["cutoff"]["min_group_num"],
     threads: 4
     shell:
         """
         cat {input} | {params.path_bedtools} slop -i - -g {params.fai} -b 3 | sort -S 4G --parallel={threads} -k1,1 -k2,2n >{output.tmp}
-        {params.path_bedtools} merge -s -S + -c 1 -o count -i {output.tmp} | awk '$4 >= {params.min_group}' > {output.fwd}
-        {params.path_bedtools} merge -s -S - -c 1 -o count -i {output.tmp} | awk '$4 >= {params.min_group}' > {output.rev}
+        {params.path_bedtools} merge -s -S + -c 1 -o count -i {output.tmp} | awk '$4 >= {params.min_group_num}' > {output.fwd}
+        {params.path_bedtools} merge -s -S - -c 1 -o count -i {output.tmp} | awk '$4 >= {params.min_group_num}' > {output.rev}
         """
 
 
@@ -378,7 +356,7 @@ rule count_base_by_sample:
         if wildcards.sample in SAMPLE2RUN
         else SAMPLE2BAM[wildcards.sample][wildcards.reftype] + ".bai",
     output:
-        "pileup_bases_by_sample/{sample}_{reftype}_{orientation}.tsv",
+        temp("pileup_bases_by_sample/{sample}_{reftype}_{orientation}.tsv"),
     params:
         path_samtools=config["path"]["samtools"],
         path_cpup=config["path"]["cpup"],
@@ -403,7 +381,7 @@ rule count_bases_combined:
             "pileup_bases_by_sample/{sample}_{{reftype}}_rev.tsv", sample=SAMPLE_IDS
         ),
     output:
-        "pileup_bases/{reftype}.tsv.gz",
+        temp("pileup_bases/{reftype}.tsv.gz"),
     params:
         path_bgzip=config["path"]["bgzip"],
         header="\t".join(["chr", "pos", "ref_base", "strand"] + list(SAMPLE_IDS)),
