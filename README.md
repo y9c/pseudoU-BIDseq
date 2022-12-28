@@ -15,11 +15,80 @@
 
 ## How to use?
 
-(**⚠ Not yet published.**)
+A [docker image](https://hub.docker.com/r/y9ch/bidseq) containing the source code and dependencies has been published for reproducibility. You can run it using the [singularity](https://sylabs.io/singularity) container runtime.
 
-...
+The entire analysis can be completed in just three steps:
+
+1. **Specific the path (with label) of both rawdata and references for your project in a YAML format.**
+
+   <details>
+     <summary><code>data.yaml</code> for example<sup>(Click to expand)</sup></summary>
+
+   ```yaml
+   reference:
+     contamination:
+       fa: ../ref/contamination.fa
+       bt2: ../ref/contamination
+     genes:
+       fa: ../ref/genes.fa
+       fai: ../ref/genes.fa.fai
+       bt2: ../ref/genes
+     genome:
+       fa: /data/reference/genome/Mus_musculus/GRCm39.fa
+       fai: /data/reference/genome/Mus_musculus/GRCm39.fa.fai
+       star: /data/reference/genome/Mus_musculus/star/GRCm39.release108
+
+   samples:
+     mESCWT-rep1-input:
+       data:
+         - R1: ../test/IP16.fastq.gz
+       group: mESCWT
+       treated: false
+     mESCWT-rep2-input:
+       data:
+         - R1: ../test/IP17.fastq.gz
+       group: mESCWT
+       treated: false
+     mESCWT-rep1-treated:
+       data:
+         - R1: ../test/IP4.fastq.gz
+       group: mESCWT
+       treated: true
+     mESCWT-rep2-treated:
+       data:
+         - R1: ../test/IP5.fastq.gz
+       group: mESCWT
+       treated: true
+   ```
+
+   _Read the [documentation](https://y9c.github.io/pseudoU-BIDseq/Run-the-pipeline.html#refer-rawdata-and-references-in-the-configuration-file) on how to customize._
+
+   </details>
+
+2. **Run all the analysis by one command**:
+
+   ```bash
+   singularity exec docker://y9ch/bidseq:latest bidseq
+   ```
+
+    <details>
+      <summary>default settings<sup>(Click to expand)</sup></summary>
+
+   - default config file: `data.yaml`
+   - default output dir: `./results`
+   - default jobs in parallel: `48`
+
+   _Read the [documentation](https://y9c.github.io/pseudoU-BIDseq/Run-the-pipeline.html#customized-analysis-parameters) on how to customize._
+
+   </details>
+
+3. **View the analytics report and use the &Psi; sites for downstream analysis**.
+
+   The output of all the steps will be in the specific working directory.
 
 ## Documentation
+
+...
 
 (**⚠ Not yet published.**)
 
