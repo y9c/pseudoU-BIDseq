@@ -26,9 +26,7 @@ printf "$logo\n"
 # Set default values
 conf="data.yaml"
 cores=120
-
-snake="./Snakefile"
-default_conf="./config.yaml"
+snake="/opt/pipeline/Snakefile"
 
 # https://stackoverflow.com/a/62616466/5693642
 # Convenience functions.
@@ -103,13 +101,13 @@ while true; do
       PROFILE_SETTING=""
     fi
     printf "\033[0;33m Analyzing...\033[0m"
-    snakemake --wms-monitor http://127.0.0.1:5000 -p --rerun-incomplete -s ${snake} -j ${cores} --configfiles ${default_conf} ${conf} ${PROFILE_SETTING} 1>${LOGFILE} 2>${LOGFILE}
+    snakemake --wms-monitor http://127.0.0.1:5000 -p --rerun-incomplete -s ${snake} -j ${cores} --configfiles /opt/pipeline/config.yaml ${conf} ${PROFILE_SETTING} 1>${LOGFILE} 2>${LOGFILE}
     if [ $? -eq 0 ]; then
       printf "\033[0;33m\b\b\b\b\b\b\b\b\b\b\b\b\b\033[0m"
-      printf "\033[0;32m\xE2\x9C\x94\033[0m Successfully finished all jobs."
+      printf "\033[0;32m\xE2\x9C\x94\033[0m Successfully finished all jobs.\n"
     else
       printf "\033[0;33m\b\b\b\b\b\b\b\b\b\b\b\b\b\033[0m"
-      printf "\033[0;31m\xE2\x9D\x8C\033[0m Jobs exit with error!"
+      printf "\033[0;31m\xE2\x9D\x8C\033[0m Jobs exit with error!\n"
     fi
     # rm .panoptes.db
     kill -s SIGKILL $PANOPTES_PID

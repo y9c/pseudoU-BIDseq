@@ -149,7 +149,9 @@ rule map_to_genome_by_star:
         sam=temp("mapping_unsort/{rn}_genome.sam"),
         un="final_unmapped/{rn}.fq.gz",
         report="mapping_report/{rn}_genome.report",
-        log="star_mapping/{rn}_Log.out",
+        log_out=temp("star_mapping/{rn}_Log.out"),
+        SJ_out=temp("star_mapping/{rn}_SJ.out.tab"),
+        progress_out=temp("star_mapping/{rn}_Log.progress.out"),
     params:
         output_pre="star_mapping/{rn}_",
         sam="star_mapping/{rn}_Aligned.out.sam",
@@ -217,10 +219,11 @@ rule sort_and_filter_bam:
         reftype="contamination|genes|genome",
     params:
         path_samtools=config["path"]["samtools"],
+        ref_fa=lambda wildcards: REF[wildcards.reftype]["fa"],
     threads: 8
     shell:
         """
-        {params.path_samtools} sort -@ {threads} --write-index --input-fmt-option 'filter=[NM]<=10' -m 4G -O CRAM -o {output.cram}##idx##{output.crai} {input}
+        {params.path_samtools} sort -@ {threads} --reference {params.ref_fa} --write-index --input-fmt-option 'filter=[NM]<=10' -m 4G -O CRAM -o {output.cram}##idx##{output.crai} {input}
         """
 
 
