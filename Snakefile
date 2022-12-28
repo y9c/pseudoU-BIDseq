@@ -71,14 +71,18 @@ rule join_pairend_reads:
             )
 
 
-rule cutadapt:
+rule run_cutadapt:
     input:
         "merged_reads/{rn}.fq.gz",
     output:
-        fastq_trimmed="cut_adapter/{rn}_cut.fq.gz",
-        fastq_untrimmed="cut_adapter/{rn}_untrimmed.fq.gz",
-        fastq_short="cut_adapter/{rn}_short.fq.gz",
-        report="cut_adapter/{rn}_cutadapt.report",
+        fastq_trimmed=temp("trimmed_reads/{rn}_cut.fq.gz"),
+        fastq_untrimmed="untrimmed_reads/{rn}_untrimmed.fq.gz"
+        if config["keep_discard"]
+        else temp("untrimmed_reads/{rn}_untrimmed.fq.gz"),
+        fastq_short="untrimmed_reads/{rn}_short.fq.gz"
+        if config["keep_discard"]
+        else temp("untrimmed_reads/{rn}_short.fq.gz"),
+        report="trimming_report/{rn}_cutadapt.report",
     params:
         path_cutadapt=config["path"]["cutadapt"],
         adapter3=config["adapter"]["p7"],
@@ -105,7 +109,7 @@ rule cutadapt:
 
 rule map_to_contamination_by_bowtie2:
     input:
-        "cut_adapter/{rn}_cut.fq.gz",
+        "trimmed_reads/{rn}_cut.fq.gz",
     output:
         sam=temp("mapping_unsort/{rn}_contamination.sam"),
         un=temp("mapping_unsort/{rn}_contamination.fq"),
@@ -147,7 +151,9 @@ rule map_to_genome_by_star:
         "mapping_unsort/{rn}_genes.fq",
     output:
         sam=temp("mapping_unsort/{rn}_genome.sam"),
-        un="final_unmapped/{rn}.fq.gz",
+        un="unmapped_reads/{rn}.fq.gz"
+        if config["keep_discard"]
+        else temp("unmapped_reads/{rn}.fq.gz"),
         report="mapping_report/{rn}_genome.report",
         log_out=temp("star_mapping/{rn}_Log.out"),
         SJ_out=temp("star_mapping/{rn}_SJ.out.tab"),

@@ -1,5 +1,9 @@
 tmpdir: /tmp
 
+# keep dicarded reads (untrimmed, too-short, unmapped...), for debugs purpose.
+# Most of the time, you do not need these files. Set it as `false` to save storage.
+keep_discard: true
+
 cutoff:
   # prefilter sites show >= x gaps in total among all samples in each group
   min_group_gap: 5
