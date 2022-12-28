@@ -1,21 +1,20 @@
-srcdir: /opt/pipeline/bin
+min_group: 1
+tmp_dir: /tmp
+
+adapter:
+  p7: AGATCGGAAGAGCACACGTCT
 
 path:
-  bowtie2: /opt/miniconda/bin/bowtie2
-  star: /opt/miniconda/bin/STAR
-  samtools: /opt/miniconda/bin/samtools
-  bedtools: /opt/miniconda/bin/bedtools
-  rnaseqc: /opt/rnaseqc
-  blast2bam: /opt/blast2bam/bin/blast2bam
-  rnaseqmut: /opt/rnaseqmut/bin/rnaseqmut
-  umicollapse: /opt/UMICollapse/umicollapse.jar
-  featureCounts: /opt/miniconda/bin/featureCounts
-  cpup: /opt/cpup/cpup
-
-barcode:
-  barcode3_r1: AGATCGGAAGAGCACACGTCTG
-  barcode3_r2: AGATCGGAAGAGCGTCGTGT
-
-# other default setting
-workdir: results
-threads: 24
+  fastp: ~/.micromamba/bin/fastp
+  cutadapt: ~/.micromamba/bin/cutadapt
+  samtools: ~/tools/samtools/samtools
+  bgzip: ~/.local/bin/bgzip
+  bowtie2: ~/.local/bin/bowtie2
+  bedtools: ~/.micromamba/bin/bedtools
+  star: ~/tools/STAR/bin/Linux_x86_64/STAR
+  umicollapse: ~/tools/UMICollapse/umicollapse.jar
+  delfilter: ../bin/deletionFilter
+  samfilter: ../bin/samFilter
+  cpup: ../bin/cpup
+  adjustGap: ../bin/adjustGap
+  realignGap: ../bin/realignGap

@@ -1,0 +1,59 @@
+batch: mouse_demo
+species: mouse
+
+######
+min_group: 1
+tmp_dir: /tmp
+
+#####
+
+reference:
+  contamination:
+    fa: ~/reference/genome/contamination/contamination.fa
+    bt2: ~/reference/index/bowtie2/contamination
+  genes:
+    fa: ~/reference/genome/Mus_musculus.GRCm39.sncRNA.fa
+    fai: ~/reference/genome/Mus_musculus.GRCm39.sncRNA.fa.fai
+    bt2: ~/reference/index/bowtie2/Mus_musculus.GRCm39.sncRNA
+  genome:
+    gtf: ~/reference/feature/Mus_musculus.GRCm39.genome.gtf
+    gtf_collapse: ~/reference/feature/Mus_musculus.GRCm39.genome.collapse.gtf
+    fa: ~/reference/genome/Mus_musculus.GRCm39.genome.fa
+    fai: ~/reference/genome/Mus_musculus.GRCm39.genome.fa.fai
+    star: ~/reference/index/star/Mus_musculus.GRCm39.genome
+    blast: ~/reference/index/blast/Mus_musculus.GRCm39.genome.fa
+    bt2: ~/reference/index/bowtie2/Mus_musculus.GRCm39.genome
+    ht2: ~/reference/index/hisat2/Mus_musculus.GRCm39.genome/genome_snp
+    hisat3n: ~/reference/index/hisat3n/Mus_musculus.GRCm39.genome/Mus_musculus.GRCm39.genome
+
+samples:
+  mESCWT-rep1-input:
+    data:
+      - R1: ~/rawdata_public/pU_mESC/IP16.fastq.gz
+    group: mESCWT
+    treated: false
+  mESCWT-rep2-input:
+    data:
+      - R1: ~/rawdata_public/pU_mESC/IP17.fastq.gz
+    group: mESCWT
+    treated: false
+  mESCWT-rep3-input:
+    data:
+      - R1: ~/rawdata_public/pU_mESC/IP18.fastq.gz
+    group: mESCWT
+    treated: false
+  mESCWT-rep1-treated:
+    data:
+      - R1: ~/rawdata_public/pU_mESC/IP4.fastq.gz
+    group: mESCWT
+    treated: true
+  mESCWT-rep2-treated:
+    data:
+      - R1: ~/rawdata_public/pU_mESC/IP5.fastq.gz
+    group: mESCWT
+    treated: true
+  mESCWT-rep3-treated:
+    data:
+      - R1: ~/rawdata_public/pU_mESC/IP6.fastq.gz
+    group: mESCWT
+    treated: true
