@@ -7,6 +7,8 @@ tmp/
 .snakemake/
 test/
 debug_*/
+BIDSEQ_LOG_*.txt
+.panoptes.db
 
 ######################### R ###########################
 

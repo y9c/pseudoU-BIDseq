@@ -5,7 +5,6 @@
 #
 # Created: 2022-04-04 18:49
 
-                                                                              
 logo="
 \033[1;34m ██████╗ ██╗   ██╗      ██████╗ ██╗██████╗ ███████╗███████╗ ██████╗  \033[0m
 \033[1;34m ██╔══██╗██║   ██║      ██╔══██╗██║██╔══██╗██╔════╝██╔════╝██╔═══██╗ \033[0m
@@ -22,16 +21,14 @@ logo="
 \033[1;34m     ╚═╝     ╚═╝╚═╝     ╚══════╝╚══════╝╚═╝╚═╝  ╚═══╝╚══════╝        \033[0m
 "
 
-
-
-
-
 printf "$logo\n"
 
 # Set default values
 conf="data.yaml"
-cores=48
-snake="/opt/pipeline/Snakefile"
+cores=120
+
+snake="./Snakefile"
+default_conf="./config.yaml"
 
 # https://stackoverflow.com/a/62616466/5693642
 # Convenience functions.
@@ -98,7 +95,7 @@ while true; do
     echo -e "\033[0;32mPLEASE MONITOR THE PIPELINE AT\033[0m http://127.0.0.1:5000"
     echo -e "\033[0;32mIf you are running this pipeline on a remote server, \033[0m"
     echo -e "\033[0;32mreplace the IP adress with server IP, or set ssh proxy on you local machine.\033[0m"
-    LOGFILE="SACSEQ_LOG_$(date +"%F-%H%M%S").txt"
+    LOGFILE="BIDSEQ_LOG_$(date +"%F-%H%M%S").txt"
     echo -e "\033[0;32mREAD DEBUG LOG AT\033[0m ${LOGFILE}"
     if [[ -n ${profile} ]]; then
       PROFILE_SETTING="--profile ${profile}"
@@ -106,7 +103,7 @@ while true; do
       PROFILE_SETTING=""
     fi
     printf "\033[0;33m Analyzing...\033[0m"
-    snakemake --wms-monitor http://127.0.0.1:5000 -p --rerun-incomplete -s ${snake} -j ${cores} --configfiles /opt/pipeline/config.yaml ${conf} ${PROFILE_SETTING} 1>${LOGFILE} 2>${LOGFILE}
+    snakemake --wms-monitor http://127.0.0.1:5000 -p --rerun-incomplete -s ${snake} -j ${cores} --configfiles ${default_conf} ${conf} ${PROFILE_SETTING} 1>${LOGFILE} 2>${LOGFILE}
     if [ $? -eq 0 ]; then
       printf "\033[0;33m\b\b\b\b\b\b\b\b\b\b\b\b\b\033[0m"
       printf "\033[0;32m\xE2\x9C\x94\033[0m Successfully finished all jobs."

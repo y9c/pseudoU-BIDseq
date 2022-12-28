@@ -82,7 +82,7 @@ rule join_pairend_reads:
         else:
             shell(
                 """
-        ln -sf {input[0]} {output}
+        ln -sfr {input[0]} {output[0]}
         """
             )
 

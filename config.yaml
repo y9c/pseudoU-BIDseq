@@ -5,16 +5,16 @@ adapter:
   p7: AGATCGGAAGAGCACACGTCT
 
 path:
-  fastp: ~/.micromamba/bin/fastp
-  cutadapt: ~/.micromamba/bin/cutadapt
-  samtools: ~/tools/samtools/samtools
-  bgzip: ~/.local/bin/bgzip
-  bowtie2: ~/.local/bin/bowtie2
-  bedtools: ~/.micromamba/bin/bedtools
-  star: ~/tools/STAR/bin/Linux_x86_64/STAR
-  umicollapse: ~/tools/UMICollapse/umicollapse.jar
-  delfilter: ../bin/deletionFilter
-  samfilter: ../bin/samFilter
-  cpup: ../bin/cpup
-  adjustGap: ../bin/adjustGap
-  realignGap: ../bin/realignGap
+  fastp: /opt/micromamba/bin/fastp
+  cutadapt: /opt/micromamba/bin/cutadapt
+  samtools: /opt/micromamba/bin/samtools
+  bgzip: /opt/micromamba/bin/bgzip
+  bowtie2: /opt/micromamba/bin/bowtie2
+  bedtools: /opt/micromamba/bin/bedtools
+  star: /opt/micromamba/bin/STAR
+  umicollapse: /bin/umicollapse.jar
+  delfilter: /opt/pipeline/bin/deletionFilter
+  samfilter: /opt/pipeline/bin/samFilter
+  cpup: /opt/pipeline/bin/cpup
+  adjustGap: /opt/pipeline/bin/adjustGap
+  realignGap: /opt/pipeline/bin/realignGap
