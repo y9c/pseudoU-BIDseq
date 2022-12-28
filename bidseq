@@ -24,12 +24,12 @@ logo="
 printf "$logo\n"
 
 # Set default values
-conf="data.yaml"
-cores=120
 snake="/opt/pipeline/Snakefile"
+conf="data.yaml"
+cores=$(python -c 'import yaml;print(yaml.safe_load(open("data.yaml","r")).get("cores",""))')
+if [ -z "$cores" ]; then cores=120; fi
 
-# https://stackoverflow.com/a/62616466/5693642
-# Convenience functions.
+# Ⓒ copyright: https://stackoverflow.com/a/62616466/5693642
 usage_error() {
   echo >&2 "$(basename $0):  $1"
   exit 2

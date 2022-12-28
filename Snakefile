@@ -7,9 +7,7 @@ if sys.version_info < (3, 6):
 min_version("7.0")
 
 
-BATCH = config["batch"]
-SPECIES = config["species"]
-WORKSPACE = config.get("workdir", f"workspace_{BATCH}")
+WORKSPACE = config.get("workdir", f"workspace")
 
 
 workdir: WORKSPACE
@@ -23,13 +21,12 @@ SAMPLE_IDS = []
 SAMPLE2RUN = defaultdict(list)
 RUN2DATA = {}
 SAMPLE2BAM = defaultdict(dict)
-for n2, v2 in config[f"samples"].items():
-    if v2.get("treated", True):
-        GROUP2SAMPLE[v2["group"]]["treated"].append(n2)
-    else:
-        GROUP2SAMPLE[v2["group"]]["input"].append(n2)
-    s = n2
+for s, v2 in config[f"samples"].items():
     SAMPLE_IDS.append(s)
+    if v2.get("treated", True):
+        GROUP2SAMPLE[v2["group"]]["treated"].append(s)
+    else:
+        GROUP2SAMPLE[v2["group"]]["input"].append(s)
     for i, v3 in enumerate(v2.get("data", []), 1):
         r = f"{s}_run{i}"
         SAMPLE2RUN[s].append(r)
@@ -76,13 +73,13 @@ rule run_cutadapt:
         "merged_reads/{rn}.fq.gz",
     output:
         fastq_trimmed=temp("trimmed_reads/{rn}_cut.fq.gz"),
-        fastq_untrimmed="untrimmed_reads/{rn}_untrimmed.fq.gz"
-        if config["keep_discard"]
-        else temp("untrimmed_reads/{rn}_untrimmed.fq.gz"),
-        fastq_short="untrimmed_reads/{rn}_short.fq.gz"
-        if config["keep_discard"]
-        else temp("untrimmed_reads/{rn}_short.fq.gz"),
-        report="trimming_report/{rn}_cutadapt.report",
+        fastq_untrimmed="discarded_reads/{rn}_untrimmed.fq.gz"
+        if config["keep_discarded"]
+        else temp("discarded_reads/{rn}_untrimmed.fq.gz"),
+        fastq_short="discarded_reads/{rn}_short.fq.gz"
+        if config["keep_discarded"]
+        else temp("undiscarded_reads{rn}_short.fq.gz"),
+        report="report_reads/trimming/{rn}_cutadapt.report",
     params:
         path_cutadapt=config["path"]["cutadapt"],
         adapter3=config["adapter"]["p7"],
@@ -113,13 +110,14 @@ rule map_to_contamination_by_bowtie2:
     output:
         sam=temp("mapping_unsort/{rn}_contamination.sam"),
         un=temp("mapping_unsort/{rn}_contamination.fq"),
-        report="mapping_report/{rn}_contamination.report",
+        report="report_reads/mapping/{rn}_contamination.report",
     params:
         path_bowtie2=config["path"]["bowtie2"],
         ref_bowtie2=lambda wildcards: REF["contamination"]["bt2"],
     threads: 24
     shell:
         """
+        export LC_ALL=C
         {params.path_bowtie2} -p {threads} \
             --end-to-end -D 20 -R 3 --score-min L,5,-0.5 -L 16 -N 1 --mp 4 --rdg 0,2 \
             --no-unal --un {output.un} -x {params.ref_bowtie2} -U {input} > {output.sam} 2>{output.report}
@@ -132,7 +130,7 @@ rule map_to_genes_by_bowtie2:
     output:
         sam=temp("mapping_unsort/{rn}_genes.sam"),
         un=temp("mapping_unsort/{rn}_genes.fq"),
-        report="mapping_report/{rn}_genes.report",
+        report="report_reads/mapping/{rn}_genes.report",
     params:
         path_bowtie2=config["path"]["bowtie2"],
         ref_bowtie2=lambda wildcards: REF["genes"]["bt2"],
@@ -140,6 +138,7 @@ rule map_to_genes_by_bowtie2:
     threads: 24
     shell:
         """
+        export LC_ALL=C
         {params.path_bowtie2} -p {threads} \
             --end-to-end --norc -D 20 -R 3 --score-min L,4,-0.5 -L 10 -i S,1,0.5 -N 1 --mp 6,3 --rdg 0,2 -a \
             --no-unal --un {output.un} -x {params.ref_bowtie2} -U {input} 2>{output.report} | {params.path_samfilter} > {output.sam}
@@ -151,10 +150,10 @@ rule map_to_genome_by_star:
         "mapping_unsort/{rn}_genes.fq",
     output:
         sam=temp("mapping_unsort/{rn}_genome.sam"),
-        un="unmapped_reads/{rn}.fq.gz"
-        if config["keep_discard"]
-        else temp("unmapped_reads/{rn}.fq.gz"),
-        report="mapping_report/{rn}_genome.report",
+        un="discarded_reads/{rn}_unmapped.fq.gz"
+        if config["keep_discarded"]
+        else temp("discarded_reads/{rn}_unmapped.fq.gz"),
+        report="report_reads/mapping/{rn}_genome.report",
         log_out=temp("star_mapping/{rn}_Log.out"),
         SJ_out=temp("star_mapping/{rn}_SJ.out.tab"),
         progress_out=temp("star_mapping/{rn}_Log.progress.out"),
@@ -219,8 +218,9 @@ rule sort_and_filter_bam:
     input:
         "mapping_realigned_unsorted/{rn}_{reftype}.cram",
     output:
-        cram="mapping_realigned/{rn}_{reftype}.cram",
-        crai="mapping_realigned/{rn}_{reftype}.cram.crai",
+        cram="mapping_realigned/{rn}_{reftype}.cram"
+        if config["keep_internal"]
+        else temp("mapping_realigned/{rn}_{reftype}.cram"),
     wildcard_constraints:
         reftype="contamination|genes|genome",
     params:
@@ -229,7 +229,7 @@ rule sort_and_filter_bam:
     threads: 8
     shell:
         """
-        {params.path_samtools} sort -@ {threads} --reference {params.ref_fa} --write-index --input-fmt-option 'filter=[NM]<=10' -m 4G -O CRAM -o {output.cram}##idx##{output.crai} {input}
+        {params.path_samtools} sort -@ {threads} --reference {params.ref_fa} --input-fmt-option 'filter=[NM]<=10' -m 4G -O CRAM -o {output.cram} {input}
         """
 
 
@@ -263,7 +263,7 @@ rule drop_duplicates:
         bai="combined_mapping/{sample}_{reftype}.bam.bai",
     output:
         bam="drop_duplicates/{sample}_{reftype}.bam",
-        log="drop_duplicates/{sample}_{reftype}.log",
+        log="report_reads/deduping/{sample}_{reftype}.log",
     params:
         path_umicollapse=config["path"]["umicollapse"],
         tmpdir=config["tmpdir"],
@@ -377,7 +377,9 @@ rule count_base_by_sample:
     threads: 2
     shell:
         """
-        {params.path_samtools} mpileup -aa -B -d 0 {params.flag} -Q 5 --reverse-del -l {input.bed} -f {params.ref} {input.bam} | {params.path_cpup} -H -S -i | sed 's/\\t/\\t{params.strand}\\t/3' > {output}
+        {params.path_samtools} mpileup -aa -B -d 0 {params.flag} -Q 5 --reverse-del -l {input.bed} -f {params.ref} {input.bam} | \
+            {params.path_cpup} -H -S -i | \
+            sed 's/\\t/\\t{params.strand}\\t/3' > {output}
         """
 
 

@@ -1,9 +1,13 @@
-batch: mouse_demo
-species: mouse
-
-# workdir: ./workspace_mouse_demo
+workdir: ./workspace_mouse_demo
 # tmpdir: /tmp
-# core: 120
+cores: 120
+
+# keep dicarded reads (untrimmed, too-short, unmapped...), for debugs purpose.
+# Most of the time, you do not need these files. Set it as `false` to save storage.
+keep_discarded: true
+# keep run mapping results (bam file).
+# cache these files, so you do not need to re-run the analysis for previous data when you add more sequening reads
+keep_internal: false
 
 # cutoff:
 #   # prefilter sites show >= x gaps in total among all samples in each group
@@ -14,21 +18,6 @@ species: mouse
 #   min_group_ratio: 0.02
 #   # only analysis putative sites that show pass prefilter in >= x groups
 #   min_group_num: 1
-
-# path:
-#   fastp: /tools/bin/fastp
-#   cutadapt: /usr/local/bin/cutadapt
-#   samtools: /tools/bin/samtools
-#   bgzip: /tools/bin/bgzip
-#   bowtie2: /tools/bin/bowtie2
-#   bedtools: /tools/bin/bedtools
-#   star: /tools/bin/STAR
-#   umicollapse: ~/tools/UMICollapse/umicollapse.jar
-#   delfilter: ../bin/deletionFilter
-#   samfilter: ../bin/samFilter
-#   cpup: ../bin/cpup
-#   adjustGap: ../bin/adjustGap
-#   realignGap: ../bin/realignGap
 
 reference:
   contamination:
