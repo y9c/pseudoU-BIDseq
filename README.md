@@ -75,7 +75,7 @@ The entire analysis can be completed in just three steps:
       <summary>default settings<sup>(Click to expand)</sup></summary>
 
    - default config file: `data.yaml`
-   - default output dir: `./results`
+   - default output dir: `./workspace`
    - default jobs in parallel: `48`
 
    _Read the [documentation](https://y9c.github.io/pseudoU-BIDseq/Run-the-pipeline.html#customized-analysis-parameters) on how to customize._

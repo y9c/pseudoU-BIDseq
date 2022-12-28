@@ -27,7 +27,7 @@ printf "$logo\n"
 snake="/opt/pipeline/Snakefile"
 conf="data.yaml"
 cores=$(python -c 'import yaml;print(yaml.safe_load(open("data.yaml","r")).get("cores",""))')
-if [ -z "$cores" ]; then cores=120; fi
+if [ -z "$cores" ]; then cores=48; fi
 
 # Ⓒ copyright: https://stackoverflow.com/a/62616466/5693642
 usage_error() {
