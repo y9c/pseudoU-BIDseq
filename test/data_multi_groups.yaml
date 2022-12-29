@@ -1,0 +1,48 @@
+# Directory for all output results and analysis reports
+workdir: ./workspace_multi_groups
+
+# NOTE: relative path of reference and sample data should relative to the workdir
+reference:
+  contamination:
+    fa: ../ref/contamination.fa
+    bt2: ../ref/contamination
+  genes:
+    fa: ../ref/genes.fa
+    fai: ../ref/genes.fa.fai
+    bt2: ../ref/genes
+  genome:
+    fa: /data/reference/genome/Mus_musculus/GRCm39.fa
+    fai: /data/reference/genome/Mus_musculus/GRCm39.fa.fai
+    star: /data/reference/genome/Mus_musculus/star/GRCm39.release108
+
+samples:
+  mESCWT-rep1-input:
+    data:
+      - R1: ../data/IP16_run1.fastq.gz
+    group: mESCWT1
+    treated: false
+  mESCWT-rep2-input:
+    data:
+      - R1: ../data/IP17_run1.fastq.gz
+    group: mESCWT2
+    treated: false
+  mESCWT-rep3-input:
+    data:
+      - R1: ../data/IP18_run1.fastq.gz
+    group: mESCWT3
+    treated: false
+  mESCWT-rep1-treated:
+    data:
+      - R1: ../data/IP4_run1.fastq.gz
+    group: mESCWT1
+    treated: true
+  mESCWT-rep2-treated:
+    data:
+      - R1: ../data/IP5_run1.fastq.gz
+    group: mESCWT2
+    treated: true
+  mESCWT-rep3-treated:
+    data:
+      - R1: ../data/IP6_run1.fastq.gz
+    group: mESCWT3
+    treated: true

@@ -1,27 +1,5 @@
 # Directory for all output results and analysis reports
-workdir: ./workspace_mouse_demo
-# Directory for temporary files.
-tempdir: ./workspace_mouse_demo/.tmp
-# Max number of cores for all the running jobs at the same time
-cores: 120
-
-# keep dicarded reads (untrimmed, too-short, unmapped...), for debugs purpose.
-# Most of the time, you do not need these files. Set it as `false` to save storage.
-keep_discarded: true
-# keep run mapping results (bam file).
-# cache these files, so you do not need to re-run the analysis for previous data when you add more sequening reads
-keep_internal: false
-
-# cutoff for pre-filtering. Most of time, you do not need to change them.
-# cutoff:
-#   # prefilter sites show >= x gaps in total among all samples in each group
-#   min_group_gap: 5
-#   # prefilter sites show >= x sequencing coverage in total among all samples in each group
-#   min_group_depth: 10
-#   # prefilter sites show >= x deletion ratio among all samples in each group
-#   min_group_ratio: 0.02
-#   # only analysis putative sites that show pass prefilter in >= x groups
-#   min_group_num: 1
+workdir: ./workspace_multi_runs
 
 # NOTE: relative path of reference and sample data should relative to the workdir
 reference:
@@ -46,25 +24,30 @@ samples:
   mESCWT-rep2-input:
     data:
       - R1: ../data/IP17_run1.fastq.gz
+      - R1: ../data/IP17_run2.fastq.gz
     group: mESCWT
     treated: false
   mESCWT-rep3-input:
     data:
       - R1: ../data/IP18_run1.fastq.gz
+      - R1: ../data/IP18_run2.fastq.gz
     group: mESCWT
     treated: false
   mESCWT-rep1-treated:
     data:
       - R1: ../data/IP4_run1.fastq.gz
+      - R1: ../data/IP4_run2.fastq.gz
     group: mESCWT
     treated: true
   mESCWT-rep2-treated:
     data:
       - R1: ../data/IP5_run1.fastq.gz
+      - R1: ../data/IP5_run2.fastq.gz
     group: mESCWT
     treated: true
   mESCWT-rep3-treated:
     data:
       - R1: ../data/IP6_run1.fastq.gz
+      - R1: ../data/IP6_run2.fastq.gz
     group: mESCWT
     treated: true
