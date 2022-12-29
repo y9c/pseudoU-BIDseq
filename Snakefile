@@ -8,7 +8,7 @@ min_version("7.0")
 
 
 WORKDIR = config.get("workdir", "workspace")
-TMPDIR = config.get("tempdir", os.path.join(workdir, ".tmp"))
+TMPDIR = config.get("tempdir", os.path.join(WORKDIR, ".tmp"))
 
 
 workdir: WORKDIR
