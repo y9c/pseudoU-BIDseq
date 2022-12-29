@@ -58,7 +58,9 @@ rule join_pairend_reads:
         if len(input) == 2:
             shell(
                 """
-        {params.path_fastp} --thread {threads} --disable_adapter_trimming --merge --correction --overlap_len_require 10 --overlap_diff_percent_limit 20 -i {input[0]} -I {input[1]} --merged_out {output} --out1 /dev/null --out2 /dev/null -h {params.html} -j {params.json}
+        {params.path_fastp} --thread {threads} \
+            --disable_adapter_trimming --merge --correction --overlap_len_require 10 --overlap_diff_percent_limit 20 \
+            -i {input[0]} -I {input[1]} --merged_out {output} --out1 /dev/null --out2 /dev/null -h {params.html} -j {params.json}
         """
             )
         else:
@@ -142,7 +144,8 @@ rule map_to_genes_by_bowtie2:
         export LC_ALL=C
         {params.path_bowtie2} -p {threads} \
             --end-to-end --norc -D 20 -R 3 --score-min L,4,-0.5 -L 10 -i S,1,0.5 -N 1 --mp 6,3 --rdg 0,2 -a \
-            --no-unal --un {output.un} -x {params.ref_bowtie2} -U {input} 2>{output.report} | {params.path_samfilter} > {output.sam}
+            --no-unal --un {output.un} -x {params.ref_bowtie2} -U {input} 2>{output.report} | \
+            {params.path_samfilter} > {output.sam}
         """
 
 
