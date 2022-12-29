@@ -1,5 +1,8 @@
+# Directory for all output results and analysis reports
 workdir: ./workspace_mouse_demo
-tmpdir: ./workspace_mouse_demo/.tmp
+# Directory for temporary files.
+tempdir: ./workspace_mouse_demo/.tmp
+# Max number of cores for all the running jobs at the same time
 cores: 120
 
 # keep dicarded reads (untrimmed, too-short, unmapped...), for debugs purpose.
@@ -9,6 +12,7 @@ keep_discarded: true
 # cache these files, so you do not need to re-run the analysis for previous data when you add more sequening reads
 keep_internal: false
 
+# cutoff for pre-filtering. Most of time, you do not need to change them.
 # cutoff:
 #   # prefilter sites show >= x gaps in total among all samples in each group
 #   min_group_gap: 5
