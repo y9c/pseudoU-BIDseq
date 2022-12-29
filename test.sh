@@ -34,55 +34,24 @@ while [[ $# -gt 0 ]]; do
   case $1 in
   -j | --jobs | --cores)
     EXTENSION="$2"
-    shift
-    shift
+    shift # past argument
+    shift # past value
     ;;
   -c | --conf)
     conf="$2"
-    shift
-    shift
+    shift # past argument
+    shift # past value
     ;;
   -s | --snake)
     snake="$2"
-    shift
-    shift
+    shift # past argument
+    shift # past value
     ;;
   *)
-    POSITIONAL_ARGS+=("$1")
-    shift
+    POSITIONAL_ARGS+=("$1") # save positional arg
+    shift                   # past argument
     ;;
   esac
 done
-set -- "${POSITIONAL_ARGS[@]}" # restore positional parameters
 
-if [ ! -f "${conf}" ]; then
-  echo "${conf} can not be found!"
-  exit 1
-fi
-panoptes --ip 0.0.0.0 --port 5000 2>/dev/null &
-export PANOPTES_PID=$!
-# echo "PANOPTES_PID=$PANOPTES_PID"
-trap 'kill -s SIGKILL $PANOPTES_PID' EXIT
-while true; do
-  if curl -s http://127.0.0.1:5000/api/service-info | grep -q running; then
-    echo -e "\033[0;32mPLEASE MONITOR THE PIPELINE AT\033[0m http://127.0.0.1:5000"
-    echo -e "\033[0;32mIf you are running this pipeline on a remote server, \033[0m"
-    echo -e "\033[0;32mreplace the IP adress with server IP, or set ssh proxy on you local machine.\033[0m"
-    LOGFILE="BIDSEQ_LOG_$(date +"%F-%H%M%S").txt"
-    echo -e "\033[0;32mREAD DEBUG LOG AT\033[0m ${LOGFILE}"
-    printf "\033[0;33m Analyzing...\033[0m"
-    snakemake --wms-monitor http://127.0.0.1:5000 --rerun-incomplete --jobs ${cores} --snakefile ${snake} --configfiles /opt/pipeline/config.yaml ${conf} $@ 1>${LOGFILE} 2>${LOGFILE}
-    if [ $? -eq 0 ]; then
-      printf "\033[0;33m\b\b\b\b\b\b\b\b\b\b\b\b\b\033[0m"
-      printf "\033[0;32m\xE2\x9C\x94\033[0m Successfully finished all jobs.\n"
-    else
-      printf "\033[0;33m\b\b\b\b\b\b\b\b\b\b\b\b\b\033[0m"
-      printf "\033[0;31m\xE2\x9D\x8C\033[0m Jobs exit with error!\n"
-    fi
-    # rm .panoptes.db
-    kill -s SIGKILL $PANOPTES_PID
-    break
-  fi
-  echo "$(date) waiting for service to start..."
-  sleep 2
-done
+echo $@
