@@ -1,12 +1,10 @@
 ---
-title: Overall Workflow
+title: Quick Start
 nav_exclude: false
 ---
 
 <!-- prettier-ignore-start -->
-# Overall Workflow
+# Quick Start
+Overall Workflow
 {: .fs-9 }
 <!-- prettier-ignore-end -->
-
-![flowchart](flowchart.svg)
-

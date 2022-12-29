@@ -19,6 +19,10 @@ A Method for Assaying &Psi; Epigenetic Modifications at Single Base Resolution
 
 ## Getting Started
 
-[Overall-Workflow](./Overall-Workflow)
+[Overall-Workflow](Overall-Workflow)
+
+[Quick-Start](Quick-Start)
+
+[Advanced-Customization](Advanced-Customization)
 
 [Step-by-step-instruction](Step-by-step-instruction)

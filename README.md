@@ -5,10 +5,10 @@
 ## Overview of the workflow
 
 <p align="center">
-  <a href="https://y9c.github.io/pseudoU-BIDseq/Overall-Workflow#gh-light-mode-only">
+  <a href="https://bidseq.chuan.science/Overall-Workflow#gh-light-mode-only">
     <img src="./docs/scheme.svg" />
   </a>
-  <a href="https://y9c.github.io/pseudoU-BIDseq/Overall-Workflow#gh-dark-mode-only">
+  <a href="https://bidseq.chuan.science/Overall-Workflow#gh-dark-mode-only">
     <img src="./docs/scheme_dark.svg" />
   </a>
 </p>
@@ -57,7 +57,7 @@ The entire analysis can be completed in just three steps:
    ```
 
    You can copy and edit from this [template](data.yaml).
-   _Read the [documentation](https://y9c.github.io/pseudoU-BIDseq/Run-the-pipeline.html#refer-rawdata-and-references-in-the-configuration-file) on how to customize._
+   _Read the [documentation](https://bidseq.chuan.science/Run-the-pipeline.html#refer-rawdata-and-references-in-the-configuration-file) on how to customize._
 
    </details>
 
@@ -74,23 +74,30 @@ The entire analysis can be completed in just three steps:
    - default output dir: `./workspace`
    - default jobs in parallel: `48`
 
-   _Read the [documentation](https://y9c.github.io/pseudoU-BIDseq/Run-the-pipeline.html#customized-analysis-parameters) on how to customize._
+   _Read the [documentation](https://bidseq.chuan.science/Run-the-pipeline.html#customized-analysis-parameters) on how to customize._
 
    </details>
 
-3. **View the analytics report and use the &Psi; sites for downstream analysis**.
+3. **View the analytics report and pileup table.**
 
-   The output of all the steps will be in the specific working directory.
+    <details>
+      <summary>output files in working directory.<sup>(Click to expand)</sup></summary>
+
+   - trimming, mapping, deduping reports are in `report_reads` folder
+   - deleted sites for &Psi; sites detection are in `pileup_adjusted` folder
+   </details>
 
 ## Documentation
 
+(**⚠ Not yet published.**)
+
 ...
 
-(**⚠ Not yet published.**)
+[Read more](https://bidseq.chuan.science)
 
 ## Citation
 
-- Qing Dai†_, Li-Sheng Zhang†_, Hui-Lung Sun†, Kinga Pajdzik†, Lei Yang, Chang Ye, Cheng-Wei Ju, Shun Liu, Yuru Wang, Zhong Zheng, Linda Zhang, Bryan Harada, Xiaoyang Dou, Iryna Irkliyenko, Xinran Feng, Wen Zhang, Tao Pan, Chuan He\*. Quantitative sequencing using BID-seq uncovers abundant pseudouridines in mammalian mRNA at base resolution. Nat Biotechnol (2022). https://doi.org/10.1038/s41587-022-01505-w
+- Dai Q. _et al_. Quantitative sequencing using BID-seq uncovers abundant pseudouridines in mammalian mRNA at base resolution. Nat Biotechnol (2022). https://doi.org/10.1038/s41587-022-01505-w
 
 &nbsp;
 
