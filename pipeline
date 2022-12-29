@@ -59,7 +59,7 @@ if [ ! -f "${conf}" ]; then
   echo "${conf} can not be found!"
   exit 1
 fi
-panoptes --ip 0.0.0.0 --port 5000 2>/dev/null &
+panoptes --ip 0.0.0.0 --port 5000 1>/dev/null 2>/dev/null &
 export PANOPTES_PID=$!
 # echo "PANOPTES_PID=$PANOPTES_PID"
 trap 'kill -s SIGKILL $PANOPTES_PID' EXIT
