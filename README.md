@@ -44,11 +44,6 @@ The entire analysis can be completed in just three steps:
          - R1: ../test/IP16.fastq.gz
        group: mESCWT
        treated: false
-     mESCWT-rep2-input:
-       data:
-         - R1: ../test/IP17.fastq.gz
-       group: mESCWT
-       treated: false
      mESCWT-rep1-treated:
        data:
          - R1: ../test/IP4.fastq.gz
@@ -61,6 +56,7 @@ The entire analysis can be completed in just three steps:
        treated: true
    ```
 
+   You can copy and edit from this [template](data.yaml).
    _Read the [documentation](https://y9c.github.io/pseudoU-BIDseq/Run-the-pipeline.html#refer-rawdata-and-references-in-the-configuration-file) on how to customize._
 
    </details>
@@ -68,7 +64,7 @@ The entire analysis can be completed in just three steps:
 2. **Run all the analysis by one command**:
 
    ```bash
-   singularity exec docker://y9ch/bidseq:latest bidseq
+   singularity exec docker://y9ch/bidseq:v1 bidseq
    ```
 
     <details>
