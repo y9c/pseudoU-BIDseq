@@ -25,13 +25,16 @@ keep_internal: false
 
 # NOTE: relative path of reference and sample data should relative to the workdir
 reference:
+  # skip contamination removal if this section is not provided
   contamination:
     fa: ../ref/contamination.fa
     bt2: ../ref/contamination
+  # REQUIRED
   genes:
     fa: ../ref/genes.fa
     fai: ../ref/genes.fa.fai
     bt2: ../ref/genes
+  # REQUIRED
   genome:
     fa: /data/reference/genome/Mus_musculus/GRCm39.fa
     fai: /data/reference/genome/Mus_musculus/GRCm39.fa.fai

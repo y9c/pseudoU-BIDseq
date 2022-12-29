@@ -16,7 +16,6 @@ workdir: WORKDIR
 
 REF = config["reference"]
 REFTYPE = ["genes", "genome"]
-REFTYPE_ALL = ["contamination", "genes", "genome"]
 GROUP2SAMPLE = defaultdict(lambda: defaultdict(list))
 SAMPLE_IDS = []
 SAMPLE2RUN = defaultdict(list)
@@ -129,7 +128,9 @@ rule map_to_contamination_by_bowtie2:
 
 rule map_to_genes_by_bowtie2:
     input:
-        os.path.join(TEMPDIR, "mapping_unsort/{rn}_contamination.fq"),
+        os.path.join(TEMPDIR, "mapping_unsort/{rn}_contamination.fq")
+        if "contamination" in REF
+        else os.path.join(TEMPDIR, "trimmed_reads/{rn}_cut.fq.gz"),
     output:
         sam=temp(os.path.join(TEMPDIR, "mapping_unsort/{rn}_genes.sam")),
         un=temp(os.path.join(TEMPDIR, "mapping_unsort/{rn}_genes.fq")),
@@ -225,8 +226,6 @@ rule sort_and_filter_bam:
         cram="mapping_realigned/{rn}_{reftype}.cram"
         if config["keep_internal"]
         else temp("mapping_realigned/{rn}_{reftype}.cram"),
-    wildcard_constraints:
-        reftype="contamination|genes|genome",
     params:
         path_samtools=config["path"]["samtools"],
         ref_fa=lambda wildcards: REF[wildcards.reftype]["fa"],
