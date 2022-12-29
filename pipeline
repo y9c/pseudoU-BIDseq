@@ -86,7 +86,7 @@ fi
 
 panoptes --ip 0.0.0.0 --port 5000 2>/dev/null &
 export PANOPTES_PID=$!
-echo "PANOPTES_PID=$PANOPTES_PID"
+# echo "PANOPTES_PID=$PANOPTES_PID"
 trap 'kill -s SIGKILL $PANOPTES_PID' EXIT
 while true; do
   if curl -s http://127.0.0.1:5000/api/service-info | grep -q running; then

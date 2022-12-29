@@ -20,8 +20,9 @@ RUN git clone --quiet --depth 1 https://github.com/y9c/cpup.git /tmp/cpup && mak
 # clean up and reduce size
 RUN apt-get purge -y wget git bzip2 make xsltproc gcc g++ pkg-config && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN echo "This is a analysis pipelie (v1.0) for BID-seq data" > /README.md
 ADD ./bin /opt/pipeline/bin
 COPY ./Snakefile /opt/pipeline/Snakefile
 COPY ./config.yaml /opt/pipeline/config.yaml
-COPY ./bidseq /opt/pipeline/bin/bidseq
+COPY ./pipeline /pipeline
+RUN chmod +x /pipeline && echo "This is a analysis pipelie (v1.0) for BID-seq data" > /README.md
+ENTRYPOINT ["/pipeline"]
