@@ -5,10 +5,13 @@ workspace_*/
 log/
 tmp/
 .snakemake/
-test/
 debug_*/
 BIDSEQ_LOG_*.txt
 .panoptes.db
+
+!test
+test/*
+!test/*.yaml
 
 ######################### R ###########################
 

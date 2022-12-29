@@ -85,7 +85,7 @@ while true; do
       printf "\033[0;33m\b\b\b\b\b\b\b\b\b\b\b\b\b\033[0m"
       printf "\033[0;32m\xE2\x9C\x94\033[0m Successfully finished all jobs.\n"
     else
-      printf "\033[0;33m\b\b\b\b\b\b\b\b\b\b\b\b\b\033[0m"
+      printf "\033[0;33m\b\b\b\b\b\b\b\b\b\b\b\b\b\b\033[0m"
       printf "\033[0;31m\xE2\x9D\x8C\033[0m Jobs exit with error!\n"
     fi
     # rm .panoptes.db
