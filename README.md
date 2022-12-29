@@ -56,7 +56,7 @@ The entire analysis can be completed in just three steps:
        treated: true
    ```
 
-   You can copy and edit from this [template](data.yaml).
+   You can copy and edit from this [template](test/data.yaml).
    _Read the [documentation](https://bidseq.chuan.science/Run-the-pipeline.html#refer-rawdata-and-references-in-the-configuration-file) on how to customize._
 
    </details>
