@@ -7,7 +7,7 @@
 - Parainfluenza_virus_5 was downloaded from NCBI: NC_006430.1
 - Mycoplasma_sp genomes were manually curatted from common lab contamination strains
 
-## reference sequence of GENES
+## reference sequence of GENES (from _Mus musculus_)
 
 - non-coding small RNA genes, including tRNA, snoRNA, miRNA, ... etc were downloaded from NCBI with duplicated records removed.
 - rRNA genes. rRNA genes were assembled and patched by myself, because the one in NCBI does not shows good quality.
