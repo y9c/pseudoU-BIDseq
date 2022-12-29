@@ -39,31 +39,36 @@ reference:
 samples:
   mESCWT-rep1-input:
     data:
-      - R1: ../test/IP16.fastq.gz
+      - R1: ../test/IP16_run1.fastq.gz
     group: mESCWT
     treated: false
   mESCWT-rep2-input:
     data:
-      - R1: ../test/IP17.fastq.gz
+      - R1: ../test/IP17_run1.fastq.gz
+      - R1: ../test/IP17_run2.fastq.gz
     group: mESCWT
     treated: false
   mESCWT-rep3-input:
     data:
-      - R1: ../test/IP18.fastq.gz
+      - R1: ../test/IP18_run1.fastq.gz
+      - R1: ../test/IP18_run2.fastq.gz
     group: mESCWT
     treated: false
   mESCWT-rep1-treated:
     data:
-      - R1: ../test/IP4.fastq.gz
+      - R1: ../test/IP4_run1.fastq.gz
+      - R1: ../test/IP4_run2.fastq.gz
     group: mESCWT
     treated: true
   mESCWT-rep2-treated:
     data:
-      - R1: ../test/IP5.fastq.gz
+      - R1: ../test/IP5_run1.fastq.gz
+      - R1: ../test/IP5_run2.fastq.gz
     group: mESCWT
     treated: true
   mESCWT-rep3-treated:
     data:
-      - R1: ../test/IP6.fastq.gz
+      - R1: ../test/IP6_run1.fastq.gz
+      - R1: ../test/IP6_run2.fastq.gz
     group: mESCWT
     treated: true
