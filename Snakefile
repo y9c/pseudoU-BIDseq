@@ -71,7 +71,7 @@ rule join_pairend_reads:
 
 rule run_cutadapt:
     input:
-        "merged_reads/{rn}.fq.gz",
+        os.path.join(TMPDIR, "merged_reads/{rn}.fq.gz"),
     output:
         fastq_trimmed=temp(os.path.join(TMPDIR, "trimmed_reads/{rn}_cut.fq.gz")),
         fastq_untrimmed="discarded_reads/{rn}_untrimmed.fq.gz"
@@ -107,7 +107,7 @@ rule run_cutadapt:
 
 rule map_to_contamination_by_bowtie2:
     input:
-        "trimmed_reads/{rn}_cut.fq.gz",
+        os.path.join(TMPDIR, "trimmed_reads/{rn}_cut.fq.gz"),
     output:
         sam=temp(os.path.join(TMPDIR, "mapping_unsort/{rn}_contamination.sam")),
         un=temp(os.path.join(TMPDIR, "mapping_unsort/{rn}_contamination.fq")),
@@ -127,7 +127,7 @@ rule map_to_contamination_by_bowtie2:
 
 rule map_to_genes_by_bowtie2:
     input:
-        "mapping_unsort/{rn}_contamination.fq",
+        os.path.join(TMPDIR, "mapping_unsort/{rn}_contamination.fq"),
     output:
         sam=temp(os.path.join(TMPDIR, "mapping_unsort/{rn}_genes.sam")),
         un=temp(os.path.join(TMPDIR, "mapping_unsort/{rn}_genes.fq")),
@@ -148,7 +148,7 @@ rule map_to_genes_by_bowtie2:
 
 rule map_to_genome_by_star:
     input:
-        "mapping_unsort/{rn}_genes.fq",
+        os.path.join(TMPDIR, "mapping_unsort/{rn}_genes.fq"),
     output:
         sam=temp(os.path.join(TMPDIR, "mapping_unsort/{rn}_genome.sam")),
         un="discarded_reads/{rn}_unmapped.fq.gz"
@@ -203,7 +203,7 @@ rule map_to_genome_by_star:
 
 rule gap_realign:
     input:
-        "mapping_unsort/{rn}_{reftype}.sam",
+        os.path.join(TMPDIR, "mapping_unsort/{rn}_{reftype}.sam"),
     output:
         temp(os.path.join(TMPDIR, "mapping_realigned_unsorted/{rn}_{reftype}.cram")),
     params:
@@ -217,11 +217,11 @@ rule gap_realign:
 
 rule sort_and_filter_bam:
     input:
-        "mapping_realigned_unsorted/{rn}_{reftype}.cram",
+        os.path.join(TMPDIR, "mapping_realigned_unsorted/{rn}_{reftype}.cram"),
     output:
         cram="mapping_realigned/{rn}_{reftype}.cram"
         if config["keep_internal"]
-        else temp(os.path.join(TMPDIR, "mapping_realigned/{rn}_{reftype}.cram")),
+        else temp("mapping_realigned/{rn}_{reftype}.cram"),
     wildcard_constraints:
         reftype="contamination|genes|genome",
     params:
@@ -260,8 +260,8 @@ rule combine_runs:
 
 rule drop_duplicates:
     input:
-        bam="combined_mapping/{sample}_{reftype}.bam",
-        bai="combined_mapping/{sample}_{reftype}.bam.bai",
+        bam=os.path.join(TMPDIR, "combined_mapping/{sample}_{reftype}.bam"),
+        bai=os.path.join(TMPDIR, "combined_mapping/{sample}_{reftype}.bam.bai"),
     output:
         bam="drop_duplicates/{sample}_{reftype}.bam",
         log="report_reads/deduping/{sample}_{reftype}.log",
@@ -319,8 +319,8 @@ rule merge_treated_bam_by_group:
 
 rule perbase_count_pre:
     input:
-        bam="drop_duplicates_grouped/{group}_{reftype}.bam",
-        bai="drop_duplicates_grouped/{group}_{reftype}.bam.bai",
+        bam=os.path.join(TMPDIR, "drop_duplicates_grouped/{group}_{reftype}.bam"),
+        bai=os.path.join(TMPDIR, "drop_duplicates_grouped/{group}_{reftype}.bam.bai"),
     output:
         temp(os.path.join(TMPDIR, "selected_region_by_group/{group}_{reftype}.bed")),
     params:
@@ -338,7 +338,7 @@ rule perbase_count_pre:
 rule prepare_bed_file:
     input:
         expand(
-            "selected_region_by_group/{group}_{{reftype}}.bed",
+            os.path.join(TMPDIR, "selected_region_by_group/{group}_{{reftype}}.bed"),
             group=[g for g, s in GROUP2SAMPLE.items() if "treated" in s],
         ),
     output:
@@ -360,7 +360,7 @@ rule prepare_bed_file:
 
 rule count_base_by_sample:
     input:
-        bed="selected_region/picked_{reftype}_{orientation}.bed",
+        bed=os.path.join(TMPDIR, "selected_region/picked_{reftype}_{orientation}.bed"),
         bam=lambda wildcards: "drop_duplicates/{sample}_{reftype}.bam"
         if wildcards.sample in SAMPLE2RUN
         else SAMPLE2BAM[wildcards.sample][wildcards.reftype],
@@ -393,10 +393,16 @@ rule count_base_by_sample:
 rule count_bases_combined:
     input:
         fwd=expand(
-            "pileup_bases_by_sample/{sample}_{{reftype}}_fwd.tsv", sample=SAMPLE_IDS
+            os.path.join(
+                TMPDIR, "pileup_bases_by_sample/{sample}_{{reftype}}_fwd.tsv"
+            ),
+            sample=SAMPLE_IDS,
         ),
         rev=expand(
-            "pileup_bases_by_sample/{sample}_{{reftype}}_rev.tsv", sample=SAMPLE_IDS
+            os.path.join(
+                TMPDIR, "pileup_bases_by_sample/{sample}_{{reftype}}_rev.tsv"
+            ),
+            sample=SAMPLE_IDS,
         ),
     output:
         temp(os.path.join(TMPDIR, "pileup_bases/{reftype}.tsv.gz")),
@@ -419,7 +425,7 @@ rule count_bases_combined:
 
 rule adjust_sites:
     input:
-        "pileup_bases/{reftype}.tsv.gz",
+        os.path.join(TMPDIR, "pileup_bases/{reftype}.tsv.gz"),
     output:
         "pileup_adjusted/{reftype}.tsv.gz",
     params:
