@@ -1,5 +1,5 @@
 workdir: ./workspace_mouse_demo
-# tmpdir: /tmp
+tmpdir: ./workspace_mouse_demo/.tmp
 cores: 120
 
 # keep dicarded reads (untrimmed, too-short, unmapped...), for debugs purpose.

@@ -1,6 +1,3 @@
-workdir: workspace
-tmpdir: /tmp
-
 # keep dicarded reads (untrimmed, too-short, unmapped...), for debugs purpose.
 # Most of the time, you do not need these files. Set it as `false` to save storage.
 keep_discarded: true

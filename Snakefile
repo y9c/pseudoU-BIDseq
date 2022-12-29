@@ -7,10 +7,11 @@ if sys.version_info < (3, 6):
 min_version("7.0")
 
 
-WORKSPACE = config.get("workdir", f"workspace")
+WORKDIR = config.get("workdir", "workspace")
+TMPDIR = config.get("tempdir", os.path.join(workdir, ".tmp"))
 
 
-workdir: WORKSPACE
+workdir: WORKDIR
 
 
 REF = config["reference"]
@@ -47,7 +48,7 @@ rule join_pairend_reads:
     input:
         lambda wildcards: RUN2DATA[wildcards.rn].values(),
     output:
-        temp("merged_reads/{rn}.fq.gz"),
+        temp(os.path.join(TMPDIR, "merged_reads/{rn}.fq.gz")),
     params:
         path_fastp=config["path"]["fastp"],
         html="merged_reads/{rn}.fastp.html",
@@ -72,13 +73,13 @@ rule run_cutadapt:
     input:
         "merged_reads/{rn}.fq.gz",
     output:
-        fastq_trimmed=temp("trimmed_reads/{rn}_cut.fq.gz"),
+        fastq_trimmed=temp(os.path.join(TMPDIR, "trimmed_reads/{rn}_cut.fq.gz")),
         fastq_untrimmed="discarded_reads/{rn}_untrimmed.fq.gz"
         if config["keep_discarded"]
         else temp("discarded_reads/{rn}_untrimmed.fq.gz"),
         fastq_short="discarded_reads/{rn}_short.fq.gz"
         if config["keep_discarded"]
-        else temp("undiscarded_reads{rn}_short.fq.gz"),
+        else temp("discarded_reads{rn}_short.fq.gz"),
         report="report_reads/trimming/{rn}_cutadapt.report",
     params:
         path_cutadapt=config["path"]["cutadapt"],
@@ -108,8 +109,8 @@ rule map_to_contamination_by_bowtie2:
     input:
         "trimmed_reads/{rn}_cut.fq.gz",
     output:
-        sam=temp("mapping_unsort/{rn}_contamination.sam"),
-        un=temp("mapping_unsort/{rn}_contamination.fq"),
+        sam=temp(os.path.join(TMPDIR, "mapping_unsort/{rn}_contamination.sam")),
+        un=temp(os.path.join(TMPDIR, "mapping_unsort/{rn}_contamination.fq")),
         report="report_reads/mapping/{rn}_contamination.report",
     params:
         path_bowtie2=config["path"]["bowtie2"],
@@ -128,8 +129,8 @@ rule map_to_genes_by_bowtie2:
     input:
         "mapping_unsort/{rn}_contamination.fq",
     output:
-        sam=temp("mapping_unsort/{rn}_genes.sam"),
-        un=temp("mapping_unsort/{rn}_genes.fq"),
+        sam=temp(os.path.join(TMPDIR, "mapping_unsort/{rn}_genes.sam")),
+        un=temp(os.path.join(TMPDIR, "mapping_unsort/{rn}_genes.fq")),
         report="report_reads/mapping/{rn}_genes.report",
     params:
         path_bowtie2=config["path"]["bowtie2"],
@@ -149,19 +150,19 @@ rule map_to_genome_by_star:
     input:
         "mapping_unsort/{rn}_genes.fq",
     output:
-        sam=temp("mapping_unsort/{rn}_genome.sam"),
+        sam=temp(os.path.join(TMPDIR, "mapping_unsort/{rn}_genome.sam")),
         un="discarded_reads/{rn}_unmapped.fq.gz"
         if config["keep_discarded"]
         else temp("discarded_reads/{rn}_unmapped.fq.gz"),
         report="report_reads/mapping/{rn}_genome.report",
-        log_out=temp("star_mapping/{rn}_Log.out"),
-        SJ_out=temp("star_mapping/{rn}_SJ.out.tab"),
-        progress_out=temp("star_mapping/{rn}_Log.progress.out"),
+        log_out=temp(os.path.join(TMPDIR, "star_mapping/{rn}_Log.out")),
+        SJ_out=temp(os.path.join(TMPDIR, "star_mapping/{rn}_SJ.out.tab")),
+        progress_out=temp(os.path.join(TMPDIR, "star_mapping/{rn}_Log.progress.out")),
     params:
-        output_pre="star_mapping/{rn}_",
-        sam="star_mapping/{rn}_Aligned.out.sam",
-        un="star_mapping/{rn}_Unmapped.out.mate1",
-        report="star_mapping/{rn}_Log.final.out",
+        output_pre=os.path.join(TMPDIR, "star_mapping/{rn}_"),
+        sam=os.path.join(TMPDIR, "star_mapping/{rn}_Aligned.out.sam"),
+        un=os.path.join(TMPDIR, "star_mapping/{rn}_Unmapped.out.mate1"),
+        report=os.path.join(TMPDIR, "star_mapping/{rn}_Log.final.out"),
         path_star=config["path"]["star"],
         ref_star=REF["genome"]["star"],
     threads: 24
@@ -204,7 +205,7 @@ rule gap_realign:
     input:
         "mapping_unsort/{rn}_{reftype}.sam",
     output:
-        temp("mapping_realigned_unsorted/{rn}_{reftype}.cram"),
+        temp(os.path.join(TMPDIR, "mapping_realigned_unsorted/{rn}_{reftype}.cram")),
     params:
         path_realignGap=config["path"]["realignGap"],
         ref_fa=lambda wildcards: REF[wildcards.reftype]["fa"],
@@ -220,7 +221,7 @@ rule sort_and_filter_bam:
     output:
         cram="mapping_realigned/{rn}_{reftype}.cram"
         if config["keep_internal"]
-        else temp("mapping_realigned/{rn}_{reftype}.cram"),
+        else temp(os.path.join(TMPDIR, "mapping_realigned/{rn}_{reftype}.cram")),
     wildcard_constraints:
         reftype="contamination|genes|genome",
     params:
@@ -240,8 +241,8 @@ rule combine_runs:
             for r in SAMPLE2RUN[wildcards.sample]
         ],
     output:
-        bam=temp("combined_mapping/{sample}_{reftype}.bam"),
-        bai=temp("combined_mapping/{sample}_{reftype}.bam.bai"),
+        bam=temp(os.path.join(TMPDIR, "combined_mapping/{sample}_{reftype}.bam")),
+        bai=temp(os.path.join(TMPDIR, "combined_mapping/{sample}_{reftype}.bam.bai")),
     params:
         path_samtools=config["path"]["samtools"],
         ref_fa=lambda wildcards: REF[wildcards.reftype]["fa"],
@@ -266,7 +267,7 @@ rule drop_duplicates:
         log="report_reads/deduping/{sample}_{reftype}.log",
     params:
         path_umicollapse=config["path"]["umicollapse"],
-        tmpdir=config["tmpdir"],
+        tmpdir=TMPDIR,
     threads: 4
     shell:
         """
@@ -305,8 +306,10 @@ rule merge_treated_bam_by_group:
             for s in GROUP2SAMPLE[wildcards.group]["treated"]
         ],
     output:
-        bam=temp("drop_duplicates_grouped/{group}_{reftype}.bam"),
-        bai=temp("drop_duplicates_grouped/{group}_{reftype}.bam.bai"),
+        bam=temp(os.path.join(TMPDIR, "drop_duplicates_grouped/{group}_{reftype}.bam")),
+        bai=temp(
+            os.path.join(TMPDIR, "drop_duplicates_grouped/{group}_{reftype}.bam.bai")
+        ),
     params:
         path_samtools=config["path"]["samtools"],
     threads: 8
@@ -319,7 +322,7 @@ rule perbase_count_pre:
         bam="drop_duplicates_grouped/{group}_{reftype}.bam",
         bai="drop_duplicates_grouped/{group}_{reftype}.bam.bai",
     output:
-        temp("selected_region_by_group/{group}_{reftype}.bed"),
+        temp(os.path.join(TMPDIR, "selected_region_by_group/{group}_{reftype}.bed")),
     params:
         path_delfilter=config["path"]["delfilter"],
         min_group_gap=config["cutoff"]["min_group_gap"],
@@ -339,9 +342,9 @@ rule prepare_bed_file:
             group=[g for g, s in GROUP2SAMPLE.items() if "treated" in s],
         ),
     output:
-        tmp=temp("selected_region/picked_{reftype}_tmp.bed"),
-        fwd=temp("selected_region/picked_{reftype}_fwd.bed"),
-        rev=temp("selected_region/picked_{reftype}_rev.bed"),
+        tmp=temp(os.path.join(TMPDIR, "selected_region/picked_{reftype}_tmp.bed")),
+        fwd=temp(os.path.join(TMPDIR, "selected_region/picked_{reftype}_fwd.bed")),
+        rev=temp(os.path.join(TMPDIR, "selected_region/picked_{reftype}_rev.bed")),
     params:
         fai=lambda wildcards: REF[wildcards.reftype]["fai"],
         path_bedtools=config["path"]["bedtools"],
@@ -365,7 +368,11 @@ rule count_base_by_sample:
         if wildcards.sample in SAMPLE2RUN
         else SAMPLE2BAM[wildcards.sample][wildcards.reftype] + ".bai",
     output:
-        temp("pileup_bases_by_sample/{sample}_{reftype}_{orientation}.tsv"),
+        temp(
+            os.path.join(
+                TMPDIR, "pileup_bases_by_sample/{sample}_{reftype}_{orientation}.tsv"
+            )
+        ),
     params:
         path_samtools=config["path"]["samtools"],
         path_cpup=config["path"]["cpup"],
@@ -392,7 +399,7 @@ rule count_bases_combined:
             "pileup_bases_by_sample/{sample}_{{reftype}}_rev.tsv", sample=SAMPLE_IDS
         ),
     output:
-        temp("pileup_bases/{reftype}.tsv.gz"),
+        temp(os.path.join(TMPDIR, "pileup_bases/{reftype}.tsv.gz")),
     params:
         path_bgzip=config["path"]["bgzip"],
         header="\t".join(["chr", "pos", "ref_base", "strand"] + list(SAMPLE_IDS)),
