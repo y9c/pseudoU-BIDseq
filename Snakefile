@@ -7,7 +7,9 @@ if sys.version_info < (3, 6):
 min_version("7.0")
 
 
-WORKDIR = config.get("workdir", "workspace")
+WORKDIR = os.path.relpath(
+    config.get("workdir", "workspace"), os.path.dirname(workflow.configfiles[-1])
+)
 TEMPDIR = os.path.relpath(config.get("tempdir", os.path.join(WORKDIR, ".tmp")), WORKDIR)
 
 
@@ -15,13 +17,15 @@ workdir: WORKDIR
 
 
 REF = config["reference"]
+for k, v in REF.items():
+    for k2, v2 in v.items():
+        REF[k][k2] = os.path.relpath(os.path.expanduser(v2), WORKDIR)
 REFTYPE = ["genes", "genome"]
 GROUP2SAMPLE = defaultdict(lambda: defaultdict(list))
 SAMPLE_IDS = []
-SAMPLE2RUN = defaultdict(list)
-RUN2DATA = {}
+SAMPLE2RUN = defaultdict(dict)
 SAMPLE2BAM = defaultdict(dict)
-for s, v2 in config[f"samples"].items():
+for s, v2 in config["samples"].items():
     SAMPLE_IDS.append(s)
     if v2.get("treated", True):
         GROUP2SAMPLE[v2["group"]]["treated"].append(s)
@@ -29,10 +33,12 @@ for s, v2 in config[f"samples"].items():
         GROUP2SAMPLE[v2["group"]]["input"].append(s)
     for i, v3 in enumerate(v2.get("data", []), 1):
         r = f"{s}_run{i}"
-        SAMPLE2RUN[s].append(r)
-        RUN2DATA[r] = {k4: os.path.expanduser(v4) for k4, v4 in v3.items()}
+        SAMPLE2RUN[s][r] = {
+            k4: os.path.relpath(os.path.expanduser(v4), WORKDIR)
+            for k4, v4 in v3.items()
+        }
     for k, v3 in v2.get("bam", {}).items():
-        SAMPLE2BAM[s][k] = os.path.expanduser(v3)
+        SAMPLE2BAM[s][k] = os.path.relpath(os.path.expanduser(v3), WORKDIR)
 
 
 rule all:
@@ -45,7 +51,11 @@ rule all:
 
 rule join_pairend_reads:
     input:
-        lambda wildcards: RUN2DATA[wildcards.rn].values(),
+        lambda wildcards: [
+            r
+            for rn_dict in SAMPLE2RUN.values()
+            for r in rn_dict.get(wildcards.rn, {}).values()
+        ],
     output:
         temp(os.path.join(TEMPDIR, "merged_reads/{rn}.fq.gz")),
     params:

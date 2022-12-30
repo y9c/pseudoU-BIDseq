@@ -1,0 +1,60 @@
+# Directory for all output results and analysis reports
+workdir: ./workspace_from_bam
+
+# NOTE: relative path of reference and sample data should relative to current config file, rather than workdir
+reference:
+  # Optional
+  # skip contamination removal if this section is not provided
+  contamination:
+    fa: ./ref/contamination.fa
+    bt2: ./ref/contamination
+  # Required
+  genes:
+    fa: ./ref/genes.fa
+    fai: ./ref/genes.fa.fai
+    bt2: ./ref/genes
+  # Required
+  genome:
+    fa: /data/reference/genome/Mus_musculus/GRCm39.fa
+    fai: /data/reference/genome/Mus_musculus/GRCm39.fa.fai
+    star: /data/reference/genome/Mus_musculus/star/GRCm39.release108
+
+samples:
+  # sample name can be any string,
+  # but it is a good habit to use letters and hyphen only, no space, underscore or other special symbol.
+  mESCWT-rep1-input:
+    bam:
+      genes: ./workspace_mouse_demo/drop_duplicates/mESCWT-rep1-input_genes.bam
+      genome: ./workspace_mouse_demo/drop_duplicates/mESCWT-rep1-input_genome.bam
+    group: mESCWT
+    treated: false
+  mESCWT-rep2-input:
+    bam:
+      genes: ./workspace_mouse_demo/drop_duplicates/mESCWT-rep2-input_genes.bam
+      genome: ./workspace_mouse_demo/drop_duplicates/mESCWT-rep2-input_genome.bam
+    group: mESCWT
+    treated: false
+  mESCWT-rep3-input:
+    bam:
+      genes: ./workspace_mouse_demo/drop_duplicates/mESCWT-rep3-input_genes.bam
+      genome: ./workspace_mouse_demo/drop_duplicates/mESCWT-rep3-input_genome.bam
+    group: mESCWT
+    treated: false
+  mESCWT-rep1-treated:
+    bam:
+      genes: ./workspace_mouse_demo/drop_duplicates/mESCWT-rep1-treated_genes.bam
+      genome: ./workspace_mouse_demo/drop_duplicates/mESCWT-rep1-treated_genome.bam
+    group: mESCWT
+    treated: true
+  mESCWT-rep2-treated:
+    bam:
+      genes: ./workspace_mouse_demo/drop_duplicates/mESCWT-rep2-treated_genes.bam
+      genome: ./workspace_mouse_demo/drop_duplicates/mESCWT-rep2-treated_genome.bam
+    group: mESCWT
+    treated: true
+  mESCWT-rep3-treated:
+    bam:
+      genes: ./workspace_mouse_demo/drop_duplicates/mESCWT-rep2-treated_genes.bam
+      genome: ./workspace_mouse_demo/drop_duplicates/mESCWT-rep2-treated_genome.bam
+    group: mESCWT
+    treated: true

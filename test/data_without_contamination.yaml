@@ -1,14 +1,14 @@
 # Directory for all output results and analysis reports
 workdir: ./workspace_without_contamination
 
-# NOTE: relative path of reference and sample data should relative to the workdir
+# NOTE: relative path of reference and sample data should relative to current config file, rather than workdir
 reference:
   # skip contamination removal if this section is not provided
   # REQUIRED
   genes:
-    fa: ../ref/genes.fa
-    fai: ../ref/genes.fa.fai
-    bt2: ../ref/genes
+    fa: ./ref/genes.fa
+    fai: ./ref/genes.fa.fai
+    bt2: ./ref/genes
   # REQUIRED
   genome:
     fa: /data/reference/genome/Mus_musculus/GRCm39.fa
@@ -18,31 +18,31 @@ reference:
 samples:
   mESCWT-rep1-input:
     data:
-      - R1: ../data/IP16_run1.fastq.gz
+      - R1: ./data/IP16_run1.fastq.gz
     group: mESCWT
     treated: false
   mESCWT-rep2-input:
     data:
-      - R1: ../data/IP17_run1.fastq.gz
+      - R1: ./data/IP17_run1.fastq.gz
     group: mESCWT
     treated: false
   mESCWT-rep3-input:
     data:
-      - R1: ../data/IP18_run1.fastq.gz
+      - R1: ./data/IP18_run1.fastq.gz
     group: mESCWT
     treated: false
   mESCWT-rep1-treated:
     data:
-      - R1: ../data/IP4_run1.fastq.gz
+      - R1: ./data/IP4_run1.fastq.gz
     group: mESCWT
     treated: true
   mESCWT-rep2-treated:
     data:
-      - R1: ../data/IP5_run1.fastq.gz
+      - R1: ./data/IP5_run1.fastq.gz
     group: mESCWT
     treated: true
   mESCWT-rep3-treated:
     data:
-      - R1: ../data/IP6_run1.fastq.gz
+      - R1: ./data/IP6_run1.fastq.gz
     group: mESCWT
     treated: true
