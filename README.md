@@ -27,12 +27,12 @@ The entire analysis can be completed in just three steps:
    ```yaml
    reference:
      contamination:
-       fa: ../ref/contamination.fa
+       fa: ./ref/contamination.fa
        bt2: ../ref/contamination
      genes:
-       fa: ../ref/genes.fa
-       fai: ../ref/genes.fa.fai
-       bt2: ../ref/genes
+       fa: ./ref/genes.fa
+       fai: ./ref/genes.fa.fai
+       bt2: ./ref/genes
      genome:
        fa: /data/reference/genome/Mus_musculus/GRCm39.fa
        fai: /data/reference/genome/Mus_musculus/GRCm39.fa.fai
@@ -41,17 +41,17 @@ The entire analysis can be completed in just three steps:
    samples:
      mESCWT-rep1-input:
        data:
-         - R1: ../test/IP16.fastq.gz
+         - R1: ./test/IP16.fastq.gz
        group: mESCWT
        treated: false
      mESCWT-rep1-treated:
        data:
-         - R1: ../test/IP4.fastq.gz
+         - R1: ./test/IP4.fastq.gz
        group: mESCWT
        treated: true
      mESCWT-rep2-treated:
        data:
-         - R1: ../test/IP5.fastq.gz
+         - R1: ./test/IP5.fastq.gz
        group: mESCWT
        treated: true
    ```
