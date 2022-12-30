@@ -19,7 +19,9 @@ workdir: WORKDIR
 REF = config["reference"]
 for k, v in REF.items():
     for k2, v2 in v.items():
-        REF[k][k2] = os.path.relpath(os.path.expanduser(v2), WORKDIR)
+        v2 = os.path.expanduser(v2)
+        REF[k][k2] = v2 if os.path.isabs(v2) else os.path.relpath(v2, WORKDIR)
+
 REFTYPE = ["genes", "genome"]
 GROUP2SAMPLE = defaultdict(lambda: defaultdict(list))
 SAMPLE_IDS = []

@@ -57,6 +57,11 @@ if [ ! -f "${conf}" ]; then
   echo "${conf} can not be found!"
   exit 1
 fi
+bind_string=$(python -c 'import yaml, sys, os;print(",".join(set(os.path.dirname(v2) for v in yaml.safe_load(open(sys.argv[1],"r"))["reference"].values() for v2 in v.values() if os.path.isabs(v2)) | set(os.path.dirname(v3) for v in yaml.safe_load(open(sys.argv[1],"r"))["samples"].values() for v2 in v.get("data", {}) for v3 in v2.values() if os.path.isabs(v3)) | set(os.path.dirname(v2) for v in yaml.safe_load(open(sys.argv[1],"r"))["samples"].values() for v2 in v.get("bam", {}).values() if os.path.isabs(v2))))' ${conf})
+if [ -n "${bind_string}" ]; then
+  echo -e "Please add \033[0;31m--bind ${bind_string}\033[0m right after 'singularity run'"
+  exit 1
+fi
 if [ -z "${cores_cmd}" ]; then
   cores_conf=$(python -c 'import yaml, sys;print(yaml.safe_load(open(sys.argv[1],"r")).get("cores",""))' ${conf})
   if [ -z "${cores_conf}" ]; then
