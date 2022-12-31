@@ -33,11 +33,13 @@ reference:
   # skip contamination removal if this section is not provided
   contamination:
     fa: ./ref/contamination.fa
-    bt2: ./ref/contamination
+    #  optional. if bowtie2 index is not provided, the pipeline will auto generate a internal one.
+    # bt2: ./ref/contamination
   # Required
   genes:
     fa: ./ref/genes.fa
-    bt2: ./ref/genes
+    #  optional. if bowtie2 index is not provided, the pipeline will auto generate a internal one.
+    # bt2: ./ref/genes
   # Required
   genome:
     fa: /data/reference/genome/Mus_musculus/GRCm39.fa

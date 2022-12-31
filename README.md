@@ -28,10 +28,8 @@ The entire analysis can be completed in just three steps:
    reference:
      contamination:
        fa: ./ref/contamination.fa
-       bt2: ./ref/contamination
      genes:
        fa: ./ref/genes.fa
-       bt2: ./ref/genes
      genome:
        fa: /data/reference/genome/Mus_musculus/GRCm39.fa
        star: /data/reference/genome/Mus_musculus/star/GRCm39.release108

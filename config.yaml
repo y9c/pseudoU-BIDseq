@@ -30,11 +30,12 @@ adapter:
 path:
   fastp: /opt/micromamba/bin/fastp
   cutadapt: /opt/micromamba/bin/cutadapt
-  samtools: /opt/micromamba/bin/samtools
   bgzip: /opt/micromamba/bin/bgzip
   bowtie2: /opt/micromamba/bin/bowtie2
-  bedtools: /opt/micromamba/bin/bedtools
+  bowtie2Build: /opt/micromamba/bin/bowtie2-build
   star: /opt/micromamba/bin/STAR
+  samtools: /opt/micromamba/bin/samtools
+  bedtools: /opt/micromamba/bin/bedtools
   umicollapse: /bin/umicollapse.jar
   delfilter: /opt/pipeline/bin/deletionFilter
   samfilter: /opt/pipeline/bin/samFilter

@@ -117,9 +117,28 @@ rule run_cutadapt:
         """
 
 
+rule build_bowtie2_index:
+    input:
+        fa=lambda wildcards: REF[wildcards.reftype]["fa"],
+    output:
+        idx=os.path.join(INTERNALDIR, "mapping_index/{reftype}.1.bt2"),
+    params:
+        path_bowtie2build=config["path"]["bowtie2Build"],
+        ref_bowtie2=os.path.join(INTERNALDIR, "mapping_index/{reftype}"),
+    threads: 2
+    shell:
+        """
+        export LC_ALL=C
+        {params.path_bowtie2build} -p {threads} {input.fa} {params.ref_bowtie2}
+        """
+
+
 rule map_to_contamination_by_bowtie2:
     input:
-        os.path.join(TEMPDIR, "trimmed_reads/{sample}_{rn}_cut.fq.gz"),
+        fq=os.path.join(TEMPDIR, "trimmed_reads/{sample}_{rn}_cut.fq.gz"),
+        idx=lambda wildcards: REF["contamination"].get(
+            "bt2", os.path.join(INTERNALDIR, "mapping_index/contamination.1.bt2")
+        ),
     output:
         sam=temp(
             os.path.join(TEMPDIR, "mapping_unsort/{sample}_{rn}_contamination.sam")
@@ -128,30 +147,37 @@ rule map_to_contamination_by_bowtie2:
         report="report_reads/mapping/{sample}_{rn}_contamination.report",
     params:
         path_bowtie2=config["path"]["bowtie2"],
-        ref_bowtie2=lambda wildcards: REF["contamination"]["bt2"],
+        ref_bowtie2=lambda wildcards: REF["contamination"].get(
+            "bt2", os.path.join(INTERNALDIR, "mapping_index/contamination")
+        ),
     threads: 24
     shell:
         """
         export LC_ALL=C
         {params.path_bowtie2} -p {threads} \
             --end-to-end -D 20 -R 3 --score-min L,5,-0.5 -L 16 -N 1 --mp 4 --rdg 0,2 \
-            --no-unal --un {output.un} -x {params.ref_bowtie2} -U {input} > {output.sam} 2>{output.report}
+            --no-unal --un {output.un} -x {params.ref_bowtie2} -U {input.fq} > {output.sam} 2>{output.report}
         """
 
 
 rule map_to_genes_by_bowtie2:
     input:
-        os.path.join(TEMPDIR, "mapping_unsort/{sample}_{rn}_contamination.fq")
+        fq=os.path.join(TEMPDIR, "mapping_unsort/{sample}_{rn}_contamination.fq")
         if "contamination" in REF
         else os.path.join(TEMPDIR, "trimmed_reads/{sample}_{rn}_cut.fq.gz"),
+        idx=lambda wildcards: REF["genes"].get(
+            "bt2", os.path.join(INTERNALDIR, "mapping_index/genes.1.bt2")
+        ),
     output:
         sam=temp(os.path.join(TEMPDIR, "mapping_unsort/{sample}_{rn}_genes.sam")),
         un=temp(os.path.join(TEMPDIR, "mapping_unsort/{sample}_{rn}_genes.fq")),
         report="report_reads/mapping/{sample}_{rn}_genes.report",
     params:
         path_bowtie2=config["path"]["bowtie2"],
-        ref_bowtie2=lambda wildcards: REF["genes"]["bt2"],
         path_samfilter=config["path"]["samfilter"],
+        ref_bowtie2=lambda wildcards: REF["genes"].get(
+            "bt2", os.path.join(INTERNALDIR, "mapping_index/genes")
+        ),
     threads: 24
     shell:
         """

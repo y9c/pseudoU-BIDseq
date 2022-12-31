@@ -19,17 +19,18 @@ Overall Workflow
 
 ```
 # path:
-#   fastp: /tools/bin/fastp
-#   cutadapt: /usr/local/bin/cutadapt
-#   samtools: /tools/bin/samtools
-#   bgzip: /tools/bin/bgzip
-#   bowtie2: /tools/bin/bowtie2
-#   bedtools: /tools/bin/bedtools
-#   star: /tools/bin/STAR
-#   umicollapse: ~/tools/UMICollapse/umicollapse.jar
-#   delfilter: ../bin/deletionFilter
-#   samfilter: ../bin/samFilter
-#   cpup: ../bin/cpup
-#   adjustGap: ../bin/adjustGap
-#   realignGap: ../bin/realignGap
+#   fastp: /opt/micromamba/bin/fastp
+#   cutadapt: /opt/micromamba/bin/cutadapt
+#   bgzip: /opt/micromamba/bin/bgzip
+#   bowtie2: /opt/micromamba/bin/bowtie2
+#   bowtie2Build: /opt/micromamba/bin/bowtie2-build
+#   star: /opt/micromamba/bin/STAR
+#   samtools: /opt/micromamba/bin/samtools
+#   bedtools: /opt/micromamba/bin/bedtools
+#   umicollapse: /bin/umicollapse.jar
+#   delfilter: /opt/pipeline/bin/deletionFilter
+#   samfilter: /opt/pipeline/bin/samFilter
+#   cpup: /opt/pipeline/bin/cpup
+#   adjustGap: /opt/pipeline/bin/adjustGap
+#   realignGap: /opt/pipeline/bin/realignGap
 ```
