@@ -184,7 +184,7 @@ rule map_to_genes_by_bowtie2:
         export LC_ALL=C
         {params.path_bowtie2} -p {threads} \
             --end-to-end --norc -D 20 -R 3 --score-min L,4,-0.5 -L 10 -i S,1,0.5 -N 1 --mp 6,3 --rdg 0,2 -a \
-            --no-unal --un {output.un} -x {params.ref_bowtie2} -U {input} 2>{output.report} | \
+            --no-unal --un {output.un} -x {params.ref_bowtie2} -U {input.fq} 2>{output.report} | \
             {params.path_samfilter} > {output.sam}
         """
 
