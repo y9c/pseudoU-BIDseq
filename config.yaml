@@ -1,3 +1,5 @@
+### default args ###
+
 # keep dicarded reads (untrimmed, too-short, unmapped...), for debugs purpose.
 # Most of the time, you do not need these files. Set it as `false` to save storage.
 keep_discarded: true
@@ -5,7 +7,14 @@ keep_discarded: true
 # cache these files, so you do not need to re-run the analysis for previous data when you add more sequening reads
 keep_internal: false
 
+### build in args ###
+# if you change build in args, add the whole block rather than some records!!
+
 cutoff:
+  ## processing reads
+  # STAR `outFilterMatchNminOverLread`
+  min_match_prop: 0.66
+  ## calling sites
   # prefilter sites show >= x gaps in total among all samples in each group
   min_group_gap: 5
   # prefilter sites show >= x sequencing coverage in total among all samples in each group

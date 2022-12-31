@@ -183,6 +183,7 @@ rule map_to_genome_by_star:
         report=os.path.join(TEMPDIR, "star_mapping/{sample}_{rn}_Log.final.out"),
         path_star=config["path"]["star"],
         ref_star=REF["genome"]["star"],
+        match_prop=config["cutoff"]["min_match_prop"],
     threads: 24
     shell:
         """
@@ -196,7 +197,7 @@ rule map_to_genome_by_star:
           --readFilesIn {input} \
           --alignEndsType Local \
           --outFilterMatchNmin 15 \
-          --outFilterMatchNminOverLread 0.66 \
+          --outFilterMatchNminOverLread {params.match_prop} \
           --outFilterMismatchNmax 10 \
           --outFilterMismatchNoverLmax 0.2 \
           --outFilterIntronMotifs RemoveNoncanonicalUnannotated \
