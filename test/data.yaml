@@ -14,6 +14,10 @@ keep_internal: false
 
 # cutoff for pre-filtering. Most of time, you do not need to change them.
 # cutoff:
+#   ## processing reads
+#   # STAR `outFilterMatchNminOverLread`
+#   min_match_prop: 0.8
+#   ## calling sites
 #   # prefilter sites show >= x gaps in total among all samples in each group
 #   min_group_gap: 5
 #   # prefilter sites show >= x sequencing coverage in total among all samples in each group

@@ -13,7 +13,7 @@ keep_internal: false
 cutoff:
   ## processing reads
   # STAR `outFilterMatchNminOverLread`
-  min_match_prop: 0.66
+  min_match_prop: 0.8
   ## calling sites
   # prefilter sites show >= x gaps in total among all samples in each group
   min_group_gap: 5
