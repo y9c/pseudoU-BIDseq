@@ -129,7 +129,7 @@ rule build_bowtie2_index:
     shell:
         """
         export LC_ALL=C
-        {params.path_bowtie2build} -p {threads} {input.fa} {params.ref_bowtie2}
+        {params.path_bowtie2build} --threads {threads} {input.fa} {params.ref_bowtie2}
         """
 
 
