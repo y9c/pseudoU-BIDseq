@@ -11,6 +11,7 @@ WORKDIR = os.path.relpath(
     config.get("workdir", "workspace"), os.path.dirname(workflow.configfiles[-1])
 )
 TEMPDIR = os.path.relpath(config.get("tempdir", os.path.join(WORKDIR, ".tmp")), WORKDIR)
+INTERNALDIR = "internal_files"
 
 
 workdir: WORKDIR
@@ -244,9 +245,13 @@ rule sort_and_filter_bam:
     input:
         os.path.join(TEMPDIR, "mapping_realigned_unsorted/{sample}_{rn}_{reftype}.cram"),
     output:
-        cram="mapping_realigned/{sample}_{rn}_{reftype}.cram"
+        cram=os.path.join(
+            INTERNALDIR, "mapping_realigned/{sample}_{rn}_{reftype}.cram"
+        )
         if config["keep_internal"]
-        else temp("mapping_realigned/{sample}_{rn}_{reftype}.cram"),
+        else temp(
+            os.path.join(INTERNALDIR, "mapping_realigned/{sample}_{rn}_{reftype}.cram")
+        ),
     params:
         path_samtools=config["path"]["samtools"],
         ref_fa=lambda wildcards: REF[wildcards.reftype]["fa"],
@@ -260,7 +265,10 @@ rule sort_and_filter_bam:
 rule combine_runs:
     input:
         lambda wildcards: [
-            f"mapping_realigned/{wildcards.sample}_{r}_{wildcards.reftype}.cram"
+            os.path.join(
+                INTERNALDIR,
+                f"mapping_realigned/{wildcards.sample}_{r}_{wildcards.reftype}.cram",
+            )
             for r in SAMPLE2RUN[wildcards.sample]
         ],
     output:
@@ -358,24 +366,39 @@ rule perbase_count_pre:
         """
 
 
+rule generate_faidx:
+    input:
+        fa=lambda wildcards: REF[wildcards.reftype]["fa"],
+    output:
+        fai=os.path.join(INTERNALDIR, "fa_index/{reftype}.fa.fai")
+        if config["keep_internal"]
+        else temp(os.path.join(INTERNALDIR, "fa_index/{reftype}.fa.fai")),
+    params:
+        path_samtools=config["path"]["samtools"],
+    shell:
+        """
+        {params.path_samtools} faidx {input.fa} --fai-idx {output.fai}
+        """
+
+
 rule prepare_bed_file:
     input:
-        expand(
+        bed=expand(
             os.path.join(TEMPDIR, "selected_region_by_group/{group}_{{reftype}}.bed"),
             group=[g for g, s in GROUP2SAMPLE.items() if "treated" in s],
         ),
+        fai=os.path.join(INTERNALDIR, "fa_index/{reftype}.fa.fai"),
     output:
         tmp=temp(os.path.join(TEMPDIR, "selected_region/picked_{reftype}_tmp.bed")),
         fwd=temp(os.path.join(TEMPDIR, "selected_region/picked_{reftype}_fwd.bed")),
         rev=temp(os.path.join(TEMPDIR, "selected_region/picked_{reftype}_rev.bed")),
     params:
-        fai=lambda wildcards: REF[wildcards.reftype]["fai"],
         path_bedtools=config["path"]["bedtools"],
         min_group_num=config["cutoff"]["min_group_num"],
     threads: 4
     shell:
         """
-        cat {input} | {params.path_bedtools} slop -i - -g {params.fai} -b 3 | sort -S 4G --parallel={threads} -k1,1 -k2,2n >{output.tmp}
+        cat {input.bed} | {params.path_bedtools} slop -i - -g {input.fai} -b 3 | sort -S 4G --parallel={threads} -k1,1 -k2,2n >{output.tmp}
         {params.path_bedtools} merge -s -S + -c 1 -o count -i {output.tmp} | awk '$4 >= {params.min_group_num}' > {output.fwd}
         {params.path_bedtools} merge -s -S - -c 1 -o count -i {output.tmp} | awk '$4 >= {params.min_group_num}' > {output.rev}
         """

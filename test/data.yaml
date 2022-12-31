@@ -10,7 +10,7 @@ cores: 120
 keep_discarded: true
 # keep run mapping results (bam file).
 # cache these files, so you do not need to re-run the analysis for previous data when you add more sequening reads
-keep_internal: false
+keep_internal: true
 
 # cutoff for pre-filtering. Most of time, you do not need to change them.
 # cutoff:
@@ -37,12 +37,10 @@ reference:
   # Required
   genes:
     fa: ./ref/genes.fa
-    fai: ./ref/genes.fa.fai
     bt2: ./ref/genes
   # Required
   genome:
     fa: /data/reference/genome/Mus_musculus/GRCm39.fa
-    fai: /data/reference/genome/Mus_musculus/GRCm39.fa.fai
     star: /data/reference/genome/Mus_musculus/star/GRCm39.release108
 
 samples:
