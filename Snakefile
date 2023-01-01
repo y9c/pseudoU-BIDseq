@@ -95,9 +95,10 @@ rule run_cutadapt:
         report="report_reads/trimming/{sample}_{rn}_cutadapt.report",
     params:
         path_cutadapt=config["path"]["cutadapt"],
-        p5=config["adapter"]["p5"],
         p7=config["adapter"]["p7"],
-        trim_p5_args='-n 3 -g "{params.p5};o=5;e=0.2" ' if config["trim_p5"] else "",
+        trim_p5_args='-n 3 -g "{};o=5;e=0.2" '.format(config["adapter"]["p5"])
+        if config["trim_p5"]
+        else "",
     threads: 20
     shell:
         """
