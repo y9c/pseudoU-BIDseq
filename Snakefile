@@ -97,12 +97,12 @@ rule run_cutadapt:
         path_cutadapt=config["path"]["cutadapt"],
         p5=config["adapter"]["p5"],
         p7=config["adapter"]["p7"],
+        trim_p5_args='-n 3 -g "{params.p5};o=5;e=0.2" ' if config["trim_p5"] else "",
     threads: 20
     shell:
         """
         {params.path_cutadapt} -j {threads} \
-            -n 3 \
-            -g "{params.p5};o=5;e=0.2" \
+            {params.trim_p5_args} \
             -a "{params.p7};o=3;e=0.15" \
             --untrimmed-output={output.fastq_untrimmed} \
             {input} | \

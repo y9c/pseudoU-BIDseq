@@ -11,6 +11,8 @@ keep_discarded: true
 # keep run mapping results (bam file).
 # cache these files, so you do not need to re-run the analysis for previous data when you add more sequening reads
 keep_internal: true
+# Whether remove atypical adapter
+trim_p5: true
 
 # cutoff for pre-filtering. Most of time, you do not need to change them.
 # cutoff:
