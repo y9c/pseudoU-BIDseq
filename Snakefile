@@ -101,8 +101,8 @@ rule run_cutadapt:
     shell:
         """
         {params.path_cutadapt} -j {threads} \
-            -n 2 \
-            -g "{params.p5};o=3;e=0.15" \
+            -n 3 \
+            -g "{params.p5};o=5;e=0.2" \
             -a "{params.p7};o=3;e=0.15" \
             --untrimmed-output={output.fastq_untrimmed} \
             {input} | \
