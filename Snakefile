@@ -95,12 +95,15 @@ rule run_cutadapt:
         report="report_reads/trimming/{sample}_{rn}_cutadapt.report",
     params:
         path_cutadapt=config["path"]["cutadapt"],
-        adapter3=config["adapter"]["p7"],
+        p5=config["adapter"]["p5"],
+        p7=config["adapter"]["p7"],
     threads: 20
     shell:
         """
         {params.path_cutadapt} -j {threads} \
-            -a "{params.adapter3};o=3;e=0.15" \
+            -n 2 \
+            -g "{params.p5};o=3;e=0.15" \
+            -a "{params.p7};o=3;e=0.15" \
             --untrimmed-output={output.fastq_untrimmed} \
             {input} | \
         {params.path_cutadapt} -j {threads} \
@@ -137,16 +140,18 @@ rule map_to_contamination_by_bowtie2:
     input:
         fq=os.path.join(TEMPDIR, "trimmed_reads/{sample}_{rn}_cut.fq.gz"),
         idx=lambda wildcards: REF["contamination"].get(
-            "bt2", os.path.join(INTERNALDIR, "mapping_index/contamination.1.bt2")
-        ),
+            "bt2", os.path.join(INTERNALDIR, "mapping_index/contamination")
+        )
+        + ".1.bt2",
     output:
-        sam=temp(
-            os.path.join(TEMPDIR, "mapping_unsort/{sample}_{rn}_contamination.sam")
+        bam=temp(
+            os.path.join(TEMPDIR, "mapping_unsort/{sample}_{rn}_contamination.bam")
         ),
         un=temp(os.path.join(TEMPDIR, "mapping_unsort/{sample}_{rn}_contamination.fq")),
         report="report_reads/mapping/{sample}_{rn}_contamination.report",
     params:
         path_bowtie2=config["path"]["bowtie2"],
+        path_samtools=config["path"]["samtools"],
         ref_bowtie2=lambda wildcards: REF["contamination"].get(
             "bt2", os.path.join(INTERNALDIR, "mapping_index/contamination")
         ),
@@ -156,7 +161,8 @@ rule map_to_contamination_by_bowtie2:
         export LC_ALL=C
         {params.path_bowtie2} -p {threads} \
             --end-to-end -D 20 -R 3 --score-min L,5,-0.5 -L 16 -N 1 --mp 4 --rdg 0,2 \
-            --no-unal --un {output.un} -x {params.ref_bowtie2} -U {input.fq} > {output.sam} 2>{output.report}
+            --no-unal --un {output.un} -x {params.ref_bowtie2} -U {input.fq} 2>{output.report} | \
+            {params.path_samtools} view -O BAM -o {output.bam}
         """
 
 
@@ -166,15 +172,17 @@ rule map_to_genes_by_bowtie2:
         if "contamination" in REF
         else os.path.join(TEMPDIR, "trimmed_reads/{sample}_{rn}_cut.fq.gz"),
         idx=lambda wildcards: REF["genes"].get(
-            "bt2", os.path.join(INTERNALDIR, "mapping_index/genes.1.bt2")
-        ),
+            "bt2", os.path.join(INTERNALDIR, "mapping_index/genes")
+        )
+        + ".1.bt2",
     output:
-        sam=temp(os.path.join(TEMPDIR, "mapping_unsort/{sample}_{rn}_genes.sam")),
+        bam=temp(os.path.join(TEMPDIR, "mapping_unsort/{sample}_{rn}_genes.bam")),
         un=temp(os.path.join(TEMPDIR, "mapping_unsort/{sample}_{rn}_genes.fq")),
         report="report_reads/mapping/{sample}_{rn}_genes.report",
     params:
         path_bowtie2=config["path"]["bowtie2"],
         path_samfilter=config["path"]["samfilter"],
+        path_samtools=config["path"]["samtools"],
         ref_bowtie2=lambda wildcards: REF["genes"].get(
             "bt2", os.path.join(INTERNALDIR, "mapping_index/genes")
         ),
@@ -185,7 +193,8 @@ rule map_to_genes_by_bowtie2:
         {params.path_bowtie2} -p {threads} \
             --end-to-end --norc -D 20 -R 3 --score-min L,4,-0.5 -L 10 -i S,1,0.5 -N 1 --mp 6,3 --rdg 0,2 -a \
             --no-unal --un {output.un} -x {params.ref_bowtie2} -U {input.fq} 2>{output.report} | \
-            {params.path_samfilter} > {output.sam}
+            {params.path_samfilter} | \
+            {params.path_samtools} view -O BAM -o {output.bam}
         """
 
 
@@ -193,7 +202,7 @@ rule map_to_genome_by_star:
     input:
         os.path.join(TEMPDIR, "mapping_unsort/{sample}_{rn}_genes.fq"),
     output:
-        sam=temp(os.path.join(TEMPDIR, "mapping_unsort/{sample}_{rn}_genome.sam")),
+        bam=temp(os.path.join(TEMPDIR, "mapping_unsort/{sample}_{rn}_genome.bam")),
         un="discarded_reads/{sample}_{rn}_unmapped.fq.gz"
         if config["keep_discarded"]
         else temp("discarded_reads/{sample}_{rn}_unmapped.fq.gz"),
@@ -223,27 +232,31 @@ rule map_to_genome_by_star:
           --genomeDir {params.ref_star} \
           --readFilesIn {input} \
           --alignEndsType Local \
+          --scoreDelOpen -1 \
+          --scoreDelBase -1 \
+          --scoreInsOpen -2 \
+          --scoreInsBase -2 \
           --outFilterMatchNmin 15 \
           --outFilterMatchNminOverLread {params.match_prop} \
           --outFilterMismatchNmax 10 \
           --outFilterMismatchNoverLmax 0.2 \
           --outFilterIntronMotifs RemoveNoncanonicalUnannotated \
           --alignSJDBoverhangMin 1 \
-          --scoreDelOpen -1 \
-          --scoreDelBase -1 \
-          --scoreInsOpen -2 \
-          --scoreInsBase -2 \
           --alignSJoverhangMin 5 \
+          --chimSegmentMin 20 \
+          --chimOutType WithinBAM HardClip \
+          --chimJunctionOverhangMin 15 \
+          --chimScoreJunctionNonGTAG 0 \
           --outFilterMultimapNmax 10 \
           --outFilterMultimapScoreRange 0 \
           --outSAMmultNmax -1 \
           --outMultimapperOrder Random \
-          --outStd SAM \
-          --outSAMtype SAM \
           --outReadsUnmapped Fastx \
+          --outSAMtype BAM Unsorted \
+          --outStd BAM_Unsorted \
           --outSAMattrRGline ID:{wildcards.sample} SM:{wildcards.sample} LB:RNA PL:Illumina PU:SE \
-          --outSAMattributes NH HI AS nM NM MD jM jI MC \
-          --outFileNamePrefix {params.output_pre} > {output.sam}
+          --outSAMattributes NH HI AS nM NM MD jM jI MC ch \
+          --outFileNamePrefix {params.output_pre} > {output.bam}
         mv {params.report} {output.report}
         rm {params.un}
         """
@@ -251,7 +264,7 @@ rule map_to_genome_by_star:
 
 rule gap_realign:
     input:
-        os.path.join(TEMPDIR, "mapping_unsort/{sample}_{rn}_{reftype}.sam"),
+        os.path.join(TEMPDIR, "mapping_unsort/{sample}_{rn}_{reftype}.bam"),
     output:
         temp(
             os.path.join(

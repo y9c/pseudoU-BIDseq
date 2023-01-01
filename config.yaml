@@ -25,7 +25,9 @@ cutoff:
   min_group_num: 1
 
 adapter:
-  p7: AGATCGGAAGAGCACACGTCT
+  # 20nt
+  p7: AGATCGGAAGAGCACACGTC
+  p5: AGTTCTACAGTCCGACGATC
 
 path:
   fastp: /opt/micromamba/bin/fastp
