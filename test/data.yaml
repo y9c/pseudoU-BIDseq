@@ -5,16 +5,19 @@ tempdir: ./workspace_mouse_demo/.tmp
 # Max number of cores for all the running jobs at the same time
 cores: 120
 
-# keep dicarded reads (untrimmed, too-short, unmapped...), for debugs purpose.
-# Most of the time, you do not need these files. Set it as `false` to save storage.
-keep_discarded: true
-# keep run mapping results (bam file).
-# cache these files, so you do not need to re-run the analysis for previous data when you add more sequening reads
-keep_internal: true
-# Whether remove atypical adapter
-trim_p5: true
-
-# cutoff for pre-filtering. Most of time, you do not need to change them.
+# # BUILD-IN SETTINGS:
+# # (At most of time, you do not need to change them.)
+#
+# # keep dicarded reads (untrimmed, too-short, unmapped...), for debugging purpose.
+# # believe me, you do not need these files. Set it as `false` to save storage.
+# keep_discarded: false
+# # keep run mapping bam file and reference index files.
+# # cache these files, so you do not need to re-run some analysis when you add more sequening reads
+# keep_internal: false
+# # Whether remove atypical adapter
+# trim_p5: false
+#
+# # cutoff for pre-filtering.
 # cutoff:
 #   ## processing reads
 #   # STAR `outFilterMatchNminOverLread`

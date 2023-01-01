@@ -3,8 +3,8 @@
 # keep dicarded reads (untrimmed, too-short, unmapped...), for debugs purpose.
 # Most of the time, you do not need these files. Set it as `false` to save storage.
 keep_discarded: false
-# keep run mapping results (mapping bam file, and reference index files).
-# cache these files, so you do not need to re-run the analysis for previous data when you add more sequening reads
+# keep run mapping bam file and reference index files.
+# cache these files, so you do not need to re-run some analysis when you add more sequening reads
 keep_internal: false
 # Whether remove atypical adapter
 trim_p5: false
