@@ -15,7 +15,7 @@
 
 ## How to use?
 
-A [docker image](https://hub.docker.com/r/y9ch/bidseq) containing the source code and dependencies has been published for reproducibility. You can run it using the [singularity](https://sylabs.io/singularity) container runtime.
+A [docker image](https://hub.docker.com/r/y9ch/bidseq) containing the source code and dependencies has been published for reproducibility. You can run it using the [apptainer](https://apptainer.org/help) container runtime.
 
 The entire analysis can be completed in just three steps:
 
@@ -61,7 +61,7 @@ The entire analysis can be completed in just three steps:
 2. **Run all the analysis by one command**:
 
    ```bash
-   singularity run docker://y9ch/bidseq:v1
+   apptainer run docker://y9ch/bidseq:v1
    ```
 
     <details>
