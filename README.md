@@ -19,7 +19,7 @@ A [docker image](https://hub.docker.com/r/y9ch/bidseq) containing the source cod
 
 The entire analysis can be completed in just three steps:
 
-1. **Specific the path (with label) of both rawdata and references for your project in a YAML format.**
+1. **Specific the path of references (_.fasta_) and samples (_.fastq_) in a configure file (_.YAML_).**
 
    <details>
      <summary><code>data.yaml</code> for example<sup>(Click to expand)</sup></summary>
