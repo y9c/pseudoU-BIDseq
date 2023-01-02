@@ -1,11 +1,13 @@
 ### default args ###
 
+# keep run mapping bam file and reference index files.
+# cache these files, so you do not need to re-run some analysis when you add more sequening reads
+keep_internal: false
 # keep dicarded reads (untrimmed, too-short, unmapped...), for debugs purpose.
 # Most of the time, you do not need these files. Set it as `false` to save storage.
-keep_discarded: true
-# keep run mapping results (bam file).
-# cache these files, so you do not need to re-run the analysis for previous data when you add more sequening reads
-keep_internal: false
+keep_discarded: false
+# Whether remove atypical adapter
+trim_p5: false
 
 ### build in args ###
 # if you change build in args, add the whole block rather than some records!!
@@ -25,20 +27,23 @@ cutoff:
   min_group_num: 1
 
 adapter:
-  p7: AGATCGGAAGAGCACACGTCT
+  # 20nt
+  p7: AGATCGGAAGAGCACACGTC
+  p5: AGTTCTACAGTCCGACGATC
 
 path:
-  fastp: /opt/micromamba/bin/fastp
-  cutadapt: /opt/micromamba/bin/cutadapt
-  bgzip: /opt/micromamba/bin/bgzip
-  bowtie2: /opt/micromamba/bin/bowtie2
-  bowtie2Build: /opt/micromamba/bin/bowtie2-build
-  star: /opt/micromamba/bin/STAR
-  samtools: /opt/micromamba/bin/samtools
-  bedtools: /opt/micromamba/bin/bedtools
+  fastp: /pipeline/micromamba/bin/fastp
+  cutadapt: /pipeline/micromamba/bin/cutadapt
+  bgzip: /pipeline/micromamba/bin/bgzip
+  bowtie2: /pipeline/micromamba/bin/bowtie2
+  bowtie2Build: /pipeline/micromamba/bin/bowtie2-build
+  star: /pipeline/micromamba/bin/STAR
+  samtools: /pipeline/micromamba/bin/samtools
+  bedtools: /pipeline/micromamba/bin/bedtools
+  multiqc: /pipeline/micromamba/bin/multiqc
   umicollapse: /bin/umicollapse.jar
-  delfilter: /opt/pipeline/bin/deletionFilter
-  samfilter: /opt/pipeline/bin/samFilter
-  cpup: /opt/pipeline/bin/cpup
-  adjustGap: /opt/pipeline/bin/adjustGap
-  realignGap: /opt/pipeline/bin/realignGap
+  delfilter: /pipeline/bin/deletionFilter
+  samfilter: /pipeline/bin/samFilter
+  cpup: /pipeline/bin/cpup
+  adjustGap: /pipeline/bin/adjustGap
+  realignGap: /pipeline/bin/realignGap

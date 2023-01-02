@@ -5,21 +5,21 @@
 ## Overview of the workflow
 
 <p align="center">
-  <a href="https://bidseq.chuan.science/Overall-Workflow#gh-light-mode-only">
+  <a href="https://y9c.github.io/pseudoU-BIDseq/Overall-Workflow#gh-light-mode-only">
     <img src="./docs/scheme.svg" />
   </a>
-  <a href="https://bidseq.chuan.science/Overall-Workflow#gh-dark-mode-only">
+  <a href="https://y9c.github.io/pseudoU-BIDseq/Overall-Workflow#gh-dark-mode-only">
     <img src="./docs/scheme_dark.svg" />
   </a>
 </p>
 
 ## How to use?
 
-A [docker image](https://hub.docker.com/r/y9ch/bidseq) containing the source code and dependencies has been published for reproducibility. You can run it using the [singularity](https://sylabs.io/singularity) container runtime.
+A [docker image](https://hub.docker.com/r/y9ch/bidseq) containing the source code and dependencies has been published for reproducibility. You can run it using the [apptainer](https://apptainer.org/help) container runtime.
 
 The entire analysis can be completed in just three steps:
 
-1. **Specific the path (with label) of both rawdata and references for your project in a YAML format.**
+1. **Specific the path of references (_.fasta_) and samples (_.fastq_) in a configure file (_.YAML_).**
 
    <details>
      <summary><code>data.yaml</code> for example<sup>(Click to expand)</sup></summary>
@@ -54,14 +54,14 @@ The entire analysis can be completed in just three steps:
 
    You can copy and edit from this [template](test/data.yaml).
 
-   _Read the [documentation](https://bidseq.chuan.science/Run-the-pipeline.html#refer-rawdata-and-references-in-the-configuration-file) on how to customize._
+   _Read the [documentation](https://y9c.github.io/pseudoU-BIDseq/Run-the-pipeline.html#refer-rawdata-and-references-in-the-configuration-file) on how to customize._
 
    </details>
 
 2. **Run all the analysis by one command**:
 
    ```bash
-   singularity run docker://y9ch/bidseq:v1
+   apptainer run docker://y9ch/bidseq:v1
    ```
 
     <details>
@@ -71,7 +71,7 @@ The entire analysis can be completed in just three steps:
    - default output dir: `./workspace`
    - default jobs in parallel: `48`
 
-   _Read the [documentation](https://bidseq.chuan.science/Run-the-pipeline.html#customized-analysis-parameters) on how to customize._
+   _Read the [documentation](https://y9c.github.io/pseudoU-BIDseq/Run-the-pipeline.html#customized-analysis-parameters) on how to customize._
 
    </details>
 
@@ -80,7 +80,7 @@ The entire analysis can be completed in just three steps:
     <details>
       <summary>output files in working directory.<sup>(Click to expand)</sup></summary>
 
-   - trimming, mapping, deduping reports are in `report_reads` folder
+   - trimming, mapping, deduping reports are in `report_reads` folder, with key numbers in all the steps reported in one webpage<sup>([example](https://y9c.github.io/pseudoU-BIDseq/readsStats.html))</sup>.
    - deleted sites for &Psi; sites detection are in `pileup_adjusted` folder
    </details>
 
@@ -90,7 +90,7 @@ The entire analysis can be completed in just three steps:
 
 ...
 
-[Read more](https://bidseq.chuan.science)
+[Read more](https://y9c.github.io/pseudoU-BIDseq)
 
 ## Citation
 
