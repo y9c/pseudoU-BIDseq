@@ -5,10 +5,10 @@
 ## Overview of the workflow
 
 <p align="center">
-  <a href="https://bidseq.chuan.science/Overall-Workflow#gh-light-mode-only">
+  <a href="https://y9c.github.io/pseudoU-BIDseq/Overall-Workflow#gh-light-mode-only">
     <img src="./docs/scheme.svg" />
   </a>
-  <a href="https://bidseq.chuan.science/Overall-Workflow#gh-dark-mode-only">
+  <a href="https://y9c.github.io/pseudoU-BIDseq/Overall-Workflow#gh-dark-mode-only">
     <img src="./docs/scheme_dark.svg" />
   </a>
 </p>
@@ -54,7 +54,7 @@ The entire analysis can be completed in just three steps:
 
    You can copy and edit from this [template](test/data.yaml).
 
-   _Read the [documentation](https://bidseq.chuan.science/Run-the-pipeline.html#refer-rawdata-and-references-in-the-configuration-file) on how to customize._
+   _Read the [documentation](https://y9c.github.io/pseudoU-BIDseq/Run-the-pipeline.html#refer-rawdata-and-references-in-the-configuration-file) on how to customize._
 
    </details>
 
@@ -71,7 +71,7 @@ The entire analysis can be completed in just three steps:
    - default output dir: `./workspace`
    - default jobs in parallel: `48`
 
-   _Read the [documentation](https://bidseq.chuan.science/Run-the-pipeline.html#customized-analysis-parameters) on how to customize._
+   _Read the [documentation](https://y9c.github.io/pseudoU-BIDseq/Run-the-pipeline.html#customized-analysis-parameters) on how to customize._
 
    </details>
 
@@ -80,7 +80,7 @@ The entire analysis can be completed in just three steps:
     <details>
       <summary>output files in working directory.<sup>(Click to expand)</sup></summary>
 
-   - trimming, mapping, deduping reports are in `report_reads` folder, with key numbers in all the steps reported in one webpage ([_example_](./docs/readsStats.html)).
+   - trimming, mapping, deduping reports are in `report_reads` folder, with key numbers in all the steps reported in one webpage<sup>([example](https://y9c.github.io/pseudoU-BIDseq/readsStats.html))</sup>.
    - deleted sites for &Psi; sites detection are in `pileup_adjusted` folder
    </details>
 
@@ -90,7 +90,7 @@ The entire analysis can be completed in just three steps:
 
 ...
 
-[Read more](https://bidseq.chuan.science)
+[Read more](https://y9c.github.io/pseudoU-BIDseq)
 
 ## Citation
 
