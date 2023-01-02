@@ -80,7 +80,7 @@ The entire analysis can be completed in just three steps:
     <details>
       <summary>output files in working directory.<sup>(Click to expand)</sup></summary>
 
-   - trimming, mapping, deduping reports are in `report_reads` folder, with key numbers in all the steps reported in one webpage<sup>([example](https://y9c.github.io/pseudoU-BIDseq/readsStats.html))</sup>.
+   - trimming, mapping, deduping reports are in `report_reads` folder, with key numbers in all the steps reported in one webpage<sup>([example](https://y9c.github.io/pseudoU-BIDseq/readsStats))</sup>.
    - deleted sites for &Psi; sites detection are in `pileup_adjusted` folder
    </details>
 
