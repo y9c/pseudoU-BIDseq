@@ -40,6 +40,7 @@ path:
   star: /pipeline/micromamba/bin/STAR
   samtools: /pipeline/micromamba/bin/samtools
   bedtools: /pipeline/micromamba/bin/bedtools
+  multiqc: /pipeline/micromamba/bin/multiqc
   umicollapse: /bin/umicollapse.jar
   delfilter: /pipeline/bin/deletionFilter
   samfilter: /pipeline/bin/samFilter
