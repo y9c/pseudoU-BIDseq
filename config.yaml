@@ -32,17 +32,17 @@ adapter:
   p5: AGTTCTACAGTCCGACGATC
 
 path:
-  fastp: /opt/micromamba/bin/fastp
-  cutadapt: /opt/micromamba/bin/cutadapt
-  bgzip: /opt/micromamba/bin/bgzip
-  bowtie2: /opt/micromamba/bin/bowtie2
-  bowtie2Build: /opt/micromamba/bin/bowtie2-build
-  star: /opt/micromamba/bin/STAR
-  samtools: /opt/micromamba/bin/samtools
-  bedtools: /opt/micromamba/bin/bedtools
+  fastp: /pipeline/micromamba/bin/fastp
+  cutadapt: /pipeline/micromamba/bin/cutadapt
+  bgzip: /pipeline/micromamba/bin/bgzip
+  bowtie2: /pipeline/micromamba/bin/bowtie2
+  bowtie2Build: /pipeline/micromamba/bin/bowtie2-build
+  star: /pipeline/micromamba/bin/STAR
+  samtools: /pipeline/micromamba/bin/samtools
+  bedtools: /pipeline/micromamba/bin/bedtools
   umicollapse: /bin/umicollapse.jar
-  delfilter: /opt/pipeline/bin/deletionFilter
-  samfilter: /opt/pipeline/bin/samFilter
-  cpup: /opt/pipeline/bin/cpup
-  adjustGap: /opt/pipeline/bin/adjustGap
-  realignGap: /opt/pipeline/bin/realignGap
+  delfilter: /pipeline/bin/deletionFilter
+  samfilter: /pipeline/bin/samFilter
+  cpup: /pipeline/bin/cpup
+  adjustGap: /pipeline/bin/adjustGap
+  realignGap: /pipeline/bin/realignGap
