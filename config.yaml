@@ -8,6 +8,8 @@ keep_internal: false
 keep_discarded: false
 # Whether remove atypical adapter
 trim_p5: false
+# Whether clip match on contamination / gene reference
+greedy_mapping: false
 
 ### build in args ###
 # if you change build in args, add the whole block rather than some records!!

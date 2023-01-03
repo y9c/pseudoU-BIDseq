@@ -157,12 +157,15 @@ rule map_to_contamination_by_bowtie2:
         ref_bowtie2=lambda wildcards: REF["contamination"].get(
             "bt2", os.path.join(INTERNALDIR, "mapping_index/contamination")
         ),
+        args_bowtie2="--local --ma 2 --score-min G,20,8"
+        if config["greedy_mapping"]
+        else "--end-to-end --ma 0 --score-min L,2,-0.5",
     threads: 24
     shell:
         """
         export LC_ALL=C
         {params.path_bowtie2} -p {threads} \
-            --end-to-end -D 20 -R 3 --score-min L,5,-0.5 -L 16 -N 1 --mp 4 --rdg 0,2 \
+            {params.args_bowtie2} -D 20 -R 3 -L 16 -N 1 --mp 4 --rdg 0,2 \
             --no-unal --un {output.un} -x {params.ref_bowtie2} -U {input.fq} 2>{output.report} | \
             {params.path_samtools} view -O BAM -o {output.bam}
         """
@@ -188,12 +191,15 @@ rule map_to_genes_by_bowtie2:
         ref_bowtie2=lambda wildcards: REF["genes"].get(
             "bt2", os.path.join(INTERNALDIR, "mapping_index/genes")
         ),
+        args_bowtie2="--local --ma 2 --score-min G,18,7"
+        if config["greedy_mapping"]
+        else "--end-to-end --ma 0 --score-min L,4,-0.5",
     threads: 24
     shell:
         """
         export LC_ALL=C
         {params.path_bowtie2} -p {threads} \
-            --end-to-end --norc -D 20 -R 3 --score-min L,4,-0.5 -L 10 -i S,1,0.5 -N 1 --mp 6,3 --rdg 0,2 -a \
+            {params.args_bowtie2} --norc -D 20 -R 3 -L 8 -N 1 -i S,1,0.5 --mp 6,3 --rdg 0,2 -a \
             --no-unal --un {output.un} -x {params.ref_bowtie2} -U {input.fq} 2>{output.report} | \
             {params.path_samfilter} | \
             {params.path_samtools} view -O BAM -o {output.bam}
