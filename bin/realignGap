@@ -107,37 +107,6 @@ def parasail_alignment(query, ref):
     return rstart, cigar
 
 
-def generate_md_tag(ref, cigar):
-    p = 0
-    md = ""
-    t_pre = "="
-    n_pre = 0
-    for n, t in cigar_ops_from_start(cigar):
-        n = int(n)
-        if t == "I" or t == "S" or t == "N":
-            continue
-        if t == "=":
-            n += n_pre
-            n_pre = n
-            p += n
-        if t == "X":
-            if t_pre == "=":
-                md += f"{n_pre}"
-                n_pre = 0
-            md += f"{ref[p: p+n].upper()}"
-            p += n
-        if t == "D":
-            if t_pre == "=":
-                md += f"{n_pre}"
-                n_pre = 0
-            md += f"^{ref[p: p+n].upper()}"
-            p += 0
-        t_pre = t
-    if t_pre == "=":
-        md += f"{n_pre}"
-    return md
-
-
 def get_splicing_site_from_cigar(cigar):
     """Get splicing site from cigar string.
 
@@ -235,11 +204,11 @@ def split_cigar(cigar, split_points):
     required=True,
 )
 @click.option(
-    "--debug/--no-debug",
-    default=False,
-    help="Write error into file for debuging.",
+    "--discard/--no-discard",
+    default=True,
+    help="Write discarded reads into file for debuging.",
 )
-def run_realign(input_fa_name, input_sam_name, output_sam_name, debug):
+def run_realign(input_fa_name, input_sam_name, output_sam_name, discard):
     fafile = pysam.FastaFile(input_fa_name)
     if input_sam_name.endswith(".bam"):
         samfile = pysam.AlignmentFile(input_sam_name, "rb")
@@ -260,12 +229,6 @@ def run_realign(input_fa_name, input_sam_name, output_sam_name, debug):
         )
     else:
         outfile = pysam.AlignmentFile(output_sam_name, "w", template=samfile)
-    if debug:
-        debug_output = pysam.AlignmentFile(
-            output_sam_name.rsplit(".", 1)[0] + "_debug.sam",
-            "w",
-            template=samfile,
-        )
 
     pad = 20
     for read in samfile.fetch(until_eof=True):
@@ -279,18 +242,16 @@ def run_realign(input_fa_name, input_sam_name, output_sam_name, debug):
                 align_end = read.reference_end + pad
                 ref = fafile.fetch(read.reference_name, align_start, align_end)
                 s, c = parasail_alignment(read.query_sequence, ref)
+                # update align position
                 read.reference_start = align_start + s
                 # use a old cigar spec...
                 c2 = degenerate_cigar(c)
                 if read.cigarstring != c2:
                     # write original cigar
-                    read.set_tag("OC", read.cigarstring)
-                    # write original MD tag
-                    read.set_tag("OM", read.get_tag("MD"))
+                    origin_cigar = read.cigarstring
+                    read.set_tag("OC", origin_cigar)
                     # update cigar string
                     read.cigarstring = c2
-                    # update MD tag
-                    read.set_tag("MD", generate_md_tag(ref[s:], c))
             # realign splicing reads
             else:
                 ref = ""
@@ -304,21 +265,23 @@ def run_realign(input_fa_name, input_sam_name, output_sam_name, debug):
                     read.reference_name, read.reference_end, align_end
                 )
                 s, c = parasail_alignment(read.query_sequence, ref)
+                # update align position
                 read.reference_start = align_start + s
                 split_points = get_splicing_site_from_cigar(read.cigarstring)
                 c2 = degenerate_cigar(split_cigar(c, split_points))
                 if read.cigarstring != c2:
                     # write original cigar
-                    read.set_tag("OC", read.cigarstring)
-                    # write original MD tag
-                    read.set_tag("OM", read.get_tag("MD"))
+                    origin_cigar = read.cigarstring
+                    read.set_tag("OC", origin_cigar)
                     # update cigar string
                     read.cigarstring = c2
-                    # update MD tag
-                    read.set_tag("MD", generate_md_tag(ref[s:], c))
         if read.infer_query_length() != read.query_length:
-            if debug:
-                debug_output.write(read)
+            if not discard:
+                # revert origin
+                read.reference_start = align_start
+                read.cigarstring = origin_cigar
+                read.set_tag("OC", None)
+                outfile.write(read)
         else:
             outfile.write(read)
 

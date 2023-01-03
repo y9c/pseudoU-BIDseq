@@ -288,7 +288,7 @@ rule gap_realign:
         """
 
 
-rule sort_and_filter_bam:
+rule fix_sort_filter_bam:
     input:
         os.path.join(TEMPDIR, "mapping_realigned_unsorted/{sample}_{rn}_{reftype}.cram"),
     output:
@@ -299,13 +299,18 @@ rule sort_and_filter_bam:
         else temp(
             os.path.join(INTERNALDIR, "mapping_realigned/{sample}_{rn}_{reftype}.cram")
         ),
+        un="discarded_reads/{sample}_{rn}_{reftype}_filteredmap.cram"
+        if config["keep_discarded"]
+        else temp("discarded_reads/{sample}_{rn}_{reftype}_filteredmap.cram"),
     params:
         path_samtools=config["path"]["samtools"],
         ref_fa=lambda wildcards: REF[wildcards.reftype]["fa"],
     threads: 8
     shell:
         """
-        {params.path_samtools} sort -@ {threads} --reference {params.ref_fa} --input-fmt-option 'filter=[NM]<=10' -m 4G -O CRAM -o {output.cram} {input}
+        {params.path_samtools} calmd -@ {threads} {input} | \
+            {params.path_samtools} sort -@ {threads} -m 4G | \
+            {params.path_samtools} view -@ {threads} --reference {params.ref_fa} -e '[NM]<=5' -O CRAM -U {output.un} -o {output.cram}
         """
 
 
