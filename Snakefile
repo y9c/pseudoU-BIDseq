@@ -191,7 +191,7 @@ rule map_to_genes_by_bowtie2:
         ref_bowtie2=lambda wildcards: REF["genes"].get(
             "bt2", os.path.join(INTERNALDIR, "mapping_index/genes")
         ),
-        args_bowtie2="--local --ma 2 --score-min G,18,7"
+        args_bowtie2="--local --ma 2 --score-min G,10,7"
         if config["greedy_mapping"]
         else "--end-to-end --ma 0 --score-min L,4,-0.5",
     threads: 24
