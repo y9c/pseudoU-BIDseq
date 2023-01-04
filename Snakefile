@@ -311,7 +311,7 @@ rule sort_cal_filter_bam:
     shell:
         """
         {params.path_samtools} sort -@ {threads} -m 4G {input} | \
-            {params.path_samtools} calmd -@ {threads} - {params.ref_fa} | \
+            {params.path_samtools} calmd -@ {threads} - {params.ref_fa} 2>/dev/null | \
             {params.path_samtools} view -@ {threads} --reference {params.ref_fa} -e '[NM]<=5' -O CRAM -U {output.un} -o {output.cram}
         """
 
@@ -319,11 +319,15 @@ rule sort_cal_filter_bam:
 rule combine_mapping_discarded:
     input:
         lambda wildcards: [
-            os.path.join(
-                INTERNALDIR,
-                f"mapping_discarded/{wildcards.sample}_{wildcards.rn}_{t}.cram",
-            )
+            f
             for t in REF.keys()
+            for f in [
+                os.path.join(
+                    INTERNALDIR,
+                    f"mapping_discarded/{wildcards.sample}_{wildcards.rn}_{t}.cram",
+                ),
+                REF[wildcards.reftype]["fa"],
+            ]
         ],
     output:
         "discarded_reads/{sample}_{rn}_filteredmap.fq.gz"
@@ -334,7 +338,7 @@ rule combine_mapping_discarded:
     threads: 4
     shell:
         """
-        {params.path_samtools} fastq -@ {threads} -o {output} {input}
+        echo {input} | tr " " "\\n" | paste - - | while read c r; do {params.path_samtools} fastq -@ {threads} --reference $r $c;done >{output}
         """
 
 
