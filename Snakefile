@@ -308,7 +308,7 @@ rule fix_sort_filter_bam:
     threads: 8
     shell:
         """
-        {params.path_samtools} calmd -@ {threads} {input} | \
+        {params.path_samtools} calmd -@ {threads} {input} {params.ref_fa} | \
             {params.path_samtools} sort -@ {threads} -m 4G | \
             {params.path_samtools} view -@ {threads} --reference {params.ref_fa} -e '[NM]<=5' -O CRAM -U {output.un} -o {output.cram}
         """
