@@ -78,10 +78,11 @@ The entire analysis can be completed in just three steps:
 3. **View the analytics report and pileup table.**
 
     <details>
-      <summary>output files in working directory.<sup>(Click to expand)</sup></summary>
+      <summary>3 folder are will be created in the working directory.<sup>(Click to expand)</sup></summary>
 
    - trimming, mapping, deduping reports are in `report_reads` folder, with key numbers in all the steps reported in one webpage<sup>([example](https://y9c.github.io/pseudoU-BIDseq/readsStats))</sup>.
-   - deleted sites for &Psi; sites detection are in `pileup_adjusted` folder
+   - deleted sites for &Psi; sites detection are in `pileup_adjusted` folder. These sites are not filtered, you can apply customized threadfolds into this table based your data type and quality.
+   - processed mapping results (_.bam_) are in `drop_duplicates` folder. You can zoom into location that you interested in IGV.
    </details>
 
 ## Documentation
