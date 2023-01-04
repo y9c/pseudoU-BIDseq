@@ -326,7 +326,7 @@ rule combine_mapping_discarded:
                     INTERNALDIR,
                     f"mapping_discarded/{wildcards.sample}_{wildcards.rn}_{t}.cram",
                 ),
-                REF[wildcards.reftype]["fa"],
+                REF[t]["fa"],
             ]
         ],
     output:
