@@ -335,10 +335,11 @@ rule combine_mapping_discarded:
         else temp("discarded_reads/{sample}_{rn}_filteredmap.fq.gz"),
     params:
         path_samtools=config["path"]["samtools"],
+        path_bgzip=config["path"]["bgzip"],
     threads: 4
     shell:
         """
-        echo {input} | tr " " "\\n" | paste - - | while read c r; do {params.path_samtools} fastq -@ {threads} --reference $r $c;done >{output}
+        echo {input} | tr " " "\\n" | paste - - | while read c r; do {params.path_samtools} fastq -@ {threads} --reference $r $c;done | {params.path_bgzip} -@ {threads} -l 9 >{output}
         """
 
 
