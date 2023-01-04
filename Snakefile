@@ -299,9 +299,11 @@ rule fix_sort_filter_bam:
         else temp(
             os.path.join(INTERNALDIR, "mapping_realigned/{sample}_{rn}_{reftype}.cram")
         ),
-        un="discarded_reads/{sample}_{rn}_{reftype}_filteredmap.cram"
-        if config["keep_discarded"]
-        else temp("discarded_reads/{sample}_{rn}_{reftype}_filteredmap.cram"),
+        un=os.path.join(INTERNALDIR, "mapping_discarded/{sample}_{rn}_{reftype}.cram")
+        if config["keep_internal"]
+        else temp(
+            os.path.join(INTERNALDIR, "mapping_discarded/{sample}_{rn}_{reftype}.cram")
+        ),
     params:
         path_samtools=config["path"]["samtools"],
         ref_fa=lambda wildcards: REF[wildcards.reftype]["fa"],
@@ -311,6 +313,29 @@ rule fix_sort_filter_bam:
         {params.path_samtools} calmd -@ {threads} {input} {params.ref_fa} | \
             {params.path_samtools} sort -@ {threads} -m 4G | \
             {params.path_samtools} view -@ {threads} --reference {params.ref_fa} -e '[NM]<=5' -O CRAM -U {output.un} -o {output.cram}
+        """
+
+
+rule combine_mapping_discarded:
+    input:
+        lambda wildcards: [
+            os.path.join(
+                INTERNALDIR,
+                f"mapping_discarded/{wildcards.sample}_{wildcards.rn}_{t}.cram",
+            )
+            for t in REF.keys()
+        ],
+    output:
+        "discarded_reads/{sample}_{rn}_filteredmap.fq.gz"
+        if config["keep_discarded"]
+        else temp("discarded_reads/{sample}_{rn}_filteredmap.fq.gz"),
+    params:
+        path_samtools=config["path"]["samtools"],
+        ref_fa=lambda wildcards: REF[wildcards.reftype]["fa"],
+    threads: 4
+    shell:
+        """
+        {params.path_samtools} fastq -@ {threads} --reference {params.ref_fa} -o {output} {input}
         """
 
 
@@ -400,6 +425,12 @@ rule report_reads_stat:
             f"report_reads/deduping/{s}_{t}_dedup.report"
             for s in SAMPLE2RUN
             for t in REF.keys()
+        ],
+        # TODO: add discarded reads
+        lambda wildcards: [
+            f"discarded_reads/{s}_{r}_filteredmap.fq.gz"
+            for s, v in SAMPLE2RUN.items()
+            for r in v
         ],
     output:
         "report_reads/readsStats.html",
