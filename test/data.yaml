@@ -14,8 +14,6 @@ cores: 120
 # # keep dicarded reads (untrimmed, too-short, unmapped...), for debugging purpose.
 # # believe me, you do not need these files. Set it as `false` to save storage.
 # keep_discarded: false
-# # Whether remove atypical adapter
-# trim_p5: false
 #
 # # cutoff for pre-filtering.
 # cutoff:
