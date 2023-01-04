@@ -288,7 +288,7 @@ rule gap_realign:
         """
 
 
-rule fix_sort_filter_bam:
+rule sort_cal_filter_bam:
     input:
         os.path.join(TEMPDIR, "mapping_realigned_unsorted/{sample}_{rn}_{reftype}.cram"),
     output:
@@ -310,8 +310,8 @@ rule fix_sort_filter_bam:
     threads: 8
     shell:
         """
-        {params.path_samtools} calmd -@ {threads} {input} {params.ref_fa} | \
-            {params.path_samtools} sort -@ {threads} -m 4G | \
+        {params.path_samtools} sort -@ {threads} -m 4G {input} | \
+            {params.path_samtools} calmd -@ {threads} - {params.ref_fa} | \
             {params.path_samtools} view -@ {threads} --reference {params.ref_fa} -e '[NM]<=5' -O CRAM -U {output.un} -o {output.cram}
         """
 
@@ -331,11 +331,10 @@ rule combine_mapping_discarded:
         else temp("discarded_reads/{sample}_{rn}_filteredmap.fq.gz"),
     params:
         path_samtools=config["path"]["samtools"],
-        ref_fa=lambda wildcards: REF[wildcards.reftype]["fa"],
     threads: 4
     shell:
         """
-        {params.path_samtools} fastq -@ {threads} --reference {params.ref_fa} -o {output} {input}
+        {params.path_samtools} fastq -@ {threads} -o {output} {input}
         """
 
 
