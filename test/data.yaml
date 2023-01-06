@@ -26,7 +26,7 @@ cores: 120
 #   # prefilter sites show >= x sequencing coverage in total among all samples in each group
 #   min_group_depth: 10
 #   # prefilter sites show >= x deletion ratio among all samples in each group
-#   min_group_ratio: 0.02
+#   min_group_ratio: 0.01
 #   # only analysis putative sites that show pass prefilter in >= x groups
 #   min_group_num: 1
 

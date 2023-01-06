@@ -87,10 +87,6 @@ The entire analysis can be completed in just three steps:
 
 ## Documentation
 
-(**⚠ Not yet published.**)
-
-...
-
 [Read more](https://y9c.github.io/pseudoU-BIDseq)
 
 ## Citation
