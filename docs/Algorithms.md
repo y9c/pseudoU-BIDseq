@@ -6,7 +6,6 @@ nav_order: 5
 
 <!-- prettier-ignore-start -->
 # Algorithms
-Overall Workflow
 {: .fs-9 }
 <!-- prettier-ignore-end -->
 
