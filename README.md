@@ -54,7 +54,7 @@ The entire analysis can be completed in just three steps:
 
    You can copy and edit from this [template](test/data.yaml).
 
-   _Read the [documentation](https://y9c.github.io/pseudoU-BIDseq/Run-the-pipeline.html#refer-rawdata-and-references-in-the-configuration-file) on how to customize._
+   _Read the [documentation](https://y9c.github.io/pseudoU-BIDseq/Step-by-step-instruction.html#refer-rawdata-and-references-in-the-configuration-file) on how to customize._
 
    </details>
 
@@ -71,7 +71,7 @@ The entire analysis can be completed in just three steps:
    - default output dir: `./workspace`
    - default jobs in parallel: `48`
 
-   _Read the [documentation](https://y9c.github.io/pseudoU-BIDseq/Run-the-pipeline.html#customized-analysis-parameters) on how to customize._
+   _Read the [documentation](https://y9c.github.io/pseudoU-BIDseq/Step-by-step-instruction.html#customized-analysis-parameters) on how to customize._
 
    </details>
 
