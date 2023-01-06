@@ -47,7 +47,7 @@ for s, v2 in config["samples"].items():
 rule all:
     input:
         "report_reads/readsStats.html",
-        expand("pileup_adjusted/{reftype}.tsv.gz", reftype=REFTYPE),
+        expand("pileup_filtered/{reftype}.tsv", reftype=REFTYPE),
 
 
 #### process reads ####
@@ -576,9 +576,8 @@ rule count_bases_combined:
             sample=SAMPLE_IDS,
         ),
     output:
-        temp(os.path.join(TEMPDIR, "pileup_bases/{reftype}.tsv.gz")),
+        temp(os.path.join(TEMPDIR, "pileup_bases/{reftype}.tsv")),
     params:
-        path_bgzip=config["path"]["bgzip"],
         header="\t".join(["chr", "pos", "ref_base", "strand"] + list(SAMPLE_IDS)),
         idx=",".join(
             ["1", "2", "3", "4"] + [str(5 + i * 5) for i in range(len(SAMPLE_IDS))]
@@ -590,18 +589,45 @@ rule count_bases_combined:
           echo {params.header:q}
           paste {input.fwd} | cut -f {params.idx}
           paste {input.rev} | cut -f {params.idx}
-        ) | {params.path_bgzip} -@ {threads} -l 9 >{output}
+        ) >{output}
         """
 
 
 rule adjust_sites:
     input:
-        os.path.join(TEMPDIR, "pileup_bases/{reftype}.tsv.gz"),
+        os.path.join(TEMPDIR, "pileup_bases/{reftype}.tsv"),
     output:
-        "pileup_adjusted/{reftype}.tsv.gz",
+        temp(os.path.join(TEMPDIR, "pileup_adjusted/{reftype}.tsv")),
     params:
         path_adjustGap=config["path"]["adjustGap"],
     shell:
         """
         {params.path_adjustGap} -i {input} -o {output}
+        """
+
+
+rule filter_sites:
+    input:
+        os.path.join(TEMPDIR, "pileup_adjusted/{reftype}.tsv"),
+    output:
+        "pileup_filtered/{reftype}.tsv",
+    params:
+        path_filterGap=config["path"]["filterGap"],
+        min_group_gap=config["cutoff"]["min_group_gap"],
+        min_group_depth=config["cutoff"]["min_group_depth"],
+        min_group_ratio=config["cutoff"]["min_group_ratio"],
+        min_group_num=config["cutoff"]["min_group_num"],
+        columns=" ".join(
+            [
+                "-c "
+                + ",".join(
+                    [str(i) for i, s in enumerate(SAMPLE_IDS) if s in v["treated"]]
+                )
+                for v in GROUP2SAMPLE.values()
+                if "treated" in v
+            ]
+        ),
+    shell:
+        """
+        {params.path_filterGap} -i {input} -o {output} {params.columns} -g {params.min_group_gap} -d {params.min_group_depth} -r {params.min_group_ratio} -n {params.min_group_num}
         """

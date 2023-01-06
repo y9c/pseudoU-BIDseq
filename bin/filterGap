@@ -1,0 +1,105 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#
+# Copyright © 2023 Ye Chang yech1990@gmail.com
+# Distributed under terms of the GNU license.
+#
+# Created: 2023-01-05 16:01
+
+
+import click
+
+
+@click.command(
+    context_settings=dict(help_option_names=["-h", "--help"]),
+    no_args_is_help=True,
+)
+@click.option(
+    "-i",
+    "--input-file",
+    "input_file",
+    default="-",
+    help="Input file (default: stdout)",
+)
+@click.option(
+    "-o",
+    "--output",
+    "output_file",
+    default="-",
+    help="Output file (default: stdout)",
+)
+@click.option(
+    "-c",
+    "--columns",
+    "columns_group",
+    multiple=True,
+    help="Column group for analysis",
+)
+@click.option(
+    "-g",
+    "--min-group-gap",
+    "min_group_gap",
+    type=int,
+    default=0,
+    help="Minimum number of total gaps in the group.",
+)
+@click.option(
+    "-d",
+    "--min-group-depth",
+    "min_group_depth",
+    type=int,
+    default=0,
+    help="Minimum number of total depth in the group.",
+)
+@click.option(
+    "-r",
+    "--min-group-ratio",
+    "min_group_ratio",
+    type=float,
+    default=0,
+    help="Minimum average ratio of deletion in the group.",
+)
+@click.option(
+    "-n",
+    "--min-group-num",
+    "min_group_num",
+    type=int,
+    default=1,
+    help="Minimum number of groups passed the filter.",
+)
+def filter_sites(
+    input_file,
+    output_file,
+    columns_group,
+    min_group_gap,
+    min_group_depth,
+    min_group_ratio,
+    min_group_num,
+):
+    with click.open_file(input_file, "r") as fi, click.open_file(
+        output_file, "w"
+    ) as fo:
+        groups = [
+            list(map(int, columns_string.split(",")))
+            for columns_string in columns_group
+        ]
+        # header line
+        fo.write(fi.readline())
+        for line in fi:
+            records = list(map(int, line.strip().split("\t")[3:]))
+            n = 0
+            for g in groups:
+                group_depth = sum(records[2 * i] for i in g)
+                group_gap = sum(records[2 * i + 1] for i in g)
+                if (
+                    group_depth >= min_group_depth
+                    and group_gap >= min_group_gap
+                    and group_gap / group_depth >= min_group_ratio
+                ):
+                    n += 1
+            if n >= min_group_num:
+                fo.write(line)
+
+
+if __name__ == "__main__":
+    filter_sites()

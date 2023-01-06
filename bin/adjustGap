@@ -8,7 +8,6 @@
 # Change Log:
 # 2022-07-26: add gap count into depth calculation
 
-import gzip
 
 import click
 
@@ -141,18 +140,20 @@ def write_chunk(chunk):
     "-i",
     "--input-file",
     "input_file",
-    help="Path of input TSV file. (gzip format)",
-    required=True,
+    default="-",
+    help="Input file (default: stdout)",
 )
 @click.option(
     "-o",
-    "--output-file",
+    "--output",
     "output_file",
-    help="Path of output TSV file. (gzip format)",
-    required=True,
+    default="-",
+    help="Output file (default: stdout)",
 )
 def run_adjust(input_file, output_file):
-    with gzip.open(input_file, "rb") as fi, gzip.open(output_file, "wb") as fo:
+    with click.open_file(input_file, "r") as fi, click.open_file(
+        output_file, "w"
+    ) as fo:
         # depth,a,c,g,t,n,skip,gap,insert,delete,istat,dstat
         names = [
             "depth",
@@ -168,9 +169,7 @@ def run_adjust(input_file, output_file):
             "istat",
             "dstat",
         ]
-        _, _, _, _, *samples = (
-            fi.readline().decode("utf-8").strip().split("\t")
-        )
+        _, _, _, _, *samples = fi.readline().strip().split("\t")
         fo.write(
             (
                 "\t".join(
@@ -178,15 +177,13 @@ def run_adjust(input_file, output_file):
                     + [f"{s}_{t}" for s in samples for t in ["depth", "gap"]]
                 )
                 + "\n"
-            ).encode()
+            )
         )
         pos_pre = 0
         chrom_pre = ""
         chunk = Chunk(samples)
         for l in fi:
-            chrom, pos, base, strand, *stats = (
-                l.decode("utf-8").strip().split("\t")
-            )
+            chrom, pos, base, strand, *stats = l.strip().split("\t")
             pos = int(pos)
             if pos != pos_pre + 1 or chrom != chrom_pre:
                 if len(chunk.pos) > 0:
@@ -196,7 +193,7 @@ def run_adjust(input_file, output_file):
                         # do the analysis here
                         process_chunk(chunk)
                     # write the output here
-                    fo.write(write_chunk(chunk).encode())
+                    fo.write(write_chunk(chunk))
                 chunk = Chunk(samples)
             chunk.pos.append(pos)
             for sample, stat in zip(samples, stats):
@@ -234,7 +231,7 @@ def run_adjust(input_file, output_file):
                 # do the analysis here
                 process_chunk(chunk)
             # write the output here
-            fo.write(write_chunk(chunk).encode())
+            fo.write(write_chunk(chunk))
 
 
 if __name__ == "__main__":
