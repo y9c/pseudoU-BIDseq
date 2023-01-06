@@ -3,3 +3,11 @@ ga_tracking: G-EFHY8WFMHK
 ga_tracking_anonymize_ip: true
 color_scheme: dark
 favicon_ico: "/favicon.ico"
+
+callouts:
+  warning:
+    title: Warning
+    color: red
+  note:
+    title: Note
+    color: green
