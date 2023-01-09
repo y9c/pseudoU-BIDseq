@@ -7,9 +7,9 @@ keep_internal: false
 # Most of the time, you do not need these files. Set it as `false` to save storage.
 keep_discarded: false
 # Whether remove atypical adapter
-trim_p5: false
+trim_p5: true
 # Whether clip match on contamination / gene reference
-greedy_mapping: false
+greedy_mapping: true
 
 ### build in args ###
 # if you change build in args, add the whole block rather than some records!!
