@@ -31,3 +31,10 @@ nav_order: 3
 | ^^        | (…)           | (...)   | (…)                  | (_optional_) other samples. Adding any number of entries is supported.                                                                                                                                                   |
 
 ## customized settings in command line
+
+- Customized configure file with `-c` argument. (default: `data.yaml`)
+- Customized number of jobs/cores in parallel `-j` argument. (default: `48`)
+
+## post filter &Psi; sites
+
+$$ \sum{aa_{i}} $$
