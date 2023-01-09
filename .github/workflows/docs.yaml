@@ -20,15 +20,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gems-
 
-      - uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '2.7' # Not needed with a .ruby-version file
-          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
-
       # Use GitHub Deploy Action to build and deploy to Github
       - uses: jeffreytse/jekyll-deploy-action@v0.4.0
         with:
-          provider: 'github'
           token: ${{ secrets.GITHUB_TOKEN }} # It's your Personal Access Token(PAT)
           repository: '' # Default is current repository
           branch: 'gh-pages' # Default is gh-pages for github provider
