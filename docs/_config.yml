@@ -1,7 +1,7 @@
 remote_theme: just-the-docs/just-the-docs
 ga_tracking: G-EFHY8WFMHK
 ga_tracking_anonymize_ip: true
-color_scheme: dark
+color_scheme: light
 favicon_ico: '/favicon.ico'
 
 callouts:
