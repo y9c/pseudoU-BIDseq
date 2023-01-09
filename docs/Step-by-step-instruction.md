@@ -38,8 +38,27 @@ math: mathjax3
 
 ## post filter &Psi; sites
 
-Deletion ratio ($r$) will be deletion number over sequencing coverage ($r = \sfrac{g}{d}$). The stoichiometry ($f$) of the Ψ-modified sites can be precisely calculated by applying the deletion ratio ($r$) to the calibration curves.
+### The stoichiometry ($f$) of the &Psi;-modified sites
+
+$f$ can be precisely calculated by applying the deletion ratio ($r = \sfrac{g}{d}$, where $g$ is deletion number and $d$ is sequencing coverage) to the calibration curves.
 
 $$
-f=\frac{\mathbit{b}-r}{\mathbit{c}\bullet(\mathbit{b}+\mathbit{s}-\mathbit{s}\bullet r-1)}
+f=\frac{b - r}{c \times (b + s - s \times r - 1)}
+$$
+
+, where $c$ is conversion ratio conversion ratio, $s$ is the RT dropout proportion and $b$ is the background noise.
+
+### The reliablity ($p$) of the &Psi;-modified sites
+
+The p-value from One-sided Fisher’s Exact Test for number of T bases in ‘BID-seq’ libraries (\sum d_t\ -\ \sum g_t), number of deletions in ‘BID-seq’ libraries (\sum g_t), number of T bases in ‘Input’ libraries (\sum d_i\ -\ \sum g_i), number of deletions in ‘Input’ libraries (\sum g_i) is less than 10-4.
+
+| --------- | ----------------------- | ----------------- |
+| --------- | ----------------------- | ----------------- |
+|           | Input                   | Treated           |
+| T         | $d_{i} - g_{i}$         | $d_{t} - g_{t}$   |
+| gap       | $g_{i}$                 | $g_{t}$           |
+
+
+$$
+{\displaystyle p={\frac {\displaystyle {{d_{i}} \choose {d_{i} - g_{i}}\displaystyle {{d_{t}} \choose {d_{t} - g_{t}}}}{\displaystyle {{d_{i} + d_{t}} \choose {g_{i}+ g_{t}}}}
 $$
