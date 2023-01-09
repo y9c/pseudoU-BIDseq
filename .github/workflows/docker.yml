@@ -10,7 +10,7 @@ on:
     types: [created, published]
   push:
     tags:
-      - v0.**
+      - v*.**
 
 jobs:
   push_to_registries:
