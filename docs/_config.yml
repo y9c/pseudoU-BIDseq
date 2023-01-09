@@ -14,7 +14,3 @@ callouts:
 
 plugins:
   - jekyll-spaceship
-
-jekyll-spaceship:
-  processors:
-    - table-processor

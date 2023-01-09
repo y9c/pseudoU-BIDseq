@@ -43,7 +43,7 @@ nav_order: 2
 
    You can also copy and edit from this [template](test/data.yaml).
 
-   _Read the [documentation](https://y9c.github.io/pseudoU-BIDseq/Step-by-step-instruction.html#refer-rawdata-and-references-in-the-configuration-file) on how to customize._
+   _Read the [documentation](https://y9c.github.io/pseudoU-BIDseq/Step-by-step-instruction.html#define-settings-in-configure-file) on how to customize._
 
 2. **Run all the analysis by one command**:
 
@@ -54,15 +54,14 @@ nav_order: 2
    default
    {: .label .label-blue }
 
-   - default config file: `data.yaml`
-   - default output dir: `./workspace`
-   - default jobs in parallel: `48`
+   - Customized configure file with `-c` argument. (default: `data.yaml`)
+   - Customized number of jobs/cores in parallel `-j` argument. (default: `48`)
 
-   _Read the [documentation](https://y9c.github.io/pseudoU-BIDseq/Step-by-step-instruction.html#customized-analysis-parameters) on how to customize._
+   _Read the [documentation](https://y9c.github.io/pseudoU-BIDseq/Step-by-step-instruction.html#customized-settings-in-command-line) on how to customize._
 
 3. **View the analytics report and pileup table.**
 
-   3 folder are will be created in the working directory,
+   3 folder are will be created in the working directory (default: `workspace`),
 
    default
    {: .label .label-blue }

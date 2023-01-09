@@ -11,8 +11,13 @@ nav_order: 5
 
 ## realign gaps
 
-bowtie2 aligner which is based on Burrows-Wheeler Transform algorithm would report the "best" alignmet each time.
-Such as the example bellow. bowtie2 can not align the gap (deletion) correctly, and report a mismatch next to the gap postion in the same time.
+Coming soon
+{: .label .label-yellow }
+
+`bowtie2` or other aligners use seed mapping to speed up, but also have some drawback on accurary.
+Such as the example bellow, bowtie2 can not deal the gap (deletion) and the flanking sequence correctly.
+
+- EXAMPLE 1: it dose not place the gap in the correct position and report a mismatch in the same time.
 
 ```
 A00639:852:HH5Y5DRXY:1:2103:10836:12179
@@ -21,7 +26,7 @@ CGACG-TTTAATTAAAACAAAGCATCGCGAAGGCCCGCGGCG
 CGACTGTTTAATTAAAACAAAGCATCGCGAAGGCCCGCGGCG
 ```
 
-This can be fixed by gap realignment, and have a better result:
+After realign:
 
 ```
 A00639:852:HH5Y5DRXY:1:2103:10836:12179
@@ -30,7 +35,7 @@ CGAC-GTTTAATTAAAACAAAGCATCGCGAAGGCCCGCGGCG
 CGACTGTTTAATTAAAACAAAGCATCGCGAAGGCCCGCGGCG
 ```
 
-mismatch at the terminal of sequence.
+- EXAMPLE 2: it treat gap region near the terminal as mutation.
 
 ```
 A00639:852:HH5Y5DRXY:1:2101:24876:34554
@@ -39,7 +44,7 @@ A00639:852:HH5Y5DRXY:1:2101:24876:34554
 (A)GTTGAAAAGAACTTTGAAGAGAGAGTTCAAGAGGGCGTGAAACCGTTAA
 ```
 
-into:
+After realign:
 
 ```
 A00639:852:HH5Y5DRXY:1:2101:24876:34554
@@ -47,3 +52,8 @@ AG-TGAAAAGAACTTTGAAGAGAGAGTTCAAGAGGGCGTGAAACCGTTAA
 || |||||||||||||||||||||||||||||||||||||||||||||||
 AGTTGAAAAGAACTTTGAAGAGAGAGTTCAAGAGGGCGTGAAACCGTTAA
 ```
+
+## Adjust gaps
+
+Coming soon
+{: .label .label-yellow }

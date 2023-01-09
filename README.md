@@ -67,9 +67,8 @@ The entire analysis can be completed in just three steps:
     <details>
       <summary>default settings<sup>(Click to expand)</sup></summary>
 
-   - default config file: `data.yaml`
-   - default output dir: `./workspace`
-   - default jobs in parallel: `48`
+   - Customized configure file with `-c` argument. (default: `data.yaml`)
+   - Customized number of jobs/cores in parallel `-j` argument. (default: `48`)
 
    _Read the [documentation](https://y9c.github.io/pseudoU-BIDseq/Step-by-step-instruction.html#customized-analysis-parameters) on how to customize._
 
@@ -78,7 +77,7 @@ The entire analysis can be completed in just three steps:
 3. **View the analytics report and pileup table.**
 
     <details>
-      <summary>3 folder are will be created in the working directory.<sup>(Click to expand)</sup></summary>
+      <summary>3 folder are will be created in the working directory (default: `workspace`).<sup>(Click to expand)</sup></summary>
 
    - trimming, mapping, deduping reports are in `report_reads` folder, with key numbers in all the steps reported in one webpage<sup>([example](https://y9c.github.io/pseudoU-BIDseq/readsStats))</sup>.
    - deleted sites for &Psi; sites detection are in `pileup_filtered` folder. These sites are only passed the _simplest filtering_, you can apply customized threadfolds into them based your data type and quality.

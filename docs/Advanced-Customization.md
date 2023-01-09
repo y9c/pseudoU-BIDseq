@@ -62,7 +62,7 @@ samples:
       genome: B1.genome.bam
 ```
 
-## customized adapter (inline barcode)
+## Customized adapter (inline barcode)
 
 If you customized your adapter sequencing if you are not using the adpter provided in the protocol.
 
@@ -70,8 +70,35 @@ Coming soon
 {: .label .label-yellow }
 Customized
 
-## customized path of tools
+## Customized path of tools
 
 Coming soon
 {: .label .label-yellow }
 Customized
+
+## Cache internal files to speed up
+
+Add the following setting in the configure file, to turn on `keep_internal` (default: false). Once internal files, including refernce index and mapping bam files, are cached, you do not need to re-run some analysis when you add more sequening reads.
+
+```yaml
+keep_internal: true
+```
+
+## keep dicarded reads for debugging purpose.
+
+```yaml
+keep_discarded: true
+```
+
+Once this parameter is true (default: False), untrimmed, too-short, unmapped... reads will be saved.
+_Most of the time, you do not need these files. Set it as `false` to save storage._
+
+## Mics
+
+Coming soon
+{: .label .label-yellow }
+
+```yaml
+trim_p5: false
+greedy_mapping: false
+```

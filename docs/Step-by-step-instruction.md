@@ -9,7 +9,9 @@ nav_order: 3
 {: .fs-9 }
 <!-- prettier-ignore-end -->
 
-## Important parameters of the `data.yaml` file.
+## define settings in configure file
+
+> Important parameters of the `data.yaml` file.
 
 | --------- | ------------- | ------- | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | --------- | ------------- | ------- | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -28,4 +30,4 @@ nav_order: 3
 | ^^        | ^^            | treated | true (boolean)       | (_optional_) true for BS treated sample, false for untreated control sample.                                                                                                                                             |
 | ^^        | (…)           | (...)   | (…)                  | (_optional_) other samples. Adding any number of entries is supported.                                                                                                                                                   |
 
-## customized-analysis-parameters
+## customized settings in command line
