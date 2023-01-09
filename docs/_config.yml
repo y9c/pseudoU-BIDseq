@@ -13,7 +13,6 @@ callouts:
     color: green
 
 plugins:
-  - jekyll-remote-theme
   - jekyll-spaceship
 
 jekyll-spaceship:
