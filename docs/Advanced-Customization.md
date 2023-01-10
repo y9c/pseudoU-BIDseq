@@ -64,7 +64,7 @@ samples:
 
 ## Customized adapter (inline barcode)
 
-If you customized your adapter sequencing if you are not using the adpter provided in the protocol.
+You can customized the adapter sequencing if you are not using the adpter provided by the protocol.
 
 Coming soon
 {: .label .label-yellow }
