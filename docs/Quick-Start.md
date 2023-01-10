@@ -48,7 +48,7 @@ nav_order: 2
 2. **Run all the analysis by one command**:
 
    ```bash
-   apptainer run docker://y9ch/bidseq:v1
+   apptainer run docker://y9ch/bidseq
    ```
 
    default
