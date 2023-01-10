@@ -86,7 +86,7 @@ The entire analysis can be completed in just three steps:
    </code>
 
    - trimming, mapping, deduping reports are in `report_reads` folder, with key numbers in all the steps reported in one webpage<sup>([example](https://y9c.github.io/pseudoU-BIDseq/readsStats))</sup>.
-   - deleted sites for &Psi; sites detection are in `filter_sites` folder. These sites are only passed the _simplest filtering_, you can apply customized threadfolds into them based your data type and quality.
+   - filtered sites for &Psi; sites detection are in `filter_sites` folder. These sites are only passed the _simplest filtering_, you can apply customized threshold into them based your data type and quality.
    - processed mapping results (_.bam_) are in `align_bam` folder. You can zoom into location that you interested in IGV.
 
    </details>
