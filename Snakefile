@@ -47,7 +47,7 @@ for s, v2 in config["samples"].items():
 rule all:
     input:
         "report_reads/readsStats.html",
-        expand("pileup_filtered/{reftype}.tsv", reftype=REFTYPE),
+        expand("filter_sites/{reftype}.tsv", reftype=REFTYPE),
 
 
 #### process reads ####
@@ -375,7 +375,7 @@ rule drop_duplicates:
         bam=os.path.join(TEMPDIR, "combined_mapping/{sample}_{reftype}.bam"),
         bai=os.path.join(TEMPDIR, "combined_mapping/{sample}_{reftype}.bam.bai"),
     output:
-        bam="drop_duplicates/{sample}_{reftype}.bam",
+        bam="align_bam/{sample}_{reftype}.bam",
         log="report_reads/deduping/{sample}_{reftype}.log",
     params:
         path_umicollapse=config["path"]["umicollapse"],
@@ -390,9 +390,9 @@ rule drop_duplicates:
 
 rule index_dedup_bam:
     input:
-        "drop_duplicates/{sample}_{reftype}.bam",
+        "align_bam/{sample}_{reftype}.bam",
     output:
-        "drop_duplicates/{sample}_{reftype}.bam.bai",
+        "align_bam/{sample}_{reftype}.bam.bai",
     params:
         path_samtools=config["path"]["samtools"],
     threads: 4
@@ -402,7 +402,7 @@ rule index_dedup_bam:
 
 rule stat_dedup_bam:
     input:
-        "drop_duplicates/{sample}_{reftype}.bam",
+        "align_bam/{sample}_{reftype}.bam",
     output:
         "report_reads/deduping/{sample}_{reftype}_dedup.report",
     params:
@@ -450,13 +450,13 @@ rule report_reads_stat:
 rule merge_treated_bam_by_group:
     input:
         bam=lambda wildcards: [
-            f"drop_duplicates/{s}_{{reftype}}.bam"
+            f"align_bam/{s}_{{reftype}}.bam"
             if s in SAMPLE2RUN
             else SAMPLE2BAM[s][wildcards.reftype]
             for s in GROUP2SAMPLE[wildcards.group]["treated"]
         ],
         bai=lambda wildcards: [
-            f"drop_duplicates/{s}_{{reftype}}.bam.bai"
+            f"align_bam/{s}_{{reftype}}.bam.bai"
             if s in SAMPLE2RUN
             else SAMPLE2BAM[s][wildcards.reftype] + ".bai"
             for s in GROUP2SAMPLE[wildcards.group]["treated"]
@@ -532,10 +532,10 @@ rule prepare_bed_file:
 rule count_base_by_sample:
     input:
         bed=os.path.join(TEMPDIR, "selected_region/picked_{reftype}_{orientation}.bed"),
-        bam=lambda wildcards: "drop_duplicates/{sample}_{reftype}.bam"
+        bam=lambda wildcards: "align_bam/{sample}_{reftype}.bam"
         if wildcards.sample in SAMPLE2RUN
         else SAMPLE2BAM[wildcards.sample][wildcards.reftype],
-        bai=lambda wildcards: "drop_duplicates/{sample}_{reftype}.bam.bai"
+        bai=lambda wildcards: "align_bam/{sample}_{reftype}.bam.bai"
         if wildcards.sample in SAMPLE2RUN
         else SAMPLE2BAM[wildcards.sample][wildcards.reftype] + ".bai",
     output:
@@ -610,7 +610,7 @@ rule filter_sites:
     input:
         os.path.join(TEMPDIR, "pileup_adjusted/{reftype}.tsv"),
     output:
-        "pileup_filtered/{reftype}.tsv",
+        "filter_sites/{reftype}.tsv",
     params:
         path_filterGap=config["path"]["filterGap"],
         min_group_gap=config["cutoff"]["min_group_gap"],

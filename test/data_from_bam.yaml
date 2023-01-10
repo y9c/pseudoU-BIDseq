@@ -22,37 +22,37 @@ samples:
   # but it is a good habit to use letters and hyphen only, no space, underscore or other special symbol.
   mESCWT-rep1-input:
     bam:
-      genes: ./workspace_mouse_demo/drop_duplicates/mESCWT-rep1-input_genes.bam
-      genome: ./workspace_mouse_demo/drop_duplicates/mESCWT-rep1-input_genome.bam
+      genes: ./workspace_mouse_demo/align_bam/mESCWT-rep1-input_genes.bam
+      genome: ./workspace_mouse_demo/align_bam/mESCWT-rep1-input_genome.bam
     group: mESCWT
     treated: false
   mESCWT-rep2-input:
     bam:
-      genes: ./workspace_mouse_demo/drop_duplicates/mESCWT-rep2-input_genes.bam
-      genome: ./workspace_mouse_demo/drop_duplicates/mESCWT-rep2-input_genome.bam
+      genes: ./workspace_mouse_demo/align_bam/mESCWT-rep2-input_genes.bam
+      genome: ./workspace_mouse_demo/align_bam/mESCWT-rep2-input_genome.bam
     group: mESCWT
     treated: false
   mESCWT-rep3-input:
     bam:
-      genes: ./workspace_mouse_demo/drop_duplicates/mESCWT-rep3-input_genes.bam
-      genome: ./workspace_mouse_demo/drop_duplicates/mESCWT-rep3-input_genome.bam
+      genes: ./workspace_mouse_demo/align_bam/mESCWT-rep3-input_genes.bam
+      genome: ./workspace_mouse_demo/align_bam/mESCWT-rep3-input_genome.bam
     group: mESCWT
     treated: false
   mESCWT-rep1-treated:
     bam:
-      genes: ./workspace_mouse_demo/drop_duplicates/mESCWT-rep1-treated_genes.bam
-      genome: ./workspace_mouse_demo/drop_duplicates/mESCWT-rep1-treated_genome.bam
+      genes: ./workspace_mouse_demo/align_bam/mESCWT-rep1-treated_genes.bam
+      genome: ./workspace_mouse_demo/align_bam/mESCWT-rep1-treated_genome.bam
     group: mESCWT
     treated: true
   mESCWT-rep2-treated:
     bam:
-      genes: ./workspace_mouse_demo/drop_duplicates/mESCWT-rep2-treated_genes.bam
-      genome: ./workspace_mouse_demo/drop_duplicates/mESCWT-rep2-treated_genome.bam
+      genes: ./workspace_mouse_demo/align_bam/mESCWT-rep2-treated_genes.bam
+      genome: ./workspace_mouse_demo/align_bam/mESCWT-rep2-treated_genome.bam
     group: mESCWT
     treated: true
   mESCWT-rep3-treated:
     bam:
-      genes: ./workspace_mouse_demo/drop_duplicates/mESCWT-rep2-treated_genes.bam
-      genome: ./workspace_mouse_demo/drop_duplicates/mESCWT-rep2-treated_genome.bam
+      genes: ./workspace_mouse_demo/align_bam/mESCWT-rep2-treated_genes.bam
+      genome: ./workspace_mouse_demo/align_bam/mESCWT-rep2-treated_genome.bam
     group: mESCWT
     treated: true
