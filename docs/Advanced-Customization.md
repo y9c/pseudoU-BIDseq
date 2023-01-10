@@ -11,9 +11,9 @@ nav_order: 4
 
 ## Pair-end mode
 
-According to the size of BID-seq libraries, SE100 or SE150 sequencing mode is sufficent for most of the RNA fragments.
+According to the fragment size of BID-seq libraries, SE100 or SE150 sequencing mode is sufficent for most of the RNA fragments.
 To reduce cost, you do not need to run pair-end sequencing for most of the samples.
-But if you have longer insert fragment size, or want to imporve better sequencing quality by PE mode, this pipeline also support analyzing data from PE mode.
+But if you have longer insert fragment size, or want to imporve sequencing quality by PE mode, this pipeline also support analyzing data from PE mode.
 
 And the set up is as simple as adding a single line to into the YAML configure file.
 
@@ -78,7 +78,7 @@ Customized
 
 ## Cache internal files to speed up
 
-Add the following setting in the configure file, to turn on `keep_internal` (default: false). Once internal files, including refernce index and mapping bam files, are cached, you do not need to re-run some analysis when you add more sequening reads.
+Add the following setting in the configure file to turn on `keep_internal` (default: false). Once internal files, including refernce index and mapping bam files, are cached, you do not need to re-run some steps of the pipeline when you add more sequening reads.
 
 ```yaml
 keep_internal: true
@@ -90,7 +90,7 @@ keep_internal: true
 keep_discarded: true
 ```
 
-Once this parameter is true (default: False), untrimmed, too-short, unmapped... reads will be saved.
+Once this parameter is set as true (default: False), untrimmed, too-short, unmapped... reads will be saved.
 _Most of the time, you do not need these files. Set it as `false` to save storage._
 
 ## Mics
