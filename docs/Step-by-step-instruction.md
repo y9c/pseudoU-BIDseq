@@ -10,7 +10,7 @@ math: mathjax3
 {: .fs-9 }
 <!-- prettier-ignore-end -->
 
-## define settings in configure file
+## Define settings in configure file
 
 > Important parameters of the `data.yaml` file.
 
@@ -39,12 +39,12 @@ math: mathjax3
 
 _Read the [documentation](https://y9c.github.io/pseudoU-BIDseq/Advanced-Customization.html) on how to customize._
 
-## customized settings in command line
+## Customized settings in command line
 
 - Customized configure file with `-c` argument. (default: `data.yaml`)
 - Customized number of jobs/cores in parallel `-j` argument. (default: `48`)
 
-## post filter &Psi; sites
+## Post-filter &Psi; sites
 
 ### The reliablity ($p$) of the &Psi;-modified sites
 

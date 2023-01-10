@@ -30,7 +30,7 @@ samples:
 {: .note }
 Read 2 file is labeled with a `R2:` tag, and it is in the same indent as the `R1` tag. There is no hypen symbol before `R2` tag, because R2 and R1 are in pairs.
 
-## multiple sequencing runs
+## Multiple sequencing runs
 
 If you sequenced the same library in multiple sequencing flowcells, or added more reads for your sample, you do not need to combined the data before running this pipeline.
 You can add multiple runs under the data tag for one sample. When you start the pipeline, it will combine the data for this sample automatically.
@@ -70,11 +70,27 @@ Coming soon
 {: .label .label-yellow }
 Customized
 
-## Customized path of tools
+## Customized cutoff for pre-filtering
 
-Coming soon
-{: .label .label-yellow }
-Customized
+Add the following **whole** block into the configure file (`data.yaml` for example), and adjust the parameters.
+
+Not recommended
+{: .label .label-red }
+
+```yaml
+cutoff:
+  min_match_prop: 0.8
+  min_group_gap: 5
+  min_group_depth: 10
+  min_group_ratio: 0.01
+  min_group_num: 1
+```
+
+- `min_match_prop`: STAR `outFilterMatchNminOverLread`
+- `min_group_gap`: prefilter sites show >= x gaps in total among all samples in each group
+- `min_group_depth`: prefilter sites show >= x sequencing coverage in total among all samples in each group
+- `min_group_ratio`: prefilter sites show >= x deletion ratio among all samples in each group
+- `min_group_num`: only analysis putative sites that show pass prefilter in >= x groups
 
 ## Cache internal files to speed up
 
@@ -84,7 +100,7 @@ Add the following setting in the configure file to turn on `keep_internal` (defa
 keep_internal: true
 ```
 
-## keep dicarded reads for debugging purpose.
+## Keep dicarded reads for debugging purpose.
 
 ```yaml
 keep_discarded: true
@@ -92,13 +108,3 @@ keep_discarded: true
 
 Once this parameter is set as true (default: False), untrimmed, too-short, unmapped... reads will be saved.
 _Most of the time, you do not need these files. Set it as `false` to save storage._
-
-## Mics
-
-Coming soon
-{: .label .label-yellow }
-
-```yaml
-trim_p5: false
-greedy_mapping: false
-```
