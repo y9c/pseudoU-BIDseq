@@ -40,7 +40,7 @@ math: mathjax3
 
 ### The stoichiometry ($f$) of the &Psi;-modified sites
 
-$f$ can be precisely calculated by applying the deletion ratio ($r = \sfrac{g}{d}$, where $g$ is deletion number and $d$ is sequencing coverage) to the calibration curves.
+$f$ can be precisely calculated by applying the deletion ratio ($r = \displaystyle{\frac{g}{d}}$, where $g$ is deletion number and $d$ is sequencing coverage) to the calibration curves.
 
 $$
 f=\frac{b - r}{c \times (b + s - s \times r - 1)}
@@ -50,14 +50,14 @@ $$
 
 ### The reliablity ($p$) of the &Psi;-modified sites
 
-The p-value from One-sided Fisher’s Exact Test for number of T bases in ‘BID-seq’ libraries (\sum d_t\ -\ \sum g_t), number of deletions in ‘BID-seq’ libraries (\sum g_t), number of T bases in ‘Input’ libraries (\sum d_i\ -\ \sum g_i), number of deletions in ‘Input’ libraries (\sum g_i) is less than 10-4.
+The p-value from One-sided Fisher’s Exact Test for number of T bases in ‘BID-seq’ libraries ($\sum{d_{t}} - \sum{g_{t}}$), number of deletions in ‘BID-seq’ libraries ($\sum{g_{t}}$), number of T bases in ‘Input’ libraries ($\sum{d_{i}} - \sum{g_{i}}$), number of deletions in ‘Input’ libraries ($\sum{g_{i}}$) is less than $10^{-4}$.
 
-| --------- | ----------------------- | ----------------- |
-| --------- | ----------------------- | ----------------- |
-|           | Input                   | Treated           |
-| T         | $d_{i} - g_{i}$         | $d_{t} - g_{t}$   |
-| gap       | $g_{i}$                 | $g_{t}$           |
+| --------- | -----------------------     | -----------------           |
+| --------- | --------------------------- | --------------------------- |
+|           | Input                       | Treated                     |
+| T         | $\sum{d_{i}} - \sum{g_{i}}$ | $\sum{d_{t}} - \sum{g_{t}}$ |
+| gap       | $\sum{g_{i}}$               | $\sum{g_{t}}$               |
 
 $$
-\displaystylep={\frac{  \displaystyle{ {d_{i}}\choose{g_{i}} } \displaystyle{ {d_{t}}\choose{g_{t}} }  }{\displaystyle{ {d_{i}+d_{t}}\choose{g_{i}+g_{t}} }}}
+\displaystyle p={\frac{  \displaystyle{ {\sum{d_{i}}}\choose{\sum{g_{i}}} } \displaystyle{ {\sum{d_{t}}}\choose{\sum{g_{t}}} }  }{\displaystyle{ {\sum{d_{i}}+\sum{d_{t}}}\choose{\sum{g_{i}}+\sum{g_{t}}} }}}
 $$
