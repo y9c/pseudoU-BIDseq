@@ -50,13 +50,20 @@ $$
 
 ### The reliablity ($p$) of the &Psi;-modified sites
 
-The p-value from One-sided Fisher’s Exact Test for number of T bases in ‘BID-seq’ libraries ($\sum{d_{t}} - \sum{g_{t}}$), number of deletions in ‘BID-seq’ libraries ($\sum{g_{t}}$), number of T bases in ‘Input’ libraries ($\sum{d_{i}} - \sum{g_{i}}$), number of deletions in ‘Input’ libraries ($\sum{g_{i}}$) is less than $10^{-4}$.
+A p-value from One-sided Fisher’s Exact Test can be used for evaluate the reliabity of each site.
+
+As the table bellow,
+
+- $\sum{d_{i}}$ is total number of coverage in input libraries
+- $\sum{d_{t}}$ is total number of coverage in treated libraries
+- $\sum{g_{i}}$ is total number of gaps in input libraries
+- $\sum{g_{t}}$ is total number of gaps in treated libraries
 
 | --------- | -----------------------     | -----------------           |
 | --------- | --------------------------- | --------------------------- |
 |           | Input                       | Treated                     |
-| T         | $\sum{d_{i}} - \sum{g_{i}}$ | $\sum{d_{t}} - \sum{g_{t}}$ |
 | gap       | $\sum{g_{i}}$               | $\sum{g_{t}}$               |
+| T         | $\sum{d_{i}} - \sum{g_{i}}$ | $\sum{d_{t}} - \sum{g_{t}}$ |
 
 $$
 \displaystyle p={\frac{  \displaystyle{ {\sum{d_{i}}}\choose{\sum{g_{i}}} } \displaystyle{ {\sum{d_{t}}}\choose{\sum{g_{t}}} }  }{\displaystyle{ {\sum{d_{i}}+\sum{d_{t}}}\choose{\sum{g_{i}}+\sum{g_{t}}} }}}
