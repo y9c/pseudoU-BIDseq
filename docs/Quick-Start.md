@@ -53,23 +53,29 @@ nav_order: 2
 
    default
    {: .label .label-blue }
+   The pipeline will load configure file named as `data.yaml` under current directory
 
-   - Customized configure file with `-c` argument. (default: `data.yaml`)
-   - Customized number of jobs/cores in parallel `-j` argument. (default: `48`)
+   {: .note }
+
+   > - Customized configure file with `-c` argument. (default: `data.yaml`)
+   > - Customized number of jobs/cores in parallel `-j` argument. (default: `48`)
 
    _Read the [documentation](https://y9c.github.io/pseudoU-BIDseq/Step-by-step-instruction.html#customized-settings-in-command-line) on how to customize._
 
 3. **View the analytics report and pileup table.**
 
-   3 folder are will be created in the working directory (default: `workspace`),
-
    default
    {: .label .label-blue }
+   3 folder are will be created in the working directory (default: `workspace`),
 
-   ├── align_bam
-   ├── **report_reads**
-   └── **filter_sites**
+   {: .note }
 
-   - trimming, mapping, deduping reports are in `report_reads` folder, with key numbers in all the steps reported in one webpage<sup>([example](https://y9c.github.io/pseudoU-BIDseq/readsStats))</sup>.
-   - deleted sites for &Psi; sites detection are in `filter_sites` folder. These sites are only passed the _simplest filtering_, you can apply customized threadfolds into them based your data type and quality.
-   - processed mapping results (_.bam_) are in `align_bam` folder. You can zoom into location that you interested in IGV.
+   > ```
+   > ├── align_bam
+   > ├── **report_reads**
+   > └── **filter_sites**
+   > ```
+   >
+   > - trimming, mapping, deduping reports are in `report_reads` folder, with key numbers in all the steps reported in one webpage<sup>([example](https://y9c.github.io/pseudoU-BIDseq/readsStats))</sup>.
+   > - deleted sites for &Psi; sites detection are in `filter_sites` folder. These sites are only passed the _simplest filtering_, you can apply customized threadfolds into them based your data type and quality.
+   > - processed mapping results (_.bam_) are in `align_bam` folder. You can zoom into location that you interested in IGV.
