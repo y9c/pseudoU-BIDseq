@@ -59,5 +59,5 @@ The p-value from One-sided Fisher’s Exact Test for number of T bases in ‘BID
 | gap       | $g_{i}$                 | $g_{t}$           |
 
 $$
-{\displaystyle p={\frac{\displaystyle {{d_{i}} \choose {g_{i}}}\displaystyle {{d_{t}} \choose {g_{t}}}}{\displaystyle {{d_{i} + d_{t}} \choose { g_{i}+g_{t} }}}}}
+\displaystyle p={\frac{\displaystyle{{d_{i}} \choose {g_{i}}}\displaystyle {{d_{t}} \choose {g_{t}}}}{\displaystyle {{d_{i} + d_{t}} \choose { g_{i}+g_{t} }}}}
 $$
