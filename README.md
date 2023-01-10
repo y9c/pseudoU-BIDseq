@@ -74,7 +74,7 @@ The entire analysis can be completed in just three steps:
 
    </details>
 
-3. **View the analytics report and pileup table.**
+3. **View the analytics reports and filtered sites.**
 
     <details>
       <summary>3 folder are will be created in the working directory (default: `workspace`).<sup>(Click to expand)</sup></summary>

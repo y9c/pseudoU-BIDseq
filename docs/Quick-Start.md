@@ -62,7 +62,7 @@ nav_order: 2
 
    _Read the [documentation](https://y9c.github.io/pseudoU-BIDseq/Step-by-step-instruction.html#customized-settings-in-command-line) on how to customize._
 
-3. **View the analytics report and pileup table.**
+3. **View the analytics reports and filtered sites.**
 
    default
    {: .label .label-blue }

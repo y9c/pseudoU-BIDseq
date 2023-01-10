@@ -10,7 +10,7 @@ math: mathjax3
 {: .fs-9 }
 <!-- prettier-ignore-end -->
 
-## Define settings in configure file
+## Define settings in the configure file
 
 > Important parameters of the `data.yaml` file.
 
@@ -39,7 +39,7 @@ math: mathjax3
 
 _Read the [documentation](https://y9c.github.io/pseudoU-BIDseq/Advanced-Customization.html) on how to customize._
 
-## Customized settings in command line
+## Customized settings in the command line
 
 - Customized configure file with `-c` argument. (default: `data.yaml`)
 - Customized number of jobs/cores in parallel `-j` argument. (default: `48`)
@@ -107,7 +107,13 @@ $$
 
 ### The stoichiometry ($f$) of the &Psi;-modified sites
 
-$f$ can be precisely calculated by applying the deletion ratio ($r = \displaystyle{\frac{g}{d}}$, where $g$ is the deletion number and $d$ is the sequencing coverage) to the calibration curves.
+&Psi; stoichiometry ($f$) can be precisely calculated by applying the deletion ratio ($r$) to the calibration curves.
+
+$$
+r = \displaystyle{\frac{g}{d}}
+$$
+
+, where $g$ is the deletion number and $d$ is the sequencing coverage
 
 $$
 f=\frac{b - r}{c \times (b + s - s \times r - 1)}
