@@ -62,20 +62,19 @@ samples:
       genome: B1.genome.bam
 ```
 
-## Customized adapter (inline barcode)
-
-You can customized the adapter sequencing if you are not using the adpter provided by the protocol.
+## Customized adapter / inline barcode
 
 Coming soon
 {: .label .label-yellow }
-Customized
+
+You can customized the adapter sequencing if you are not using the adpter provided by the protocol.
 
 ## Customized cutoff for pre-filtering
 
-Add the following **whole** block into the configure file (`data.yaml` for example), and adjust the parameters.
-
 Not recommended
 {: .label .label-red }
+
+Add the following **whole** block into the configure file (`data.yaml` for example), and adjust the parameters.
 
 ```yaml
 cutoff:
