@@ -113,7 +113,7 @@ $$
 r = \displaystyle{\frac{g}{d}}
 $$
 
-, where $g$ is the deletion number and $d$ is the sequencing coverage
+, where $g$ is the <u>deletion number</u> and $d$ is the <u>sequencing coverage</u>.
 
 $$
 f=\frac{b - r}{c \times (b + s - s \times r - 1)}
