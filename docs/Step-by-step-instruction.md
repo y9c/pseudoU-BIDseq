@@ -97,8 +97,6 @@ $$
 > write.table(df, gzfile(fn_out), sep = "\t", row.names = F, quote = F)
 > ```
 
-```
-
 ### The stoichiometry ($f$) of the &Psi;-modified sites
 
 $f$ can be precisely calculated by applying the deletion ratio ($r = \displaystyle{\frac{g}{d}}$, where $g$ is deletion number and $d$ is sequencing coverage) to the calibration curves.
@@ -108,4 +106,3 @@ f=\frac{b - r}{c \times (b + s - s \times r - 1)}
 $$
 
 , where $c$ is conversion ratio conversion ratio, $s$ is the RT dropout proportion and $b$ is the background noise.
-```
