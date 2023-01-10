@@ -71,7 +71,9 @@ nav_order: 2
    {: .note }
 
    > ├── align_bam
+   >
    > ├── **report_reads**
+   >
    > └── **filter_sites**
    >
    > - trimming, mapping, deduping reports are in `report_reads` folder, with key numbers in all the steps reported in one webpage<sup>([example](https://y9c.github.io/pseudoU-BIDseq/readsStats))</sup>.
