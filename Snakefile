@@ -97,7 +97,9 @@ rule run_cutadapt:
     params:
         path_cutadapt=config["path"]["cutadapt"],
         p7=config["adapter"]["p7"],
-        trim_p5_args='-n 3 -g "{};o=5;e=0.2" '.format(config["adapter"]["p5"])
+        trim_p5_args='-n 2 -g "{};o=3;e=0.2;rightmost" '.format(
+            config["adapter"]["p5"][-10:]
+        )
         if config["trim_p5"]
         else "",
     threads: 20
