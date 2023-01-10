@@ -65,10 +65,10 @@ The entire analysis can be completed in just three steps:
    ```
 
     <details>
-      <summary>default settings<sup>(Click to expand)</sup></summary>
+      <summary>The pipeline will load configure file named as `data.yaml` under current directory.<sup>(Click to expand)</sup></summary>
 
-   > - Customized configure file with `-c` argument. (default: `data.yaml`)
-   > - Customized number of jobs/cores in parallel `-j` argument. (default: `48`)
+   - Customized configure file with `-c` argument. (default: `data.yaml`)
+   - Customized number of jobs/cores in parallel `-j` argument. (default: `48`)
 
    _Read the [documentation](https://y9c.github.io/pseudoU-BIDseq/Step-by-step-instruction.html#customized-analysis-parameters) on how to customize._
 
@@ -79,15 +79,15 @@ The entire analysis can be completed in just three steps:
     <details>
       <summary>3 folder are will be created in the working directory (default: `workspace`).<sup>(Click to expand)</sup></summary>
 
-   > ```
-   > ├── align_bam
-   > ├── **report_reads**
-   > └── **filter_sites**
-   > ```
-   >
-   > - trimming, mapping, deduping reports are in `report_reads` folder, with key numbers in all the steps reported in one webpage<sup>([example](https://y9c.github.io/pseudoU-BIDseq/readsStats))</sup>.
-   > - deleted sites for &Psi; sites detection are in `filter_sites` folder. These sites are only passed the _simplest filtering_, you can apply customized threadfolds into them based your data type and quality.
-   > - processed mapping results (_.bam_) are in `align_bam` folder. You can zoom into location that you interested in IGV.
+   ```
+   ├── align_bam
+   ├── **report_reads**
+   └── **filter_sites**
+   ```
+
+   - trimming, mapping, deduping reports are in `report_reads` folder, with key numbers in all the steps reported in one webpage<sup>([example](https://y9c.github.io/pseudoU-BIDseq/readsStats))</sup>.
+   - deleted sites for &Psi; sites detection are in `filter_sites` folder. These sites are only passed the _simplest filtering_, you can apply customized threadfolds into them based your data type and quality.
+   - processed mapping results (_.bam_) are in `align_bam` folder. You can zoom into location that you interested in IGV.
 
    </details>
 
