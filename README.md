@@ -81,8 +81,8 @@ The entire analysis can be completed in just three steps:
 
    ```
    ├── align_bam
-   ├── **report_reads**
-   └── **filter_sites**
+   ├── <b>report_reads</b>
+   └── <b>filter_sites</b>
    ```
 
    - trimming, mapping, deduping reports are in `report_reads` folder, with key numbers in all the steps reported in one webpage<sup>([example](https://y9c.github.io/pseudoU-BIDseq/readsStats))</sup>.
