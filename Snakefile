@@ -130,7 +130,9 @@ rule build_bowtie2_index:
     input:
         fa=lambda wildcards: REF[wildcards.reftype]["fa"],
     output:
-        idx=os.path.join(INTERNALDIR, "mapping_index/{reftype}.1.bt2"),
+        idx=os.path.join(INTERNALDIR, "mapping_index/{reftype}.1.bt2")
+        if config["keep_internal"]
+        else temp(os.path.join(INTERNALDIR, "mapping_index/{reftype}.1.bt2")),
     params:
         path_bowtie2build=config["path"]["bowtie2Build"],
         ref_bowtie2=os.path.join(INTERNALDIR, "mapping_index/{reftype}"),
