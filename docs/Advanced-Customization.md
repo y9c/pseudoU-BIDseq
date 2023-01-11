@@ -66,7 +66,8 @@ samples:
 
 You can customize the adapter sequencing if you are not using the adapter (\_NNNNN_AGATCGGAAGAGCACACGTCT) provided by the protocol.
 
-By default, only 5 N are added on the 3' adapter, which is used as an inline barcode. But it is also possible to add an inline barcode as the one used in _Nature__ Biotech.__ [paper](https://www.nature.com/articles/s41587-022-01505-w#Sec12) (_NNNNN_<u>ATCACG</u>AGATCGGAAGAGCACACGTCT).
+By default, only 5 N are added on the 3' adapter, which is used as an inline barcode.
+But it is also possible to add an inline barcode as the one used in _Nature Biotech._ [paper](https://www.nature.com/articles/s41587-022-01505-w#Sec12) (_NNNNN_<u>ATCACG</u>AGATCGGAAGAGCACACGTCT).
 
 There are two ways to specify the inline barcode.
 
