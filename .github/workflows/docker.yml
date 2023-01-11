@@ -36,5 +36,4 @@ jobs:
           context: .
           push: true
           tags: |
-            y9ch/bidseq:latest
             ghcr.io/y9c/bidseq:latest
