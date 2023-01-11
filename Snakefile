@@ -318,7 +318,7 @@ rule sort_cal_filter_bam:
         """
         {params.path_samtools} sort -@ {threads} -m 4G {input} | \
             {params.path_samtools} calmd -@ {threads} - {params.ref_fa} 2>/dev/null | \
-            {params.path_samtools} view -@ {threads} --reference {params.ref_fa} -e '[NM]<=5 && [NM]/(qlen-sclen)<=0.2' -O CRAM -U {output.un} -o {output.cram}
+            {params.path_samtools} view -@ {threads} --reference {params.ref_fa} -e '[NM]<=5 && [NM]/(qlen-sclen)<=0.1' -O CRAM -U {output.un} -o {output.cram}
         """
 
 
