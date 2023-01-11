@@ -27,6 +27,7 @@ REFTYPE = ["genes", "genome"]
 GROUP2SAMPLE = defaultdict(lambda: defaultdict(list))
 SAMPLE_IDS = []
 SAMPLE2RUN = defaultdict(dict)
+SAMPLE2BARCODE = defaultdict(dict)
 SAMPLE2BAM = defaultdict(dict)
 for s, v2 in config["samples"].items():
     SAMPLE_IDS.append(s)
@@ -34,6 +35,7 @@ for s, v2 in config["samples"].items():
         GROUP2SAMPLE[v2["group"]]["treated"].append(s)
     else:
         GROUP2SAMPLE[v2["group"]]["input"].append(s)
+    SAMPLE2BARCODE[s] = v2.get("barcode", config.get("barcode", ""))
     for i, v3 in enumerate(v2.get("data", []), 1):
         r = f"run{i}"
         SAMPLE2RUN[s][r] = {
@@ -96,7 +98,7 @@ rule run_cutadapt:
         report="report_reads/trimming/{sample}_{rn}_cutadapt.report",
     params:
         path_cutadapt=config["path"]["cutadapt"],
-        p7=config["adapter"]["p7"],
+        p7=lambda wildcards: SAMPLE2BARCODE[wildcards.sample] + config["adapter"]["p7"],
         trim_p5_args='-n 2 -g "{};o=3;e=0.2;rightmost" '.format(
             config["adapter"]["p5"][-10:]
         )

@@ -76,6 +76,7 @@ schema = {
                         },
                         "group": {"type": "string"},
                         "treated": {"type": "boolean"},
+                        "barcode": {"type": "string"},
                     },
                     "if": {"not": {"required": ["bam"]}},
                     "then": {"required": ["data"]},

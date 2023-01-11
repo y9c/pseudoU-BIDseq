@@ -64,10 +64,27 @@ samples:
 
 ## Customized adapter / inline barcode
 
-Coming soon
-{: .label .label-yellow }
-
 You can customized the adapter sequencing if you are not using the adpter provided by the protocol.
+
+By default, only 5 N are added on the 3' adapter, which is used as inline barcode. But it is also possilbe to add inline barcode as the one used in he _Nature Biotech._ paper.
+
+There are two way to specific inline barcode.
+
+1. You can use global setting in the configure file by adding:
+
+```yaml
+barcode: ATCACG
+```
+
+2.  If only part of the libraries are with inline barcode, while others are not, you can specific inline barcode for each sample. Leave it blank (default) means without inline barcode.
+
+```yaml
+samples:
+  mESCWT-rep1-input:
+    data:
+      - R1: ./test/IP16_sequencing_run1.fastq.gz
+    barcode: ATCACG
+```
 
 ## Customized cutoff for pre-filtering
 
