@@ -100,7 +100,7 @@ rule run_cutadapt:
         path_cutadapt=config["path"]["cutadapt"],
         p7=lambda wildcards: SAMPLE2BARCODE[wildcards.sample] + config["adapter"]["p7"],
         trim_p5_args='-n 2 -g "{};o=3;e=0.2;rightmost" '.format(
-            config["adapter"]["p5"][-10:]
+            config["adapter"]["p5"][-13:]
         )
         if config["trim_p5"]
         else "",
