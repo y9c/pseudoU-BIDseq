@@ -64,19 +64,19 @@ samples:
 
 ## Customized adapter / inline barcode
 
-You can customized the adapter sequencing if you are not using the adpter (<u>NNNNN</u>AGATCGGAAGAGCACACGTCT) provided by the protocol.
+You can customized the adapter sequencing if you are not using the adpter (*NNNNN*AGATCGGAAGAGCACACGTCT) provided by the protocol.
 
-By default, only 5 N are added on the 3' adapter, which is used as inline barcode. But it is also possilbe to add inline barcode as the one used in he _Nature Biotech._ paper (<u>NNNNNATCACG</u>AGATCGGAAGAGCACACGTCT).
+By default, only 5 N are added on the 3' adapter, which is used as inline barcode. But it is also possilbe to add inline barcode as the one used in he _Nature Biotech._ paper (_NNNNN_<u>ATCACG</u>AGATCGGAAGAGCACACGTCT).
 
 There are two ways to specific the inline barcode.
 
-- You can use global setting in the configure file by adding:
+- You can apply global setting for all the samples in the configure file by adding:
 
 ```yaml
 barcode: ATCACG
 ```
 
-- If only part of the libraries are with inline barcode, while others are not, you can specific inline barcode for each sample. Leave it blank (default) means without inline barcode.
+- If only some of the libraries are with inline barcode, while others are not, you can specific inline barcode for each sample respectively. Leave it blank (default) means without inline barcode.
 
 ```yaml
 samples:
