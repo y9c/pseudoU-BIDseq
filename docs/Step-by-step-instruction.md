@@ -46,11 +46,11 @@ _Read the [documentation](https://y9c.github.io/pseudoU-BIDseq/Advanced-Customiz
 
 ## Post-filter &Psi; sites
 
-### The reliablity ($p$) of the &Psi;-modified sites
+### The reliability ($p$) of the &Psi;-modified sites
 
-A p-value from **One-sided Fisher’s Exact Test** can be used for evaluating the reliabity of each site.
+A p-value from the **One-sided Fisher’s Exact Test** can be used for evaluating the reliability of each site.
 
-As the table bellow,
+As the table below,
 
 - $\sum{d_{i}}$ is total number of coverage in input libraries
 - $\sum{d_{t}}$ is total number of coverage in treated libraries

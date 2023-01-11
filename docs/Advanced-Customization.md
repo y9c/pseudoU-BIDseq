@@ -11,11 +11,11 @@ nav_order: 4
 
 ## Pair-end mode
 
-According to the fragment size of BID-seq libraries, SE100 or SE150 sequencing mode is sufficent for most of the RNA fragments.
+According to the fragment size of BID-seq libraries, SE100 or SE150 sequencing mode is sufficient for most of the RNA fragments.
 To reduce cost, you do not need to run pair-end sequencing for most of the samples.
-But if you have longer insert fragment size, or want to imporve sequencing quality by PE mode, this pipeline also support analyzing data from PE mode.
+But if you have a longer insert fragment size, or want to improve sequencing quality by PE mode, this pipeline also supports analyzing data from PE mode.
 
-And the set up is as simple as adding a single line to into the YAML configure file.
+And the setup is as simple as adding a single line into the YAML configure file.
 
 ```yaml
 samples:
@@ -28,11 +28,11 @@ samples:
 `R2: ./test/IP16_R2.fastq.gz` is added under the data tag.
 
 {: .note }
-Read 2 file is labeled with a `R2:` tag, and it is in the same indent as the `R1` tag. There is no hypen symbol before `R2` tag, because R2 and R1 are in pairs.
+Read 2 file is labeled with an `R2` tag, and it is in the same indent as the `R1` tag. There is no hyphen symbol before the `R2` tag, because R2 and R1 are in pairs.
 
 ## Multiple sequencing runs
 
-If you sequenced the same library in multiple sequencing flowcells, or added more reads for your sample, you do not need to combined the data before running this pipeline.
+If you sequenced the same library in multiple sequencing flowcells or added more reads for your sample, you do not need to combine the data before running this pipeline.
 You can add multiple runs under the data tag for one sample. When you start the pipeline, it will combine the data for this sample automatically.
 
 ```yaml
@@ -45,8 +45,8 @@ samples:
 ```
 
 {: .note }
-Sequencing data is combined after read alignment, rather than at the first step of the analysis. This stategy can save computation resource and energy. For example, sometime you run the sequencing for your libraries, but found that the data is not sufficent after the analyze.
-You then add extra sequencing data for this library. In this pipeline, only new generated data need to be aligned.
+Sequencing data is combined after read alignment, rather than at the first step of the analysis. This strategy can save computation resources and energy. For example, sometimes you run the sequencing for your libraries but found that the data is not sufficient after the analysis.
+You then add extra sequencing data for this library. In this pipeline, only newly generated data need to be aligned.
 
 ## Use pre-analyzed bam file for &Psi; sites detection only
 
@@ -64,19 +64,19 @@ samples:
 
 ## Customized adapter / inline barcode
 
-You can customized the adapter sequencing if you are not using the adpter (*NNNNN*AGATCGGAAGAGCACACGTCT) provided by the protocol.
+You can customize the adapter sequencing if you are not using the adapter (\_NNNNN_AGATCGGAAGAGCACACGTCT) provided by the protocol.
 
-By default, only 5 N are added on the 3' adapter, which is used as inline barcode. But it is also possilbe to add inline barcode as the one used in he _Nature Biotech._ paper (_NNNNN_<u>ATCACG</u>AGATCGGAAGAGCACACGTCT).
+By default, only 5 N are added on the 3' adapter, which is used as an inline barcode. But it is also possible to add an inline barcode as the one used in _Nature__ Biotech.__ [paper](https://www.nature.com/articles/s41587-022-01505-w#Sec12) (_NNNNN_<u>ATCACG</u>AGATCGGAAGAGCACACGTCT).
 
-There are two ways to specific the inline barcode.
+There are two ways to specify the inline barcode.
 
-- You can apply global setting for all the samples in the configure file by adding:
+- You can apply the global setting for all the samples in the configure file by adding:
 
 ```yaml
 barcode: ATCACG
 ```
 
-- If only some of the libraries are with inline barcode, while others are not, you can specific inline barcode for each sample respectively. Leave it blank (default) means without inline barcode.
+- If only some of the libraries are with inline barcodes, while others are not, you can specific inline barcodes for each sample respectively. Leave it blank (default) means without an inline barcode.
 
 ```yaml
 samples:
@@ -110,13 +110,9 @@ cutoff:
 
 ## Cache internal files to speed up
 
-Add the following setting in the configure file to turn on `keep_internal` (default: false). Once internal files, including refernce index and mapping bam files, are cached, you do not need to re-run some steps of the pipeline when you add more sequening reads.
+Add the following setting in the configure file to turn on `keep_internal` (default: false). Once internal files, including reference index and mapping bam files, are cached, you do not need to re-run some steps of the pipeline when you add more sequencing reads.
 
-```yaml
-keep_internal: true
-```
-
-## Keep dicarded reads for debugging purpose.
+## Keep discarded reads for debugging purposes.
 
 ```yaml
 keep_discarded: true

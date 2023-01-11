@@ -13,7 +13,7 @@
   </a>
 </p>
 
-## How to use?
+## How to use it?
 
 A [docker image](https://hub.docker.com/r/y9ch/bidseq) containing the source code and dependencies has been published for reproducibility. You can run it using the [apptainer](https://apptainer.org/help) container runtime.
 
@@ -64,8 +64,8 @@ The entire analysis can be completed in just three steps:
    apptainer run docker://y9ch/bidseq
    ```
 
-    <details>
-      <summary>The pipeline will load configure file named as `data.yaml` under current directory.<sup>(Click to expand)</sup></summary>
+   <details>
+       <summary>The pipeline will load configure file named `data.yaml` under the current directory.<sup>(Click to expand)</sup></summary>
 
    - Customized configure file with `-c` argument. (default: `data.yaml`)
    - Customized number of jobs/cores in parallel `-j` argument. (default: `48`)
@@ -76,8 +76,8 @@ The entire analysis can be completed in just three steps:
 
 3. **View the analytics reports and filtered sites.**
 
-    <details>
-      <summary>3 folder are will be created in the working directory (default: `workspace`).<sup>(Click to expand)</sup></summary>
+   <details>
+      <summary>3 folders are will be created in the working directory (default: `workspace`).<sup>(Click to expand)</sup></summary>
 
    <code>
    ├── align_bam
@@ -85,9 +85,9 @@ The entire analysis can be completed in just three steps:
    └── <b>filter_sites</b>
    </code>
 
-   - trimming, mapping, deduping reports are in `report_reads` folder, with key numbers in all the steps reported in one webpage<sup>([example](https://y9c.github.io/pseudoU-BIDseq/readsStats))</sup>.
-   - filtered sites for &Psi; sites detection are in `filter_sites` folder. These sites are only passed the _simplest filtering_, you can apply customized threshold into them based your data type and quality.
-   - processed mapping results (_.bam_) are in `align_bam` folder. You can zoom into location that you interested in IGV.
+   - trimming, mapping, and deduping reports are in `report_reads` folder, with key numbers in all the steps reported in one webpage<sup>([example](https://y9c.github.io/pseudoU-BIDseq/readsStats))</sup>.
+   - filtered sites for &Psi; detection are in the `filter_sites` folder. These sites are only passed the _simplest filtering_, you can apply customized thresholds to them based on your data type and quality.
+   - processed mapping results (_.bam_) are in `align_bam` folder. You can zoom into a location that you are interested in IGV.
 
    </details>
 

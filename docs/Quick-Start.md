@@ -53,7 +53,7 @@ nav_order: 2
 
    default
    {: .label .label-blue }
-   The pipeline will load configure file named as `data.yaml` under current directory
+   The pipeline will load configure file named `data.yaml` under the current directory
 
    {: .note }
 
@@ -66,7 +66,7 @@ nav_order: 2
 
    default
    {: .label .label-blue }
-   3 folder are will be created in the working directory (default: `workspace`),
+   3 folder will be created in the working directory (default: `workspace`),
 
    {: .note }
 
