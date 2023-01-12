@@ -38,23 +38,31 @@ math: mathjax3
 > - `tempdir`
 > - `cores`
 > - ...
+>
 > - `reference`
+>
 >   The `reference` section specifies the path of reference sequences, which are in the fasta format, and the index for bowtie2 or STAR aligner.
 >
 >   - contamination : Put some putative contamination in your samples in to a fasta file. For cultured cells, contamination is most likely to be Mycoplasmsa and E. coli. For plant samples, it might be some fungi.
+>
 >     💡 **If contamination fasta file is not provided, the contamination filter step will be skipped.**
+>
 >     💡 The bowtie2 index for **contamination** is optional, and if it is not provided, the pipeline will generate bowtie2 index automatically.
 >
 >   - genes:
 >     rRNA genes and non-coding small RNA genes (snoRNA, miRNA, tRNA, ...) of the species you study can be downloaded from NCBI database and used as the reference in this step.
 >     An example dataset for mouse (Mus musculus) can be downloaded from this (LINK)[https://github.com/chelab/db/raw/main/reference_sequence/Mus_musculus.GRCm39.sncRNA.fa.gz].
+>
 >     💡 Mapping to genes before mapping reads into genome is a strategy to improved accurary to removed putative false possitives. More details are explained in the paper.
+>
 >     💡 The bowtie2 index for **genes** is optional, and if it is not provided, the pipeline will generate bowtie2 index automatically.
 >
 >   - genome: Use the latest version of the reference genome for the species you study.
->     The STAR index for the **genome** sequence is also required.
+>
+>     💡 The STAR index for the **genome** sequence is also required.
 >
 > - `samples`
+>
 >   The `samples` section specifies the path (`data`), the classification (`group`), the library type (`treated`) and other information for each sample.
 
 _Read the [documentation](https://y9c.github.io/pseudoU-BIDseq/Advanced-Customization.html) on how to customize._
