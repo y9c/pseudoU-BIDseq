@@ -51,7 +51,7 @@ math: mathjax3
 >
 >   - genes:
 >     rRNA genes and non-coding small RNA genes (snoRNA, miRNA, tRNA, ...) of the species you study can be downloaded from NCBI database and used as the reference in this step.
->     An example dataset for mouse (Mus musculus) can be downloaded from this (LINK)[https://github.com/chelab/db/raw/main/reference_sequence/Mus_musculus.GRCm39.sncRNA.fa.gz].
+>     An example dataset for mouse (Mus musculus) can be downloaded from this [LINK](https://github.com/chelab/db/raw/main/reference_sequence/Mus_musculus.GRCm39.sncRNA.fa.gz).
 >
 >     💡 Mapping to genes before mapping reads into genome is a strategy to improved accurary to removed putative false possitives. More details are explained in the paper.
 >
