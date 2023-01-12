@@ -43,9 +43,6 @@ nav_order: 2
 
    You can also copy and edit from this [template](test/data.yaml).
 
-   - The `reference` section specifies the path of reference sequences, which are in the fasta format. The STAR index for the **genome** sequence is also required. The bowtie2 indices for **contamination** and **genes** are optional. If it is not provided, the pipeline will generate bowtie2 index automatically.
-   - The `samples` section specifies the path (`data`), the classification (`group`), the library type (`treated`) and other information for each sample.
-
    _Read the [more details](https://y9c.github.io/pseudoU-BIDseq/Step-by-step-instruction.html#define-settings-in-the-configure-file) on how to customize._
 
 2. **Run all the analysis by one command**:
