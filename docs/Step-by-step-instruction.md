@@ -64,6 +64,10 @@ _Read the [documentation](https://y9c.github.io/pseudoU-BIDseq/Advanced-Customiz
 - Customized configure file with `-c` argument. (default: `data.yaml`)
 - Customized number of jobs/cores in parallel `-j` argument. (default: `48`)
 
+{: .note }
+
+> `-j` arg in the command line has higher priority than the `cores` setting in the yaml file. This one will mask the one in the configure file.
+
 ## Post-filter &Psi; sites
 
 ### The reliability ($p$) of the &Psi;-modified sites

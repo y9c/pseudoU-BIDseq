@@ -53,12 +53,11 @@ nav_order: 2
 
    default
    {: .label .label-blue }
-   The pipeline will load configure file named `data.yaml` under the current directory
+   The pipeline will load configure file named `data.yaml` under the current directory.
 
    {: .note }
 
-   > - Customized configure file with `-c` argument. (default: `data.yaml`)
-   > - Customized number of jobs/cores in parallel `-j` argument. (default: `48`)
+   > If your configure file is not named as `data.yaml`, add `-c your_file_name.yaml` arg after the command to customize.
 
 3. **View the analytics reports and filtered sites.**
 
