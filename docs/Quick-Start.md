@@ -63,8 +63,6 @@ nav_order: 2
    > - Customized configure file with `-c` argument. (default: `data.yaml`)
    > - Customized number of jobs/cores in parallel `-j` argument. (default: `48`)
 
-   _Read the [documentation](https://y9c.github.io/pseudoU-BIDseq/Step-by-step-instruction.html#customized-settings-in-command-line) on how to customize._
-
 3. **View the analytics reports and filtered sites.**
 
    default

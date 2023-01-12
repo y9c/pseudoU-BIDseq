@@ -27,7 +27,7 @@ math: mathjax3
 | ^^        | ^^            | bt2     | Auto (string)           | (_optional_) `bowtie2` index for selected genes                                                                                                                                                                          |
 | ^^        | genome        | fa      | - (string)              | (**required**) reference genome for the species you study                                                                                                                                                                |
 | ^^        | ^^            | star    | - (string)              | (**required**) `STAR` index for reference genome                                                                                                                                                                         |
-| sample    | (sample name) | data    | - (list)                | (**required**) list of files path for sequencing reads in fastq format. Multiple sequencing run for one sample is supported. You do not need to combine the input fastq files before passing the data into the pipeline. |
+| samples   | (sample name) | data    | - (list)                | (**required**) list of files path for sequencing reads in fastq format. Multiple sequencing run for one sample is supported. You do not need to combine the input fastq files before passing the data into the pipeline. |
 | ^^        | ^^            | group   | - (string)              | (**required**) group ID for this sample                                                                                                                                                                                  |
 | ^^        | ^^            | treated | true (boolean)          | (_optional_) true for BS treated sample, false for untreated control sample.                                                                                                                                             |
 | ^^        | (…)           | (...)   | (…)                     | (_optional_) other samples. Adding any number of entries is supported.                                                                                                                                                   |
@@ -38,7 +38,8 @@ math: mathjax3
 > - `tempdir`
 > - `cores`
 > - ...
-> - reference
+> - `reference`
+>
 >   - contamination : Put some putative contamination in your samples in to a fasta file. For cultured cells, contamination is most likely to be Mycoplasmsa and E. coli. For plant samples, it might be some fungi.
 >     **If contamination fasta file is not provided, the contamination filter step will be skipped.**
 >   - genes:
@@ -46,6 +47,8 @@ math: mathjax3
 >     Mapping to genes before mapping reads into genome is a strategy to improved accurary to removed putative false possitives. More details are explained in the paper.
 >     An example dataset for mouse (Mus musculus) can be downloaded from this (LINK)[https://github.com/chelab/db/raw/main/reference_sequence/Mus_musculus.GRCm39.sncRNA.fa.gz].
 >   - genome: Use the latest version of the reference genome for the species you study.
+>
+> - `samples`
 
 _Read the [documentation](https://y9c.github.io/pseudoU-BIDseq/Advanced-Customization.html) on how to customize._
 
