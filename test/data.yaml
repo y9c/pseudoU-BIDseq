@@ -6,6 +6,8 @@ tempdir: ./workspace_mouse_demo/.tmp
 cores: 120
 # inline barcode
 barcode: ''
+# double UMI (5' UMI + 3' UMI)
+umi: false
 
 # # BUILD-IN SETTINGS:
 # # (At most of time, you do not need to change them.)

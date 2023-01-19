@@ -110,6 +110,9 @@ rule run_cutadapt:
         )
         if config["trim_p5"]
         else "",
+        extract_umi_args=lambda wildcards: '-u 5 -u -5 --rename="{id}_{cut_prefix}{cut_suffix} {comment}"'
+        if config.get("double_umi", False)
+        else '-u -5 --rename="{id}_{cut_suffix} {comment}"',
     threads: 20
     shell:
         """
@@ -119,8 +122,7 @@ rule run_cutadapt:
             --untrimmed-output={output.fastq_untrimmed} \
             {input} | \
         {params.path_cutadapt} -j {threads} \
-            -u -5 \
-            --rename='{{id}}_{{cut_suffix}} {{comment}}' \
+            {params.extract_umi_args} \
             -q 20 \
             --nextseq-trim=20  \
             --max-n=0 \
