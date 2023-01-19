@@ -68,23 +68,32 @@ You can customize the adapter sequencing if you are not using the adapter (*NNNN
 
 By default, only 5 N are added on the 3' adapter, which is used as a UMI (Unique Molecular Identifier).
 But it is also possible to add an inline barcode as the one used in _Nature Biotech._ [paper](https://www.nature.com/articles/s41587-022-01505-w#Sec12) (_NNNNN_<u>ATCACG</u>AGATCGGAAGAGCACACGTCT).
+Moreover, you can also specify the 5' UMI in the barcode setting.
 
-There are two ways to specify the inline barcode.
+There are two ways to specify the inline barcode and 5' UMI.
 
 - You can apply the global setting for all the samples in the configure file by adding:
 
 ```yaml
-barcode: ATCACG
+barcode: NNNNN-NNNNNATCACG
 ```
 
-- If only some of the libraries are with inline barcodes, while others are not, you can specific inline barcodes for each sample respectively. Leave it blank (default) means without an inline barcode.
+which means there is a 5nt of UMI on 5' and 5nt of UMI on 3' with an `ATCACG` inline barcode.
+
+If there is **no** 5' UMI, but with inline barcode. The setting scheme is as follows:
+
+```yaml
+barcode: NNNNNATCACG
+```
+
+- If only some of the libraries are with inline barcodes, while others are not, you can specify inline barcodes for each sample respectively. Leave it blank (default) means without an inline barcode.
 
 ```yaml
 samples:
   mESCWT-rep1-input:
     data:
       - R1: ./test/IP16_sequencing_run1.fastq.gz
-    barcode: ATCACG
+    barcode: NNNNN-NNNNNATCACG
 ```
 
 ## Customized cutoff for pre-filtering

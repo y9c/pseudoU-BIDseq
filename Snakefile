@@ -23,6 +23,23 @@ for k, v in REF.items():
         v2 = os.path.expanduser(v2)
         REF[k][k2] = v2 if os.path.isabs(v2) else os.path.relpath(v2, WORKDIR)
 
+
+def parse_barcode(b):
+    # NNNNN-NNNNNATCACG
+    if "-" in b:
+        b1, b2i = b.split("-")
+    else:
+        b1, b2i = "", b
+    i = b2i.lstrip("N")
+    b2 = b2i[: len(b2i) - len(i)]
+    # check that b2 is all Ns
+    if not all([x == "N" for x in b2]):
+        raise ValueError("5'-UMI {b} is not in the expected format.")
+    if not all([x == "N" for x in b1]):
+        raise ValueError("3'-UMI {b} is not in the expected format.")
+    return {"inline": i, "umi5": len(b1), "umi3": len(b2)}
+
+
 REFTYPE = ["genes", "genome"]
 GROUP2SAMPLE = defaultdict(lambda: defaultdict(list))
 SAMPLE_IDS = []
@@ -35,7 +52,9 @@ for s, v2 in config["samples"].items():
         GROUP2SAMPLE[v2["group"]]["treated"].append(s)
     else:
         GROUP2SAMPLE[v2["group"]]["input"].append(s)
-    SAMPLE2BARCODE[s] = v2.get("barcode", config.get("barcode", ""))
+    SAMPLE2BARCODE[s] = parse_barcode(
+        v2.get("barcode", config.get("barcode", "-NNNNN"))
+    )
     for i, v3 in enumerate(v2.get("data", []), 1):
         r = f"run{i}"
         SAMPLE2RUN[s][r] = {
@@ -104,15 +123,25 @@ rule run_cutadapt:
         report="report_reads/trimming/{sample}_{rn}_cutadapt.report",
     params:
         path_cutadapt=config["path"]["cutadapt"],
-        p7=lambda wildcards: SAMPLE2BARCODE[wildcards.sample] + config["adapter"]["p7"],
+        p7=lambda wildcards: SAMPLE2BARCODE[wildcards.sample]["inline"]
+        + config["adapter"]["p7"],
         trim_p5_args='-n 2 -g "{};o=3;e=0.2;rightmost" '.format(
             config["adapter"]["p5"][-13:]
         )
         if config["trim_p5"]
         else "",
-        extract_umi_args=lambda wildcards: '-u 5 -u -5 --rename="{id}_{cut_prefix}{cut_suffix} {comment}"'
-        if config.get("double_umi", False)
-        else '-u -5 --rename="{id}_{cut_suffix} {comment}"',
+        extract_umi_args=lambda wildcards: "-u {} -u -{} ".format(
+            SAMPLE2BARCODE[wildcards.sample]["umi5"],
+            SAMPLE2BARCODE[wildcards.sample]["umi3"],
+        )
+        + ' --rename="{id}_{cut_prefix}{cut_suffix} {comment}"'
+        if SAMPLE2BARCODE[wildcards.sample]["umi5"] > 0
+        and SAMPLE2BARCODE[wildcards.sample]["umi3"] > 0
+        else "-u -{}".format(SAMPLE2BARCODE[wildcards.sample]["umi3"])
+        + ' --rename="{id}_{cut_suffix} {comment}"'
+        if SAMPLE2BARCODE[wildcards.sample]["umi3"] > 0
+        else "-u {}".format(SAMPLE2BARCODE[wildcards.sample]["umi5"])
+        + ' --rename="{id}_{cut_prefix} {comment}"',
     threads: 20
     shell:
         """
