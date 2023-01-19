@@ -59,7 +59,9 @@ rule join_pairend_reads:
     input:
         lambda wildcards: SAMPLE2RUN[wildcards.sample][wildcards.rn].values(),
     output:
-        temp(os.path.join(TEMPDIR, "merged_reads/{sample}_{rn}.fq.gz")),
+        m=temp(os.path.join(TEMPDIR, "merged_reads/{sample}_{rn}.fq.gz")),
+        u1=temp(os.path.join(TEMPDIR, "merged_reads/{sample}_{rn}_un1.fq.gz")),
+        u2=temp(os.path.join(TEMPDIR, "merged_reads/{sample}_{rn}_un2.fq.gz")),
     params:
         path_fastp=config["path"]["fastp"],
         html="merged_reads/{sample}_{rn}.fastp.html",
@@ -71,7 +73,7 @@ rule join_pairend_reads:
                 """
         {params.path_fastp} --thread {threads} \
             --disable_adapter_trimming --merge --correction --overlap_len_require 10 --overlap_diff_percent_limit 20 \
-            -i {input[0]} -I {input[1]} --merged_out {output} --out1 /dev/null --out2 /dev/null -h {params.html} -j {params.json}
+            -i {input[0]} -I {input[1]} --merged_out {output.m} --out1 {output.u1} --out2 {output.u2} -h {params.html} -j {params.json}
         """
             )
         else:
