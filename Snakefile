@@ -60,8 +60,12 @@ rule join_pairend_reads:
         lambda wildcards: SAMPLE2RUN[wildcards.sample][wildcards.rn].values(),
     output:
         m=temp(os.path.join(TEMPDIR, "merged_reads/{sample}_{rn}.fq.gz")),
-        u1=temp(os.path.join(TEMPDIR, "merged_reads/{sample}_{rn}_un1.fq.gz")),
-        u2=temp(os.path.join(TEMPDIR, "merged_reads/{sample}_{rn}_un2.fq.gz")),
+        u1=os.path.join(TEMPDIR, "discarded_reads/{sample}_{rn}_un1.fq.gz")
+        if config["keep_discarded"]
+        else temp(os.path.join(TEMPDIR, "discarded_reads/{sample}_{rn}_un1.fq.gz")),
+        u2=os.path.join(TEMPDIR, "discarded_reads/{sample}_{rn}_un2.fq.gz")
+        if config["keep_discarded"]
+        else temp(os.path.join(TEMPDIR, "discarded_reads/{sample}_{rn}_un2.fq.gz")),
     params:
         path_fastp=config["path"]["fastp"],
         html="merged_reads/{sample}_{rn}.fastp.html",
