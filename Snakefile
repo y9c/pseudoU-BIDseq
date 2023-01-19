@@ -79,12 +79,12 @@ rule join_pairend_reads:
         lambda wildcards: SAMPLE2RUN[wildcards.sample][wildcards.rn].values(),
     output:
         m=temp(os.path.join(TEMPDIR, "merged_reads/{sample}_{rn}.fq.gz")),
-        u1=os.path.join(TEMPDIR, "discarded_reads/{sample}_{rn}_un1.fq.gz")
+        u1=os.path.join("discarded_reads/{sample}_{rn}_un1.fq.gz")
         if config["keep_discarded"]
-        else temp(os.path.join(TEMPDIR, "discarded_reads/{sample}_{rn}_un1.fq.gz")),
-        u2=os.path.join(TEMPDIR, "discarded_reads/{sample}_{rn}_un2.fq.gz")
+        else temp("discarded_reads/{sample}_{rn}_un1.fq.gz"),
+        u2="discarded_reads/{sample}_{rn}_un2.fq.gz"
         if config["keep_discarded"]
-        else temp(os.path.join(TEMPDIR, "discarded_reads/{sample}_{rn}_un2.fq.gz")),
+        else temp("discarded_reads/{sample}_{rn}_un2.fq.gz"),
     params:
         path_fastp=config["path"]["fastp"],
         html="merged_reads/{sample}_{rn}.fastp.html",
@@ -137,11 +137,11 @@ rule run_cutadapt:
         + ' --rename="{id}_{cut_prefix}{cut_suffix} {comment}"'
         if SAMPLE2BARCODE[wildcards.sample]["umi5"] > 0
         and SAMPLE2BARCODE[wildcards.sample]["umi3"] > 0
-        else "-u -{}".format(SAMPLE2BARCODE[wildcards.sample]["umi3"])
-        + ' --rename="{id}_{cut_suffix} {comment}"'
-        if SAMPLE2BARCODE[wildcards.sample]["umi3"] > 0
         else "-u {}".format(SAMPLE2BARCODE[wildcards.sample]["umi5"])
-        + ' --rename="{id}_{cut_prefix} {comment}"',
+        + ' --rename="{id}_{cut_prefix} {comment}"'
+        if SAMPLE2BARCODE[wildcards.sample]["umi5"] > 0
+        else "-u -{}".format(SAMPLE2BARCODE[wildcards.sample]["umi3"])
+        + ' --rename="{id}_{cut_suffix} {comment}"',
     threads: 20
     shell:
         """
