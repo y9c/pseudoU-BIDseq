@@ -8,6 +8,8 @@ keep_internal: false
 keep_discarded: false
 # Whether remove atypical adapter
 trim_p5: false
+# Whether remove long polyA sequence
+trim_polyA: false
 # Whether clip match on contamination / gene reference
 greedy_mapping: false
 

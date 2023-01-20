@@ -125,10 +125,31 @@ rule run_cutadapt:
         path_cutadapt=config["path"]["cutadapt"],
         p7=lambda wildcards: SAMPLE2BARCODE[wildcards.sample]["inline"]
         + config["adapter"]["p7"],
-        trim_p5_args='-n 2 -g "{};o=3;e=0.2;rightmost" '.format(
-            config["adapter"]["p5"][-13:]
+        trim_p5_step=lambda wildcards, threads: " ".join(
+            [
+                config["path"]["cutadapt"],
+                "-j",
+                str(threads),
+                "-g",
+                '"{};o=3;e=0.2;rightmost"'.format(config["adapter"]["p5"][-13:]),
+                "-",
+                "|",
+            ]
         )
         if config["trim_p5"]
+        else "",
+        trim_polyA_step=lambda wildcards, threads: " ".join(
+            [
+                config["path"]["cutadapt"],
+                "-j",
+                str(threads),
+                "-a",
+                '"A{20}"',
+                "-",
+                "|",
+            ]
+        )
+        if config["trim_polyA"]
         else "",
         extract_umi_args=lambda wildcards: "-u {} -u -{} ".format(
             SAMPLE2BARCODE[wildcards.sample]["umi5"],
@@ -146,10 +167,11 @@ rule run_cutadapt:
     shell:
         """
         {params.path_cutadapt} -j {threads} \
-            {params.trim_p5_args} \
             -a "{params.p7};o=3;e=0.15" \
             --untrimmed-output={output.fastq_untrimmed} \
             {input} | \
+        {params.trim_p5_step} \
+        {params.trim_polyA_step} \
         {params.path_cutadapt} -j {threads} \
             {params.extract_umi_args} \
             -q 20 \
