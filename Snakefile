@@ -144,7 +144,7 @@ rule run_cutadapt:
                 "-j",
                 str(threads),
                 "-a",
-                '"A{20}"',
+                '"A{20};o=6;e=0.15"',
                 "-",
                 "|",
             ]
@@ -171,13 +171,15 @@ rule run_cutadapt:
             --untrimmed-output={output.fastq_untrimmed} \
             {input} | \
         {params.trim_p5_step} \
-        {params.trim_polyA_step} \
         {params.path_cutadapt} -j {threads} \
             {params.extract_umi_args} \
+            - | \
+        {params.trim_polyA_step} \
+        {params.path_cutadapt} -j {threads} \
             -q 20 \
             --nextseq-trim=20  \
             --max-n=0 \
-            -m 16 \
+            -m 18 \
             --too-short-output {output.fastq_short} \
             - \
             -o {output.fastq_trimmed} \
