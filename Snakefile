@@ -424,28 +424,18 @@ rule sort_cal_filter_bam:
 
 rule combine_mapping_discarded:
     input:
-        lambda wildcards: [
-            f
-            for t in REF.keys()
-            for f in [
-                os.path.join(
-                    INTERNALDIR,
-                    f"mapping_discarded/{wildcards.sample}_{wildcards.rn}_{t}.cram",
-                ),
-                REF[t]["fa"],
-            ]
-        ],
+        os.path.join(TEMPDIR, "mapping_discarded/{sample}_{rn}_genome.cram"),
     output:
         "discarded_reads/{sample}_{rn}_filteredmap.fq.gz"
         if config["keep_discarded"]
         else temp("discarded_reads/{sample}_{rn}_filteredmap.fq.gz"),
     params:
         path_samtools=config["path"]["samtools"],
-        path_bgzip=config["path"]["bgzip"],
+        ref_fa=REF["genome"]["fa"],
     threads: 4
     shell:
         """
-        echo {input} | tr " " "\\n" | paste - - | while read c r; do {params.path_samtools} fastq -@ {threads} --reference $r $c;done | {params.path_bgzip} -@ {threads} -l 9 >{output}
+        {params.path_samtools} fastq -@ {threads} --reference {params.ref_fa} -o {output}
         """
 
 
