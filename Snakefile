@@ -114,9 +114,6 @@ rule run_cutadapt:
         fastq_trimmed=temp(
             os.path.join(TEMPDIR, "trimmed_reads/{sample}_{rn}_cut.fq.gz")
         ),
-        fastq_untrimmed="discarded_reads/{sample}_{rn}_untrimmed.fq.gz"
-        if config["keep_discarded"]
-        else temp("discarded_reads/{sample}_{rn}_untrimmed.fq.gz"),
         fastq_short="discarded_reads/{sample}_{rn}_short.fq.gz"
         if config["keep_discarded"]
         else temp("discarded_reads/{sample}_{rn}_short.fq.gz"),
@@ -125,6 +122,17 @@ rule run_cutadapt:
         path_cutadapt=config["path"]["cutadapt"],
         p7=lambda wildcards: SAMPLE2BARCODE[wildcards.sample]["inline"]
         + config["adapter"]["p7"],
+        drop_untrimmed_args=lambda wildcards: (
+            "--untrimmed-output=" + "discarded_reads/{sample}_{rn}_untrimmed.fq.gz"
+            if config["keep_discarded"]
+            else "--discard-untrimmed"
+        )
+        if config["trimmed_only"]
+        or (
+            config["trimmed_only"] == "auto"
+            and len(SAMPLE2BARCODE[wildcards.sample]["inline"]) > 0
+        )
+        else "",
         trim_p5_step=lambda wildcards, threads: " ".join(
             [
                 config["path"]["cutadapt"],
@@ -168,7 +176,7 @@ rule run_cutadapt:
         """
         {params.path_cutadapt} -j {threads} \
             -a "{params.p7};o=3;e=0.15" \
-            --untrimmed-output={output.fastq_untrimmed} \
+            {params.drop_untrimmed_args} \
             {input} | \
         {params.trim_p5_step} \
         {params.path_cutadapt} -j {threads} \

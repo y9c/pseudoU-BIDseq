@@ -6,6 +6,10 @@ keep_internal: false
 # keep dicarded reads (untrimmed, too-short, unmapped...), for debugging purpose.
 # Most of the time, you do not need these files. Set it as `false` to save storage.
 keep_discarded: false
+
+# only keep reads that have a p7 adapter in the read1, which is important for inline barcode detection
+# If inline barcode is added, this arg will be true, otherwise it will be false
+trimmed_only: auto
 # Whether remove atypical adapter
 trim_p5: false
 # Whether remove long polyA sequence
