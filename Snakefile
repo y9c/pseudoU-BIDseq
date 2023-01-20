@@ -232,23 +232,42 @@ rule map_to_contamination_by_bowtie2:
         ref_bowtie2=lambda wildcards: REF["contamination"].get(
             "bt2", os.path.join(INTERNALDIR, "mapping_index/contamination")
         ),
-        args_bowtie2="--local --ma 2 --score-min G,20,8"
+        args_bowtie2="--local --ma 2 --score-min G,20,8 -D 20 -R 3 -L 16 -N 1 --mp 4 --rdg 0,2"
         if config["greedy_mapping"]
-        else "--end-to-end --ma 0 --score-min L,2,-0.5",
+        else "--end-to-end --ma 0 --score-min L,2,-0.5 -D 20 -R 3 -L 16 -N 1 --mp 4 --rdg 0,2",
     threads: 24
     shell:
         """
         export LC_ALL=C
         {params.path_bowtie2} -p {threads} \
-            {params.args_bowtie2} -D 20 -R 3 -L 16 -N 1 --mp 4 --rdg 0,2 \
+            {params.args_bowtie2} \
             --no-unal --un {output.un} -x {params.ref_bowtie2} -U {input.fq} 2>{output.report} | \
             {params.path_samtools} view -O BAM -o {output.bam}
         """
 
 
+rule extract_contamination_unmap:
+    input:
+        os.path.join(TEMPDIR, "mapping_discarded/{sample}_{rn}_contamination.cram"),
+    output:
+        os.path.join(TEMPDIR, "mapping_rerun/{sample}_{rn}_contamination.fq"),
+    params:
+        path_samtools=config["path"]["samtools"],
+        ref_fa=lambda wildcards: REF.get("contamination", {"fa": []})["fa"],
+    threads: 4
+    shell:
+        """
+        {params.path_samtools} fastq -@ {threads} --reference {params.ref_fa} {input} > {output}
+        """
+
+
 rule map_to_genes_by_bowtie2:
     input:
-        fq=os.path.join(TEMPDIR, "mapping_unsort/{sample}_{rn}_contamination.fq")
+        fq=(
+            os.path.join(TEMPDIR, "mapping_unsort/{sample}_{rn}_contamination.fq")
+            + ","
+            + os.path.join(TEMPDIR, "mapping_rerun/{sample}_{rn}_contamination.fq")
+        )
         if "contamination" in REF
         else os.path.join(TEMPDIR, "trimmed_reads/{sample}_{rn}_cut.fq.gz"),
         idx=lambda wildcards: REF["genes"].get(
@@ -281,9 +300,25 @@ rule map_to_genes_by_bowtie2:
         """
 
 
+rule extract_genes_unmap:
+    input:
+        os.path.join(TEMPDIR, "mapping_discarded/{sample}_{rn}_genes.cram"),
+    output:
+        os.path.join(TEMPDIR, "mapping_rerun/{sample}_{rn}_genes.fq"),
+    params:
+        path_samtools=config["path"]["samtools"],
+        ref_fa=REF["genes"]["fa"],
+    threads: 4
+    shell:
+        """
+        {params.path_samtools} fastq -@ {threads} --reference {params.ref_fa} {input} > {output}
+        """
+
+
 rule map_to_genome_by_star:
     input:
-        os.path.join(TEMPDIR, "mapping_unsort/{sample}_{rn}_genes.fq"),
+        f1=os.path.join(TEMPDIR, "mapping_unsort/{sample}_{rn}_genes.fq"),
+        f2=os.path.join(TEMPDIR, "mapping_rerun/{sample}_{rn}_genes.fq"),
     output:
         bam=temp(os.path.join(TEMPDIR, "mapping_unsort/{sample}_{rn}_genome.bam")),
         un="discarded_reads/{sample}_{rn}_unmapped.fq.gz"
@@ -313,7 +348,7 @@ rule map_to_genome_by_star:
         {params.path_star} \
           --runThreadN {threads} \
           --genomeDir {params.ref_star} \
-          --readFilesIn {input} \
+          --readFilesIn {input.f1},{input.f2} \
           --alignEndsType Local \
           --scoreDelOpen -1 \
           --scoreDelBase -1 \
@@ -374,11 +409,7 @@ rule sort_cal_filter_bam:
         else temp(
             os.path.join(INTERNALDIR, "mapping_realigned/{sample}_{rn}_{reftype}.cram")
         ),
-        un=os.path.join(INTERNALDIR, "mapping_discarded/{sample}_{rn}_{reftype}.cram")
-        if config["keep_internal"]
-        else temp(
-            os.path.join(INTERNALDIR, "mapping_discarded/{sample}_{rn}_{reftype}.cram")
-        ),
+        un=temp(os.path.join(TEMPDIR, "mapping_discarded/{sample}_{rn}_{reftype}.cram")),
     params:
         path_samtools=config["path"]["samtools"],
         ref_fa=lambda wildcards: REF[wildcards.reftype]["fa"],
