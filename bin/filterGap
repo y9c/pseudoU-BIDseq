@@ -19,7 +19,7 @@ import click
     "--input-file",
     "input_file",
     default="-",
-    help="Input file (default: stdout)",
+    help="Input file (default: stdin)",
 )
 @click.option(
     "-o",
