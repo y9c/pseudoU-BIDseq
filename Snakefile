@@ -435,7 +435,7 @@ rule combine_mapping_discarded:
     threads: 4
     shell:
         """
-        {params.path_samtools} fastq -@ {threads} --reference {params.ref_fa} -o {output}
+        {params.path_samtools} fastq -@ {threads} --reference {params.ref_fa} -0 {output} {input}
         """
 
 
