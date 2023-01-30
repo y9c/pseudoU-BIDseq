@@ -101,7 +101,7 @@ The entire analysis can be completed in just three steps:
 
 <p align="center">
   <img
-    src="https://raw.githubusercontent.com/catppuccin/catppuccin/main/assets/footers/gray0_ctp_on_line.svg?sanitize=true"
+    src="https://raw.githubusercontent.com/y9c/y9c/master/resource/footer_line.svg?sanitize=true"
   />
 </p>
 <p align="center">
