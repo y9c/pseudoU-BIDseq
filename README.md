@@ -109,7 +109,7 @@ The entire analysis can be completed in just three steps:
   <a href="https://github.com/y9c" target="_blank">Chang Y</a>
 </p>
 <p align="center">
-  <a href="https://github.com/y9c/pseudoU-BIDseq/blob/master/LICENSE"><img
-      src="https://img.shields.io/static/v1.svg?style=for-the-badge&label=License&message=GPLv3&logoColor=d9e0ee&colorA=282a36&colorB=c678d
-  /></a>
+  <a href="https://github.com/y9c/pseudoU-BIDseq/blob/master/LICENSE">
+  <img src="https://img.shields.io/static/v1.svg?style=for-the-badge&label=License&message=GPLv3&logoColor=d9e0ee&colorA=282a36&colorB=c678d />
+  </a>
 </p>
