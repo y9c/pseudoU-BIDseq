@@ -120,9 +120,17 @@ cutoff:
 
 ## Cache internal files to speed up
 
-Add the following setting in the configure file to turn on `keep_internal` (default: false). Once internal files, including reference index and mapping bam files, are cached, you do not need to re-run some steps of the pipeline when you add more sequencing reads.
+Add the following setting in the configure file to turn on `keep_internal` (default: false).
+
+```yaml
+keep_internal: true
+```
+
+Once internal files, including reference index and mapping bam files, are cached, you do not need to re-run some steps of the pipeline when you add more sequencing reads.
 
 ## Keep discarded reads for debugging purposes.
+
+Add the following setting in the configure file to keep discarded reads.
 
 ```yaml
 keep_discarded: true

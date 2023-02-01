@@ -65,7 +65,7 @@ math: mathjax3
 >
 >   The 'samples' section specifies the path (`data`), the classification (`group`), the library type (`treated`) and other information for each sample.
 >
->   `group` information is import to sites prefiltering. <u>Samples that might have different &Psi; level should be labeled with different group.</u> For example, different cell culture condition, different genotype, or different tissue type.
+>   `group` information is essential for sites prefiltering. <u>Samples that might have different &Psi; level should be labeled with different group.</u> For example, different cell culture condition, different genotype, or different tissue type.
 
 _Read more on [Advanced Customization](https://y9c.github.io/pseudoU-BIDseq/Advanced-Customization.html)._
 
