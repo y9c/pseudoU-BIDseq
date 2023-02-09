@@ -264,11 +264,10 @@ rule extract_contamination_unmap:
 
 rule map_to_genes_by_bowtie2:
     input:
-        fq=(
-            os.path.join(TEMPDIR, "mapping_unsort/{sample}_{rn}_contamination.fq")
-            + ","
-            + os.path.join(TEMPDIR, "mapping_rerun/{sample}_{rn}_contamination.fq")
-        )
+        fq=[
+            os.path.join(TEMPDIR, "mapping_unsort/{sample}_{rn}_contamination.fq"),
+            os.path.join(TEMPDIR, "mapping_rerun/{sample}_{rn}_contamination.fq"),
+        ]
         if "contamination" in REF
         else os.path.join(TEMPDIR, "trimmed_reads/{sample}_{rn}_cut.fq.gz"),
         idx=lambda wildcards: REF["genes"].get(
@@ -289,13 +288,20 @@ rule map_to_genes_by_bowtie2:
         args_bowtie2="--local --ma 2 --score-min G,10,7 -D 20 -R 3 -L 8 -N 1 -i S,1,0.5 --mp 6,3 --rdg 1,2 --rfg 6,3"
         if config["greedy_mapping"]
         else "--end-to-end --ma 0 --score-min L,4,-0.5 -D 20 -R 3 -L 8 -N 1 -i S,1,0.5 --mp 6,3 --rdg 1,2 -rfg 6,3",
+        fq=lambda wildcards: os.path.join(
+            TEMPDIR, "mapping_unsort/{sample}_{rn}_contamination.fq"
+        )
+        + ","
+        + os.path.join(TEMPDIR, "mapping_rerun/{sample}_{rn}_contamination.fq")
+        if "contamination" in REF
+        else os.path.join(TEMPDIR, "trimmed_reads/{sample}_{rn}_cut.fq.gz"),
     threads: 24
     shell:
         """
         export LC_ALL=C
         {params.path_bowtie2} -p {threads} \
             {params.args_bowtie2} --norc -a \
-            --no-unal --un {output.un} -x {params.ref_bowtie2} -U {input.fq} 2>{output.report} | \
+            --no-unal --un {output.un} -x {params.ref_bowtie2} -U {params.fq} 2>{output.report} | \
             {params.path_samfilter} | \
             {params.path_samtools} view -O BAM -o {output.bam}
         """
