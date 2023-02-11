@@ -753,7 +753,7 @@ rule pick_sites:
     output:
         "post_filtered_sites/{reftype}.tsv",
     params:
-        group_filter=config["group_filter"],
+        group_filter=config.get("group_filter", {}),
         group_meta=dict(GROUP2SAMPLE),
     script:
         config["path"]["pickSites"]
