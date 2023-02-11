@@ -289,12 +289,18 @@ rule map_to_genes_by_bowtie2:
         if config["greedy_mapping"]
         else "--end-to-end --ma 0 --score-min L,4,-0.5 -D 20 -R 3 -L 8 -N 1 -i S,1,0.5 --mp 6,3 --rdg 1,2 -rfg 6,3",
         fq=lambda wildcards: os.path.join(
-            TEMPDIR, "mapping_unsort/{sample}_{rn}_contamination.fq"
+            TEMPDIR,
+            f"mapping_unsort/{wildcards.sample}_{wildcards.rn}_contamination.fq",
         )
         + ","
-        + os.path.join(TEMPDIR, "mapping_rerun/{sample}_{rn}_contamination.fq")
+        + os.path.join(
+            TEMPDIR,
+            f"mapping_rerun/{wildcards.sample}_{wildcards.rn}_contamination.fq",
+        )
         if "contamination" in REF
-        else os.path.join(TEMPDIR, "trimmed_reads/{sample}_{rn}_cut.fq.gz"),
+        else os.path.join(
+            TEMPDIR, f"trimmed_reads/{wildcards.sample}_{wildcards.rn}_cut.fq.gz"
+        ),
     threads: 24
     shell:
         """
