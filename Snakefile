@@ -69,6 +69,9 @@ rule all:
     input:
         "report_reads/readsStats.html",
         expand("filter_sites/{reftype}.tsv", reftype=REFTYPE),
+        expand("post_filtered_sites/{reftype}.tsv", reftype=REFTYPE)
+        if "group_filter" in config
+        else [],
 
 
 #### process reads ####
@@ -103,6 +106,7 @@ rule join_pairend_reads:
             shell(
                 """
         ln -sfr {input[0]} {output[0]}
+        touch {output.html} {output.json} {output.u1} {output.u2}
         """
             )
 
@@ -740,3 +744,16 @@ rule filter_sites:
         """
         {params.path_filterGap} -i {input} -o {output} {params.columns} -g {params.min_group_gap} -d {params.min_group_depth} -r {params.min_group_ratio} -n {params.min_group_num}
         """
+
+
+# pick sites by group filter
+rule pick_sites:
+    input:
+        "filter_sites/{reftype}.tsv",
+    output:
+        "post_filtered_sites/{reftype}.tsv",
+    params:
+        group_filter=config["group_filter"],
+        group_meta=dict(GROUP2SAMPLE),
+    script:
+        config["path"]["pickSites"]

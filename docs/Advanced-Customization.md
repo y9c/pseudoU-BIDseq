@@ -118,6 +118,30 @@ cutoff:
 - `min_group_ratio`: prefilter sites show >= x deletion ratio among all samples in each group
 - `min_group_num`: only analysis putative sites that show pass prefilter in >= x groups
 
+## Post filter sites
+
+Experimental
+{: .label .label-red }
+
+Add the following block to the data.yaml file to do post-filtering.
+
+Note:
+
+- There is an indent (space) before each parameter
+- The filter includes the number itselvf. For example, `min_treated_depth: 20` will filter sites with more than and **equal to** 20 coverage.
+- `min_passed_group: 1` means sites that pass filtering for **any** group will be retained.
+
+```yaml
+group_filter:
+  min_passed_group: 1
+  min_treated_depth: 20
+  min_input_depth: 20
+  min_treated_gap: 5
+  min_treated_ratio: 0.02
+  min_fold_ratio: 2
+  max_p_value: 0.0001
+```
+
 ## Cache internal files to speed up
 
 Add the following setting in the configure file to turn on `keep_internal` (default: false).
