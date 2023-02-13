@@ -33,17 +33,10 @@ with open(input_file, "r") as fi, open(output_file, "w") as fo:
         records = line.strip().split("\t")
         passed = False
         n_passed = 0
-        for g, (di_index, gi_index, dt_index, gt_index) in group_index.items():
-            di = sum([int(records[i]) for i in di_index])
-            gi = sum([int(records[i]) for i in gi_index])
-            dt = sum([int(records[i]) for i in dt_index])
-            gt = sum([int(records[i]) for i in gt_index])
-            # min_treated_depth: 20
-            # min_input_depth: 20
-            # min_treated_gap: 5
-            # min_treated_ratio: 0.02
-            # min_fold_ratio: 2
-            # max_p_value: 0.0001
+        for _, idx_list in group_index.items():
+            di, gi, dt, gt = [
+                sum([int(records[i]) for i in idx]) for idx in idx_list
+            ]
             if (
                 dt >= GROUP_FILTER["min_treated_depth"]
                 and di >= GROUP_FILTER["min_input_depth"]
