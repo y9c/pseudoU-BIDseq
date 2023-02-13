@@ -128,7 +128,7 @@ Add the following block to the data.yaml file to do post-filtering.
 Note:
 
 - There is an indent (space) before each parameter
-- The filter includes the number itselvf. For example, `min_treated_depth: 20` will filter sites with more than and **equal to** 20 coverage.
+- The filter includes the number itself. For example, `min_treated_depth: 20` will filter sites with more than and **equal to** 20 coverage.
 - `min_passed_group: 1` means sites that pass filtering for **any** group will be retained.
 
 ```yaml
