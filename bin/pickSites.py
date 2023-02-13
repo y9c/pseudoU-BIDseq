@@ -101,4 +101,4 @@ with open(input_file, "r") as fi, open(output_file, "w") as fo:
                 n_passed += 1
             if n_passed >= GROUP_FILTER["min_passed_group"]:
                 fo.write(line)
-                continue
+                break
