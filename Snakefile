@@ -291,7 +291,7 @@ rule map_to_genes_by_bowtie2:
         ),
         args_bowtie2="--local --ma 2 --score-min G,10,7 -D 20 -R 3 -L 8 -N 1 -i S,1,0.5 --mp 6,3 --rdg 1,2 --rfg 6,3"
         if config["greedy_mapping"]
-        else "--end-to-end --ma 0 --score-min L,4,-0.5 -D 20 -R 3 -L 8 -N 1 -i S,1,0.5 --mp 6,3 --rdg 1,2 -rfg 6,3",
+        else "--end-to-end --ma 0 --score-min L,4,-0.5 -D 20 -R 3 -L 8 -N 1 -i S,1,0.5 --mp 6,3 --rdg 1,2 --rfg 6,3",
         fq=lambda wildcards: os.path.join(
             TEMPDIR,
             f"mapping_unsort/{wildcards.sample}_{wildcards.rn}_contamination.fq",
