@@ -21,6 +21,6 @@ RUN git clone --quiet --depth 1 https://github.com/Daniel-Liu-c0deb0t/UMICollaps
 RUN apt-get purge -y wget git bzip2 make xsltproc gcc g++ pkg-config && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 COPY ./bin /pipeline/bin
-COPY ./VERSION ./Snakefile ./config.yaml ./entrypoint ./validator /pipeline/
+COPY ./VERSION ./Snakefile ./config.yaml ./entrypoint ./validator ./calibration_curves.tsv /pipeline/
 RUN chmod +x /pipeline/entrypoint && chmod +x /pipeline/validator
 ENTRYPOINT ["/pipeline/entrypoint"]

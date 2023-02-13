@@ -132,6 +132,10 @@ Note:
 - `min_passed_group: 1` means sites that pass filtering for **any** group will be retained.
 
 ```yaml
+# optional
+# calibration_curves: ./calibration_curves.tsv
+
+# required
 group_filter:
   min_passed_group: 1
   min_treated_depth: 20

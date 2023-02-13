@@ -34,6 +34,7 @@ cutoff:
   # only analysis putative sites that show pass prefilter in >= x groups
   min_group_num: 1
 
+calibration_curves: /pipeline/calibration_curves.tsv
 # group_filter:
 #   # greater and equal to
 #   min_passed_group: 1
