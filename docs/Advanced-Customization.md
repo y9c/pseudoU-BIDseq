@@ -138,6 +138,7 @@ group_filter:
   min_input_depth: 20
   min_treated_gap: 5
   min_treated_ratio: 0.02
+  min_treated_fraction: 0.02
   min_fold_ratio: 2
   max_p_value: 0.0001
 ```

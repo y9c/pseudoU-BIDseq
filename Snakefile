@@ -755,5 +755,7 @@ rule pick_sites:
     params:
         group_filter=config.get("group_filter", {}),
         group_meta=dict(GROUP2SAMPLE),
+        calibration_curve=config.get("calibration_curve", {}),
+        ref_fasta=lambda wildcards: REF[wildcards.reftype]["fa"],
     script:
         config["path"]["pickSites"]
