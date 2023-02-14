@@ -49,9 +49,15 @@ SAMPLE2BAM = defaultdict(dict)
 for s, v2 in config["samples"].items():
     SAMPLE_IDS.append(s)
     if v2.get("treated", True):
+        if isinstance(v2["group"], list):
+            raise ValueError("treated samples can only be in one group")
         GROUP2SAMPLE[v2["group"]]["treated"].append(s)
     else:
-        GROUP2SAMPLE[v2["group"]]["input"].append(s)
+        if isinstance(v2["group"], list):
+            for g in v2["group"]:
+                GROUP2SAMPLE[g]["input"].append(s)
+        else:
+            GROUP2SAMPLE[v2["group"]]["input"].append(s)
     SAMPLE2BARCODE[s] = parse_barcode(
         v2.get("barcode", config.get("barcode", "-NNNNN"))
     )

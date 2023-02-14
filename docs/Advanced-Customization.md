@@ -96,6 +96,27 @@ samples:
     barcode: NNNNN-NNNNNATCACG
 ```
 
+## Share input samples among different groups
+
+For **pre-filtering** &Psi sites, only deletion signal on treated samples are used. And the pre-filtering step works group by group. Note that `group` is the defined in the `yaml` file by yourself.
+
+However, for **post-filtering** &Psi sites, input samples are also included for masking background noise and SNP sites. Input libraries are similar to RNA-seq libraries, thus samples from an unique source won't have big difference in genotype.
+Even samples prepared from different condition, eg stress vs. control, can be combined are genotyping. To save sequencing cost, input libraries can be sequenced shallow and combined among groups.
+
+If you want to do so, just add multiple group labels into the configure file as the example bellow.
+
+```yaml
+samples:
+  mESCWT-rep1-input:
+    data:
+      - R1: ./test/IP16_R1.fastq.gz
+    group:
+      - mESC-WT
+      - mESC-KO
+```
+
+Note that there is hyphen symbol before the group name, and one record in a one line. The group information in the input libraries won't have any effects on your results if your skip post-filtering step.
+
 ## Customized cutoff for pre-filtering
 
 Not recommended

@@ -5,7 +5,7 @@ tempdir: ./workspace_mouse_demo/.tmp
 # Max number of cores for all the running jobs at the same time
 cores: 120
 
-barcode: "-NNNNN"
+barcode: '-NNNNN'
 
 # # BUILD-IN SETTINGS:
 # # (At most of time, you do not need to change them.)
