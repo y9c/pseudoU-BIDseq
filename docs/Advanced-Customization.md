@@ -158,6 +158,7 @@ Note:
 
 # required
 group_filter:
+  combine_group_input: true
   min_passed_group: 1
   min_treated_depth: 20
   min_input_depth: 20

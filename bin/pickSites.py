@@ -51,7 +51,7 @@ def get_sequence(chrom, pos, strand):
 
 def fit_calibration(x: float, m: str) -> float:
     #  m = m[len(m) // 2 - 2 : len(m) // 2 + 3]
-    if m not in CALIBRATION_PARAMS:
+    if np.isnan(x) or m not in CALIBRATION_PARAMS:
         return np.nan
     c, s, b = CALIBRATION_PARAMS[m]
     if x <= b:
@@ -64,7 +64,6 @@ def fit_calibration(x: float, m: str) -> float:
 
 with open(input_file, "r") as fi, open(output_file, "w") as fo:
     header = fi.readline()
-    fo.write(header)
     header = header.strip().split("\t")
     # input depth, input gap, treated depth, treated gap
     group_index = {
@@ -76,22 +75,51 @@ with open(input_file, "r") as fi, open(output_file, "w") as fo:
         for k, v in GROUP_META.items()
     }
 
+    if GROUP_FILTER["combine_group_input"]:
+        combined_input_depth = [
+            header.index(n + "_depth")
+            for v in GROUP_META.values()
+            for n in v["input"]
+        ]
+        combined_input_gap = [
+            header.index(n + "_gap")
+            for v in GROUP_META.values()
+            for n in v["input"]
+        ]
+        for k in GROUP_META:
+            group_index[k][0] = combined_input_depth
+            group_index[k][1] = combined_input_gap
+
+    fo.write(
+        "\t".join(
+            header
+            + [g + "_" + t for t in ["ratio", "fraction"] for g in group_index]
+        )
+        + "\tgroup\n"
+    )
+
     for line in fi:
         n_passed = 0
         records = line.strip().split("\t")
+        ratios = []
+        fracs = []
+        gs = []
         motif = get_sequence(*records[:3])
-        for _, idx_list in group_index.items():
+        for g, idx_list in group_index.items():
             di, gi, dt, gt = [
                 sum([int(records[i]) for i in idx]) for idx in idx_list
             ]
+            ratio = gt / dt if dt > 0 else np.nan
+            ratios.append(f"{ratio:.3f}" if not np.isnan(ratio) else "NaN")
+            frac = fit_calibration(ratio, motif)
+            fracs.append(f"{frac:.3f}" if not np.isnan(frac) else "NaN")
             if (
                 dt >= GROUP_FILTER["min_treated_depth"]
                 and di >= GROUP_FILTER["min_input_depth"]
                 and gt >= GROUP_FILTER["min_treated_gap"]
-                and gt / dt >= GROUP_FILTER["min_treated_ratio"]
-                and (gt / dt) >= GROUP_FILTER["min_fold_ratio"] * (gi / di)
-                and fit_calibration(gt / dt, motif)
-                > GROUP_FILTER["min_treated_fraction"]
+                and ratio >= GROUP_FILTER["min_treated_ratio"]
+                and ratio >= GROUP_FILTER["min_fold_ratio"] * (gi / di)
+                and frac > GROUP_FILTER["min_treated_fraction"]
                 and fisher_exact(
                     [[max(di - gi, 0), gi], [max(dt - gt, 0), gt]],
                     alternative="greater",
@@ -99,6 +127,12 @@ with open(input_file, "r") as fi, open(output_file, "w") as fo:
                 < GROUP_FILTER["max_p_value"]
             ):
                 n_passed += 1
-            if n_passed >= GROUP_FILTER["min_passed_group"]:
-                fo.write(line)
-                break
+                gs.append(g)
+
+        if n_passed >= GROUP_FILTER["min_passed_group"]:
+            fo.write(
+                "\t".join(records + ratios + fracs)
+                + "\t"
+                + ",".join(gs)
+                + "\n"
+            )
