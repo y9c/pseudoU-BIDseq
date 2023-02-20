@@ -261,7 +261,7 @@ rule extract_contamination_unmap:
     input:
         os.path.join(TEMPDIR, "mapping_discarded/{sample}_{rn}_contamination.cram"),
     output:
-        os.path.join(TEMPDIR, "mapping_rerun/{sample}_{rn}_contamination.fq"),
+        temp(os.path.join(TEMPDIR, "mapping_rerun/{sample}_{rn}_contamination.fq")),
     params:
         path_samtools=config["path"]["samtools"],
         ref_fa=lambda wildcards: REF.get("contamination", {"fa": []})["fa"],
@@ -327,7 +327,7 @@ rule extract_genes_unmap:
     input:
         os.path.join(TEMPDIR, "mapping_discarded/{sample}_{rn}_genes.cram"),
     output:
-        os.path.join(TEMPDIR, "mapping_rerun/{sample}_{rn}_genes.fq"),
+        temp(os.path.join(TEMPDIR, "mapping_rerun/{sample}_{rn}_genes.fq")),
     params:
         path_samtools=config["path"]["samtools"],
         ref_fa=REF["genes"]["fa"],
