@@ -93,9 +93,13 @@ with open(input_file, "r") as fi, open(output_file, "w") as fo:
     fo.write(
         "\t".join(
             header
-            + [g + "_" + t for t in ["ratio", "fraction"] for g in group_index]
+            + [
+                g + "_" + t
+                for t in ["ratio", "fraction", "passed"]
+                for g in group_index
+            ]
         )
-        + "\tgroup\n"
+        + "\n"
     )
 
     for line in fi:
@@ -103,7 +107,7 @@ with open(input_file, "r") as fi, open(output_file, "w") as fo:
         records = line.strip().split("\t")
         ratios = []
         fracs = []
-        gs = []
+        passeds = []
         motif = get_sequence(*records[:3])
         for g, idx_list in group_index.items():
             di, gi, dt, gt = [
@@ -126,13 +130,10 @@ with open(input_file, "r") as fi, open(output_file, "w") as fo:
                 ).pvalue
                 < GROUP_FILTER["max_p_value"]
             ):
+                passeds.append("1")
                 n_passed += 1
-                gs.append(g)
+            else:
+                passeds.append("0")
 
         if n_passed >= GROUP_FILTER["min_passed_group"]:
-            fo.write(
-                "\t".join(records + ratios + fracs)
-                + "\t"
-                + ",".join(gs)
-                + "\n"
-            )
+            fo.write("\t".join(records + ratios + fracs + passeds) + "\n")
