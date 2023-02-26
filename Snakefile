@@ -138,7 +138,7 @@ rule run_cutadapt:
             if config["keep_discarded"]
             else "--discard-untrimmed"
         )
-        if config["trimmed_only"]
+        if config["trimmed_only"] is True
         or (
             config["trimmed_only"] == "auto"
             and len(SAMPLE2BARCODE[wildcards.sample]["inline"]) > 0
