@@ -148,28 +148,28 @@ rule run_cutadapt:
             [
                 config["path"]["cutadapt"],
                 "-j",
-                str(threads),
-                "-g",
-                '"{};o=3;e=0.2;rightmost"'.format(config["adapter"]["p5"][-13:]),
-                "-",
-                "|",
-            ]
-        )
-        if config["trim_p5"]
-        else "",
+                        str(threads),
+                        "-g",
+                        '"{};o=3;e=0.2;rightmost"'.format(config["adapter"]["p5"][-13:]),
+                        "-",
+                        "|",
+                    ]
+                )
+                if config["trim_p5"]
+                else "",
         trim_polyA_step=lambda wildcards, threads: " ".join(
             [
                 config["path"]["cutadapt"],
                 "-j",
-                str(threads),
-                "-a",
-                '"A{20};o=6;e=0.15"',
-                "-",
-                "|",
-            ]
-        )
-        if config["trim_polyA"]
-        else "",
+                        str(threads),
+                        "-a",
+                        '"A{20};o=6;e=0.15"',
+                        "-",
+                        "|",
+                    ]
+                )
+                if config["trim_polyA"]
+                else "",
         extract_umi_args=lambda wildcards: "-u {} -u -{} ".format(
             SAMPLE2BARCODE[wildcards.sample]["umi5"],
             SAMPLE2BARCODE[wildcards.sample]["umi3"],
@@ -230,7 +230,7 @@ rule map_to_contamination_by_bowtie2:
         idx=lambda wildcards: REF["contamination"].get(
             "bt2", os.path.join(INTERNALDIR, "mapping_index/contamination")
         )
-        + ".1.bt2",
+            + ".1.bt2",
     output:
         bam=temp(
             os.path.join(TEMPDIR, "mapping_unsort/{sample}_{rn}_contamination.bam")
@@ -283,7 +283,7 @@ rule map_to_genes_by_bowtie2:
         idx=lambda wildcards: REF["genes"].get(
             "bt2", os.path.join(INTERNALDIR, "mapping_index/genes")
         )
-        + ".1.bt2",
+            + ".1.bt2",
     output:
         bam=temp(os.path.join(TEMPDIR, "mapping_unsort/{sample}_{rn}_genes.bam")),
         un=temp(os.path.join(TEMPDIR, "mapping_unsort/{sample}_{rn}_genes.fq")),
@@ -502,7 +502,7 @@ rule drop_duplicates:
     threads: 4
     shell:
         """
-        java -server -Xmx46G -Xms24G -Xss100M -Djava.io.TEMPDIR={params.TEMPDIR} -jar {params.path_umicollapse} bam \
+        java -server -Xmx46G -Xms24G -Xss100M -Djava.io.tmpdir={params.TEMPDIR} -jar {params.path_umicollapse} bam \
             --merge avgqual --two-pass -i {input.bam} -o {output.bam} >{output.log}
         """
 
