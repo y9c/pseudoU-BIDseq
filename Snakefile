@@ -73,7 +73,7 @@ for s, v2 in config["samples"].items():
 
 rule all:
     input:
-        "report_reads/readsStats.html",
+        "report_reads/readsStats.html" if len(SAMPLE2RUN) > 0 else [],
         expand("filter_sites/{reftype}.tsv", reftype=REFTYPE),
         expand("post_filtered_sites/{reftype}.tsv", reftype=REFTYPE)
         if "group_filter" in config
