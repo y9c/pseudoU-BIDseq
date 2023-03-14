@@ -64,11 +64,17 @@ for s, v2 in config["samples"].items():
     for i, v3 in enumerate(v2.get("data", []), 1):
         r = f"run{i}"
         SAMPLE2RUN[s][r] = {
-            k4: os.path.relpath(os.path.expanduser(v4), WORKDIR)
+            k4: os.path.expanduser(v4)
+            if os.path.isabs(os.path.expanduser(v4))
+            else os.path.relpath(os.path.expanduser(v4), WORKDIR)
             for k4, v4 in v3.items()
         }
     for k, v3 in v2.get("bam", {}).items():
-        SAMPLE2BAM[s][k] = os.path.relpath(os.path.expanduser(v3), WORKDIR)
+        SAMPLE2BAM[s][k] = (
+            os.path.expanduser(v3)
+            if os.path.isabs(os.path.expanduser(v3))
+            else os.path.relpath(os.path.expanduser(v3), WORKDIR)
+        )
 
 
 rule all:
