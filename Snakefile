@@ -25,19 +25,32 @@ for k, v in REF.items():
 
 
 def parse_barcode(b):
-    # NNNNN-NNNNNATCACG
+    # NNNNNXXX-XXXNNNNNATCACG
     if "-" in b:
-        b1, b2i = b.split("-")
+        b1m1, m2b2i = b.split("-")
     else:
-        b1, b2i = "", b
-    i = b2i.lstrip("N")
+        b1m2, m2b2i = "", b
+    # parse left
+    m1 = b1m1.lstrip("N")
+    b1 = b1m1[: len(b1m1) - len(m1)]
+    if not all([x == "X" for x in m1]):
+        raise ValueError(f"5'-mask {m1} is not all N.")
+    # parse right
+    b2i = m2b2i.lstrip("X")
+    m2 = m2b2i[: len(m2b2i) - len(b2i)]
+    i = b2i.lstrip("X")
     b2 = b2i[: len(b2i) - len(i)]
-    # check that b2 is all Ns
-    if not all([x == "N" for x in b2]):
-        raise ValueError("5'-UMI {b} is not in the expected format.")
-    if not all([x == "N" for x in b1]):
-        raise ValueError("3'-UMI {b} is not in the expected format.")
-    return {"inline": i, "umi5": len(b1), "umi3": len(b2)}
+    # check inline barcode is "ATGC"
+    for x in i:
+        if x not in "ATGCatgc":
+            raise ValueError(f"Inline barcode {i} is not all A/T/G/C.")
+    return {
+        "inline": i,
+        "umi5": len(b1),
+        "umi3": len(b2),
+        "mask5": len(m1),
+        "mask3": len(m2),
+    }
 
 
 REFTYPE = ["genes", "genome"]
@@ -188,6 +201,13 @@ rule run_cutadapt:
         if SAMPLE2BARCODE[wildcards.sample]["umi5"] > 0
         else "-u -{}".format(SAMPLE2BARCODE[wildcards.sample]["umi3"])
         + ' --rename="{id}_{cut_suffix} {comment}"',
+        mask_ends_args=lambda wildcards: "-u {}".format(
+            SAMPLE2BARCODE[wildcards.sample]["mask5"]
+        )
+        if SAMPLE2BARCODE[wildcards.sample]["mask5"] > 0
+        else "" + "-u -{}".format(SAMPLE2BARCODE[wildcards.sample]["mask3"])
+        if SAMPLE2BARCODE[wildcards.sample]["mask3"] > 0
+        else "",
     threads: 20
     shell:
         """
@@ -201,6 +221,7 @@ rule run_cutadapt:
             - | \
         {params.trim_polyA_step} \
         {params.path_cutadapt} -j {threads} \
+            {params.mask_ends_args} \
             -q 20 \
             --nextseq-trim=20  \
             --max-n=0 \
