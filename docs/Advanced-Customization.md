@@ -62,7 +62,7 @@ samples:
       genome: B1.genome.bam
 ```
 
-## Customized adapter / inline barcode
+## Customized adapter / inline barcode / trimming tails
 
 You can customize the adapter sequencing if you are not using the adapter (*NNNNN*AGATCGGAAGAGCACACGTCT) provided by the protocol.
 
@@ -75,10 +75,10 @@ There are two ways to specify the inline barcode and 5' UMI.
 - You can apply the global setting for all the samples in the configure file by adding:
 
 ```yaml
-barcode: NNNNN-NNNNNATCACG
+barcode: NNNNNXXX-XXXNNNNNATCACG
 ```
 
-which means there is a 5nt of UMI on 5' and 5nt of UMI on 3' with an `ATCACG` inline barcode.
+which means there is a 5nt of UMI (NNNNN) on 5' and 5nt of UMI (NNNNN) on 3' with an `ATCACG` inline barcode. Meanwhile, 3 bases (XXX) on both ends will be trimmed after removing the adapters.
 
 If there is **no** 5' UMI, but with inline barcode. The setting scheme is as follows:
 

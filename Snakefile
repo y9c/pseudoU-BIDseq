@@ -38,7 +38,7 @@ def parse_barcode(b):
     # parse right
     b2i = m2b2i.lstrip("X")
     m2 = m2b2i[: len(m2b2i) - len(b2i)]
-    i = b2i.lstrip("X")
+    i = b2i.lstrip("N")
     b2 = b2i[: len(b2i) - len(i)]
     # check inline barcode is "ATGC"
     for x in i:
