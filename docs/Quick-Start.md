@@ -41,7 +41,7 @@ nav_order: 2
        treated: true
    ```
 
-   You can also copy and edit from this [template](test/data.yaml).
+   You can also copy and edit from this [template](https://github.com/y9c/pseudoU-BIDseq/blob/main/test/data.yaml).
 
    _Read the [more details](https://y9c.github.io/pseudoU-BIDseq/Step-by-step-instruction.html#define-settings-in-the-configure-file) on how to customize._
 
