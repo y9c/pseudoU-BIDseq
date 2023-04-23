@@ -17,6 +17,9 @@ INTERNALDIR = "internal_files"
 workdir: WORKDIR
 
 
+CALI = config.get("calibration_curves", "")
+CALI = CALI if os.path.isabs(CALI) else os.path.relpath(CALI, WORKDIR)
+
 REF = config["reference"]
 for k, v in REF.items():
     for k2, v2 in v.items():
@@ -788,7 +791,7 @@ rule pick_sites:
     params:
         group_filter=config.get("group_filter", {}),
         group_meta=dict(GROUP2SAMPLE),
-        calibration_curve=config.get("calibration_curves", ""),
+        calibration_curve=CALI,
         ref_fasta=lambda wildcards: REF[wildcards.reftype]["fa"],
     script:
         config["path"]["pickSites"]
