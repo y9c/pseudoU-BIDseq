@@ -23,10 +23,16 @@ with open(CALIBRATION_CURVE, "r") as f:
     next(f)
     for line in f:
         motif, c, s, b = line.strip().split("\t")
-        CALIBRATION_PARAMS[motif] = (float(c), float(s), float(b))
+        CALIBRATION_PARAMS[motif.replace("-", "T")] = (
+            float(c),
+            float(s),
+            float(b),
+        )
 
 
 REF = pyfaidx.Fasta(REF_FASTA)
+
+
 # assum the first 3 columns in the meta info of position
 def get_sequence(chrom, pos, strand):
     pad = 2
