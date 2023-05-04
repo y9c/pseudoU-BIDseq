@@ -35,17 +35,23 @@ cutoff:
   min_group_num: 1
 
 calibration_curves: /pipeline/calibration_curves.tsv
-# group_filter:
-#   # greater and equal to
-#   combine_group_input: true
-#   min_passed_group: 1
-#   min_treated_depth: 20
-#   min_input_depth: 20
-#   min_treated_gap: 5
-#   min_treated_ratio: 0.02
-#   min_treated_fraction: 0.02
-#   min_fold_ratio: 2
-#   max_p_value: 0.0001
+
+# only call gap sites within selected region
+select_region:
+  - genes
+  - genome
+
+# All the cutoff in these filter are **greater or equal to**
+group_filter:
+  combine_group_input: true
+  min_passed_group: 1
+  min_treated_depth: 20
+  min_input_depth: 20
+  min_treated_gap: 5
+  min_treated_ratio: 0.02
+  min_treated_fraction: 0.02
+  min_fold_ratio: 2
+  max_p_value: 0.0001
 
 adapter:
   # 20nt

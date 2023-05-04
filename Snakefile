@@ -96,10 +96,8 @@ for s, v2 in config["samples"].items():
 rule all:
     input:
         "report_reads/readsStats.html" if len(SAMPLE2RUN) > 0 else [],
+        expand("call_sites/{reftype}.tsv.gz", reftype=REFTYPE),
         expand("filter_sites/{reftype}.tsv", reftype=REFTYPE),
-        expand("post_filtered_sites/{reftype}.tsv", reftype=REFTYPE)
-        if "group_filter" in config
-        else [],
 
 
 #### process reads ####
@@ -680,7 +678,12 @@ rule prepare_bed_file:
 
 rule count_base_by_sample:
     input:
-        bed=os.path.join(TEMPDIR, "selected_region/picked_{reftype}_{orientation}.bed"),
+        bed=lambda wildcards: os.path.join(
+            TEMPDIR,
+            f"selected_region/picked_{wildcards.reftype}_{wildcards.orientation}.bed",
+        )
+        if wildcards.reftype in config["select_region"]
+        else [],
         bam=lambda wildcards: "align_bam/{sample}_{reftype}.bam"
         if wildcards.sample in SAMPLE2RUN
         else SAMPLE2BAM[wildcards.sample][wildcards.reftype],
@@ -697,6 +700,13 @@ rule count_base_by_sample:
         path_samtools=config["path"]["samtools"],
         path_cpup=config["path"]["cpup"],
         ref=lambda wildcards: REF[wildcards.reftype]["fa"],
+        region=lambda wildcards: "-l "
+        + os.path.join(
+            TEMPDIR,
+            f"selected_region/picked_{wildcards.reftype}_{wildcards.orientation}.bed",
+        )
+        if wildcards.reftype in config["select_region"]
+        else "",
         strand=lambda wildcards: "+" if wildcards.orientation == "fwd" else "-",
         flag=lambda wildcards: "--ff 3608"
         if wildcards.orientation == "fwd"
@@ -704,7 +714,7 @@ rule count_base_by_sample:
     threads: 2
     shell:
         """
-        {params.path_samtools} mpileup -aa -B -d 0 {params.flag} -Q 5 --reverse-del -l {input.bed} -f {params.ref} {input.bam} | \
+        {params.path_samtools} mpileup -aa -B -d 0 {params.flag} -Q 5 --reverse-del {params.region} -f {params.ref} {input.bam} | \
             {params.path_cpup} -H -S -i | \
             sed 's/\\t/\\t{params.strand}\\t/3' > {output}
         """
@@ -746,7 +756,7 @@ rule adjust_sites:
     input:
         os.path.join(TEMPDIR, "pileup_bases/{reftype}.tsv"),
     output:
-        temp(os.path.join(TEMPDIR, "pileup_adjusted/{reftype}.tsv")),
+        temp(os.path.join(TEMPDIR, "call_sites_tmp/{reftype}.tsv")),
     params:
         path_adjustGap=config["path"]["adjustGap"],
     shell:
@@ -755,11 +765,22 @@ rule adjust_sites:
         """
 
 
-rule filter_sites:
+rule compress_call_sites:
     input:
-        os.path.join(TEMPDIR, "pileup_adjusted/{reftype}.tsv"),
+        os.path.join(TEMPDIR, "call_sites_tmp/{reftype}.tsv"),
     output:
-        "filter_sites/{reftype}.tsv",
+        "call_sites/{reftype}.tsv.gz",
+    shell:
+        """
+        gzip -c {input} > {output}
+        """
+
+
+rule pre_filter_sites:
+    input:
+        os.path.join(TEMPDIR, "call_sites_tmp/{reftype}.tsv"),
+    output:
+        temp(os.path.join(TEMPDIR, "filter_sites_tmp/{reftype}.tsv")),
     params:
         path_filterGap=config["path"]["filterGap"],
         min_group_gap=config["cutoff"]["min_group_gap"],
@@ -782,12 +803,11 @@ rule filter_sites:
         """
 
 
-# pick sites by group filter
-rule pick_sites:
+rule post_filter_sites:
     input:
-        "filter_sites/{reftype}.tsv",
+        os.path.join(TEMPDIR, "filter_sites_tmp/{reftype}.tsv"),
     output:
-        "post_filtered_sites/{reftype}.tsv",
+        "filter_sites/{reftype}.tsv",
     params:
         group_filter=config.get("group_filter", {}),
         group_meta=dict(GROUP2SAMPLE),
