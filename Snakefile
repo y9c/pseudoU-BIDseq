@@ -32,7 +32,7 @@ def parse_barcode(b):
     if "-" in b:
         b1m1, m2b2i = b.split("-")
     else:
-        b1m2, m2b2i = "", b
+        b1m1, m2b2i = "", b
     # parse left
     m1 = b1m1.lstrip("N")
     b1 = b1m1[: len(b1m1) - len(m1)]
