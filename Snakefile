@@ -545,7 +545,7 @@ rule drop_duplicates:
         else:
             shell(
                 """
-                ln -s {input.bam} {output.bam}
+                cp {input.bam} {output.bam}
                 touch {output.log}
                 """
             )
