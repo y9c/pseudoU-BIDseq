@@ -1,4 +1,6 @@
 [![Docker](https://img.shields.io/docker/pulls/y9ch/bidseq.svg)](https://hub.docker.com/r/y9ch/bidseq)
+[![DOI:10.1038/s41587-022-01505-w](https://zenodo.org/badge/DOI/10.1038/s41587-022-01505-w.svg)](https://doi.org/10.1038/s41587-022-01505-w)
+
 
 # &Psi;-BID-seq
 
@@ -95,7 +97,7 @@ The entire analysis can be completed in just three steps:
 
 ## Citation
 
-- Dai Q. _et al_. Quantitative sequencing using BID-seq uncovers abundant pseudouridines in mammalian mRNA at base resolution. Nat Biotechnol (2022). https://doi.org/10.1038/s41587-022-01505-w
+- Dai, Q., Zhang, LS., Sun, HL. et al. Quantitative sequencing using BID-seq uncovers abundant pseudouridines in mammalian mRNA at base resolution. Nat Biotechnol 41, 344–354 (2023).
 
 &nbsp;
 

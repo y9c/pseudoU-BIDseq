@@ -201,7 +201,9 @@ rule run_cutadapt:
         + ' --rename="{id}_{cut_prefix} {comment}"'
         if SAMPLE2BARCODE[wildcards.sample]["umi5"] > 0
         else "-u -{}".format(SAMPLE2BARCODE[wildcards.sample]["umi3"])
-        + ' --rename="{id}_{cut_suffix} {comment}"',
+        + ' --rename="{id}_{cut_suffix} {comment}"'
+        if SAMPLE2BARCODE[wildcards.sample]["umi3"] > 0
+        else "",
         mask_ends_args=lambda wildcards: "-u {}".format(
             SAMPLE2BARCODE[wildcards.sample]["mask5"]
         )
@@ -528,11 +530,25 @@ rule drop_duplicates:
         path_umicollapse=config["path"]["umicollapse"],
         TEMPDIR=TEMPDIR,
     threads: 4
-    shell:
-        """
-        java -server -Xmx46G -Xms24G -Xss100M -Djava.io.tmpdir={params.TEMPDIR} -jar {params.path_umicollapse} bam \
-            --merge avgqual --two-pass -i {input.bam} -o {output.bam} >{output.log}
-        """
+    run:
+        if (
+            SAMPLE2BARCODE[wildcards.sample]["umi5"]
+            + SAMPLE2BARCODE[wildcards.sample]["umi3"]
+            > 0
+        ):
+            shell(
+                """
+                java -server -Xmx46G -Xms24G -Xss100M -Djava.io.tmpdir={params.TEMPDIR} -jar {params.path_umicollapse} bam \
+                    --merge avgqual --two-pass -i {input.bam} -o {output.bam} >{output.log}
+                """
+            )
+        else:
+            shell(
+                """
+                ln -s {input.bam} {output.bam}
+                touch {output.log}
+                """
+            )
 
 
 rule index_dedup_bam:
