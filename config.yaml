@@ -17,6 +17,9 @@ trim_polyA: false
 # Whether clip match on contamination / gene reference
 greedy_mapping: false
 
+# If the library is forward_stranded, true mean the R1 is in the same orientation as RNA
+forward_stranded: true
+
 ### build in args ###
 # if you change build in args, add the whole block rather than some records!!
 
@@ -69,6 +72,7 @@ path:
   bedtools: /pipeline/micromamba/bin/bedtools
   multiqc: /pipeline/micromamba/bin/multiqc
   umicollapse: /bin/umicollapse.jar
+  joinFastq: /pipeline/bin/joinFastq
   delfilter: /pipeline/bin/deletionFilter
   samfilter: /pipeline/bin/samFilter
   cpup: /pipeline/bin/cpup

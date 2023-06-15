@@ -85,6 +85,12 @@ for s, v2 in config["samples"].items():
             else os.path.relpath(os.path.expanduser(v4), WORKDIR)
             for k4, v4 in v3.items()
         }
+        if not v2.get("forward_stranded", config["forward_stranded"]):
+            # swap R1 and R2
+            SAMPLE2RUN[s][r]["R1"], SAMPLE2RUN[s][r]["R2"] = (
+                SAMPLE2RUN[s][r]["R2"],
+                SAMPLE2RUN[s][r]["R1"],
+            )
     for k, v3 in v2.get("bam", {}).items():
         SAMPLE2BAM[s][k] = (
             os.path.expanduser(v3)
@@ -107,17 +113,15 @@ rule join_pairend_reads:
     input:
         lambda wildcards: SAMPLE2RUN[wildcards.sample][wildcards.rn].values(),
     output:
-        m=temp(os.path.join(TEMPDIR, "merged_reads/{sample}_{rn}.fq.gz")),
+        fq=temp(os.path.join(TEMPDIR, "merged_reads/{sample}_{rn}.fq.gz")),
         html="report_reads/joining/{sample}_{rn}.fastp.html",
         json="report_reads/joining/{sample}_{rn}.fastp.json",
-        u1="discarded_reads/{sample}_{rn}_un1.fq.gz"
-        if config["keep_discarded"]
-        else temp("discarded_reads/{sample}_{rn}_un1.fq.gz"),
-        u2="discarded_reads/{sample}_{rn}_un2.fq.gz"
-        if config["keep_discarded"]
-        else temp("discarded_reads/{sample}_{rn}_un2.fq.gz"),
     params:
+        m=os.path.join(TEMPDIR, "merged_reads/{sample}_{rn}_merge.fq.gz"),
+        u1=os.path.join(TEMPDIR, "merged_reads/{sample}_{rn}_u1.fq.gz"),
+        u2=os.path.join(TEMPDIR, "merged_reads/{sample}_{rn}_u2.fq.gz"),
         path_fastp=config["path"]["fastp"],
+        path_joinFastq=config["path"]["joinFastq"],
     threads: 10
     run:
         if len(input) == 2:
@@ -125,14 +129,16 @@ rule join_pairend_reads:
                 """
         {params.path_fastp} --thread {threads} \
             --disable_adapter_trimming --merge --correction --overlap_len_require 10 --overlap_diff_percent_limit 20 \
-            -i {input[0]} -I {input[1]} --merged_out {output.m} --out1 {output.u1} --out2 {output.u2} -h {output.html} -j {output.json}
+            -i {input[0]} -I {input[1]} --merged_out {params.m} --out1 {params.u1} --out2 {params.u2} -h {output.html} -j {output.json}
+        {params.path_joinFastq} {params.m} {params.u1} {params.u2} {output.fq}
+        rm -f {params.m} {params.u1} {params.u2}
         """
             )
         else:
             shell(
                 """
-        ln -sfr {input[0]} {output[0]}
-        touch {output.html} {output.json} {output.u1} {output.u2}
+        ln -sfr {input[0]} {output.fq}
+        touch {output.html} {output.json}
         """
             )
 
