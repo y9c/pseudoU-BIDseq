@@ -74,9 +74,7 @@ for s, v2 in config["samples"].items():
                 GROUP2SAMPLE[g]["input"].append(s)
         else:
             GROUP2SAMPLE[v2["group"]]["input"].append(s)
-    SAMPLE2BARCODE[s] = parse_barcode(
-        v2.get("barcode", config.get("barcode", "-NNNNN"))
-    )
+    SAMPLE2BARCODE[s] = parse_barcode(v2.get("barcode", config["barcode"]))
     for i, v3 in enumerate(v2.get("data", []), 1):
         r = f"run{i}"
         SAMPLE2RUN[s][r] = {
@@ -86,7 +84,6 @@ for s, v2 in config["samples"].items():
             for k4, v4 in v3.items()
         }
         if not v2.get("forward_stranded", config["forward_stranded"]):
-            # swap R1 and R2
             SAMPLE2RUN[s][r]["R1"], SAMPLE2RUN[s][r]["R2"] = (
                 SAMPLE2RUN[s][r]["R2"],
                 SAMPLE2RUN[s][r]["R1"],
@@ -103,7 +100,7 @@ rule all:
     input:
         "report_reads/readsStats.html" if len(SAMPLE2RUN) > 0 else [],
         expand("call_sites/{reftype}.tsv.gz", reftype=REFTYPE),
-        expand("filter_sites/{reftype}.tsv", reftype=REFTYPE),
+        expand("filter_sites/{reftype}.tsv.gz", reftype=REFTYPE),
 
 
 #### process reads ####
@@ -535,7 +532,7 @@ rule drop_duplicates:
     params:
         path_umicollapse=config["path"]["umicollapse"],
         TEMPDIR=TEMPDIR,
-    threads: 4
+    threads: 8
     run:
         if (
             SAMPLE2BARCODE[wildcards.sample]["umi5"]
@@ -545,7 +542,7 @@ rule drop_duplicates:
             shell(
                 """
                 java -server -Xmx46G -Xms24G -Xss100M -Djava.io.tmpdir={params.TEMPDIR} -jar {params.path_umicollapse} bam \
-                    --merge avgqual --two-pass -i {input.bam} -o {output.bam} >{output.log}
+                    -t {threads} --data naive --merge avgqual --two-pass -i {input.bam} -o {output.bam} >{output.log}
                 """
             )
         else:
@@ -778,7 +775,7 @@ rule adjust_sites:
     input:
         os.path.join(TEMPDIR, "pileup_bases/{reftype}.tsv"),
     output:
-        temp(os.path.join(TEMPDIR, "call_sites_tmp/{reftype}.tsv")),
+        "call_sites/{reftype}.tsv.gz",
     params:
         path_adjustGap=config["path"]["adjustGap"],
     shell:
@@ -787,22 +784,11 @@ rule adjust_sites:
         """
 
 
-rule compress_call_sites:
-    input:
-        os.path.join(TEMPDIR, "call_sites_tmp/{reftype}.tsv"),
-    output:
-        "call_sites/{reftype}.tsv.gz",
-    shell:
-        """
-        gzip -c {input} > {output}
-        """
-
-
 rule pre_filter_sites:
     input:
-        os.path.join(TEMPDIR, "call_sites_tmp/{reftype}.tsv"),
+        "call_sites/{reftype}.tsv.gz",
     output:
-        temp(os.path.join(TEMPDIR, "filter_sites_tmp/{reftype}.tsv")),
+        temp(os.path.join(TEMPDIR, "prefilter_sites/{reftype}.tsv.gz")),
     params:
         path_filterGap=config["path"]["filterGap"],
         min_group_gap=config["cutoff"]["min_group_gap"],
@@ -827,9 +813,9 @@ rule pre_filter_sites:
 
 rule post_filter_sites:
     input:
-        os.path.join(TEMPDIR, "filter_sites_tmp/{reftype}.tsv"),
+        os.path.join(TEMPDIR, "prefilter_sites/{reftype}.tsv.gz"),
     output:
-        "filter_sites/{reftype}.tsv",
+        "filter_sites/{reftype}.tsv.gz",
     params:
         group_filter=config.get("group_filter", {}),
         group_meta=dict(GROUP2SAMPLE),

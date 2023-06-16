@@ -6,6 +6,9 @@
 #
 # Created: 2023-02-10 22:41
 
+import gzip
+import sys
+
 import numpy as np
 import pyfaidx
 from scipy.stats import fisher_exact
@@ -68,7 +71,22 @@ def fit_calibration(x: float, m: str) -> float:
         return (b - x) / (c * (b + s - s * x - 1))
 
 
-with open(input_file, "r") as fi, open(output_file, "w") as fo:
+def open_file(filename, mode):
+    if filename == "-":
+        if "r" in mode:
+            return sys.stdin
+        elif "w" in mode:
+            return sys.stdout
+    elif filename.endswith(".gz"):
+        if "r" in mode:
+            return gzip.open(filename, "rt")
+        elif "w" in mode:
+            return gzip.open(filename, "wt")
+    else:
+        return open(filename, mode)
+
+
+with open_file(input_file, "r") as fi, open_file(output_file, "w") as fo:
     header = fi.readline()
     header = header.strip().split("\t")
     # input depth, input gap, treated depth, treated gap

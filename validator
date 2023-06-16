@@ -82,6 +82,7 @@ schema = {
                         },
                         "treated": {"type": "boolean"},
                         "barcode": {"type": "string"},
+                        "forward_stranded": {"type": "boolean"},
                     },
                     "if": {"not": {"required": ["bam"]}},
                     "then": {"required": ["data"]},

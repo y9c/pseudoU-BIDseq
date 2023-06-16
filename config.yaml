@@ -17,6 +17,9 @@ trim_polyA: false
 # Whether clip match on contamination / gene reference
 greedy_mapping: false
 
+# defualt barcode scheme
+barcode: '-NNNNN'
+
 # If the library is forward_stranded, true mean the R1 is in the same orientation as RNA
 forward_stranded: true
 

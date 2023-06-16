@@ -7,7 +7,25 @@
 # Created: 2023-01-05 16:01
 
 
+import gzip
+import sys
+
 import click
+
+
+def open_file(filename, mode):
+    if filename == "-":
+        if "r" in mode:
+            return sys.stdin
+        elif "w" in mode:
+            return sys.stdout
+    elif filename.endswith(".gz"):
+        if "r" in mode:
+            return gzip.open(filename, "rt")
+        elif "w" in mode:
+            return gzip.open(filename, "wt")
+    else:
+        return open(filename, mode)
 
 
 @click.command(
@@ -76,9 +94,7 @@ def filter_sites(
     min_group_ratio,
     min_group_num,
 ):
-    with click.open_file(input_file, "r") as fi, click.open_file(
-        output_file, "w"
-    ) as fo:
+    with open_file(input_file, "r") as fi, open_file(output_file, "w") as fo:
         groups = [
             list(map(int, columns_string.split(",")))
             for columns_string in columns_group
