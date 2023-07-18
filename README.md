@@ -106,14 +106,14 @@ The entire analysis can be completed in just three steps:
 
   ```BibTex
   @misc{y_y9cpseudou-bidseq_2022,
-  	  title = {y9c/{pseudoU}-{BIDseq}: v1.0},
-  	  url = {https://zenodo.org/record/8158036},
-  	  urldate = {2023-07-18},
-	  publisher = {Zenodo},
-  	  author = {Ye, Chang},
-	  month = dec,
-	  year = {2022},
-	  doi = {10.5281/zenodo.8158036},
+    title = {y9c/{pseudoU}-{BIDseq}: v1.0},
+    url = {https://zenodo.org/record/8158036},
+    urldate = {2023-07-18},
+    publisher = {Zenodo},
+    author = {Ye, Chang},
+    month = dec,
+    year = {2022},
+    doi = {10.5281/zenodo.8158036},
   }
   ```
 
@@ -121,14 +121,13 @@ The entire analysis can be completed in just three steps:
 
   ```BibTex
   @article{dai_quantitative_2022,
-	  title = {Quantitative sequencing using {BID}-seq uncovers abundant pseudouridines in mammalian {mRNA} at base resolution},
-	  issn = {1087-0156},
-	  doi = {10.1038/s41587-022-01505-w},
-	  journal = {Nature Biotechnology},
-	  author = {Dai, Qing and Zhang, Li-Sheng and Sun, Hui-Lung and Pajdzik, Kinga and Yang, Lei and Ye, Chang and Ju, Cheng-Wei and Liu, Shun and Wang, Yuru and Zheng, Zhong and Zhang, Linda and Harada, Bryan T. and Dou, Xiaoyang and Irkliyenko, Iryna and Feng, Xinran and Zhang, Wen and Pan, Tao and He, Chuan},
-	  year = {2022},
-	  pmid = {36302989},
-	  pages = {1--11},
+    title = {Quantitative sequencing using {BID}-seq uncovers abundant pseudouridines in mammalian {mRNA} at base resolution},
+    issn = {1087-0156},
+    doi = {10.1038/s41587-022-01505-w},
+    journal = {Nature Biotechnology},
+    author = {Dai, Qing and Zhang, Li-Sheng and Sun, Hui-Lung and Pajdzik, Kinga and Yang, Lei and Ye, Chang and Ju, Cheng-Wei and Liu, Shun and Wang, Yuru and Zheng, Zhong and Zhang, Linda and Harada, Bryan T. and Dou, Xiaoyang and Irkliyenko, Iryna and Feng, Xinran and Zhang, Wen and Pan, Tao and He, Chuan},
+    year = {2022},
+    pages = {1--11},
   }
   ```
 
