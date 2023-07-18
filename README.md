@@ -106,14 +106,14 @@ The entire analysis can be completed in just three steps:
 
   ```BibTex
   @misc{y_y9cpseudou-bidseq_2022,
-	  title = {y9c/{pseudoU}-{BIDseq}: v1.0},
+  	title = {y9c/{pseudoU}-{BIDseq}: v1.0},
   	url = {https://zenodo.org/record/8158036},
   	urldate = {2023-07-18},
-	  publisher = {Zenodo},
+	publisher = {Zenodo},
   	author = {Ye, Chang},
-	  month = dec,
-	  year = {2022},
-	  doi = {10.5281/zenodo.8158036},
+	month = dec,
+	year = {2022},
+	doi = {10.5281/zenodo.8158036},
   }
   ```
 
