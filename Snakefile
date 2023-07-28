@@ -18,7 +18,9 @@ workdir: WORKDIR
 
 
 CALI = config.get("calibration_curves", "")
-CALI = CALI if os.path.isabs(CALI) else os.path.relpath(CALI, WORKDIR)
+CALI = (
+    CALI if os.path.isabs(CALI) else os.path.relpath(os.path.expanduser(CALI), WORKDIR)
+)
 
 REF = config["reference"]
 for k, v in REF.items():
