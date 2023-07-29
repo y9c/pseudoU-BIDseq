@@ -203,14 +203,14 @@ rule run_cutadapt:
             SAMPLE2BARCODE[wildcards.sample]["umi5"],
             SAMPLE2BARCODE[wildcards.sample]["umi3"],
         )
-        + ' --rename="{id}_{cut_prefix}{cut_suffix} {comment}"'
+        + ' --rename="{id}_{cut_prefix}{cut_suffix}"'
         if SAMPLE2BARCODE[wildcards.sample]["umi5"] > 0
         and SAMPLE2BARCODE[wildcards.sample]["umi3"] > 0
         else "-u {}".format(SAMPLE2BARCODE[wildcards.sample]["umi5"])
-        + ' --rename="{id}_{cut_prefix} {comment}"'
+        + ' --rename="{id}_{cut_prefix}"'
         if SAMPLE2BARCODE[wildcards.sample]["umi5"] > 0
         else "-u -{}".format(SAMPLE2BARCODE[wildcards.sample]["umi3"])
-        + ' --rename="{id}_{cut_suffix} {comment}"'
+        + ' --rename="{id}_{cut_suffix}"'
         if SAMPLE2BARCODE[wildcards.sample]["umi3"] > 0
         else "",
         mask_ends_args=lambda wildcards: "-u {}".format(
