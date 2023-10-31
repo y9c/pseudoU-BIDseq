@@ -767,17 +767,29 @@ rule count_bases_combined:
         temp(os.path.join(TEMPDIR, "pileup_bases/{reftype}.tsv")),
     params:
         header="\t".join(["chr", "pos", "ref_base", "strand"] + list(SAMPLE_IDS)),
-        idx=",".join(
-            ["1", "2", "3", "4"] + [str(5 + i * 5) for i in range(len(SAMPLE_IDS))]
-        ),
     threads: 4
     shell:
         """
-        (
-          echo {params.header:q}
-          paste {input.fwd} | cut -f {params.idx}
-          paste {input.rev} | cut -f {params.idx}
-        ) >{output}
+        echo {params.header:q} > {output}
+        paste_files() {{
+            for file in $@; do
+              if [[ -s $file ]]; then
+                first_non_empty_file=$file
+                break
+              fi
+            done
+            cmd="paste <(cut -f 1-4 $first_non_empty_file)"
+            for file in $@; do
+              if [[ ! -s $file ]]; then
+                cmd+=" <(sed 'c0,0,0,0,0,0,0,0,0,0,,' $first_non_empty_file)"
+              else
+                cmd+=" <(cut -f 5 $file)"
+              fi
+            done
+            eval $cmd
+        }}
+        paste_files {input.fwd} >> {output}
+        paste_files {input.rev} >> {output}
         """
 
 
