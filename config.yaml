@@ -16,6 +16,8 @@ trim_p5: false
 trim_polyA: false
 # Whether clip match on contamination / gene reference
 greedy_mapping: false
+# speed up bowtie2 mapping, might lead to some FP, but can speed up significantly
+speedy_mapping: false
 
 # defualt barcode scheme
 barcode: '-NNNNN'

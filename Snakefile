@@ -224,6 +224,8 @@ rule run_cutadapt:
     shell:
         """
         {params.path_cutadapt} -j {threads} \
+            --strip-suffix "/1" --strip-suffix "/2" \
+            --strip-suffix ".1" --strip-suffix ".2" \
             -a "{params.p7};o=3;e=0.15" \
             {params.drop_untrimmed_args} \
             {input} | \
@@ -282,7 +284,9 @@ rule map_to_contamination_by_bowtie2:
         ref_bowtie2=lambda wildcards: REF["contamination"].get(
             "bt2", os.path.join(INTERNALDIR, "mapping_index/contamination")
         ),
-        args_bowtie2="--local --ma 2 --score-min G,20,8 -D 20 -R 3 -L 16 -N 1 --mp 4 --rdg 0,2"
+        args_bowtie2="--sensitive -L 16 --rdg 0,2"
+        if config["speedy_mapping"]
+        else "--local --ma 2 --score-min G,20,8 -D 20 -R 3 -L 16 -N 1 --mp 4 --rdg 0,2"
         if config["greedy_mapping"]
         else "--end-to-end --ma 0 --score-min L,2,-0.5 -D 20 -R 3 -L 16 -N 1 --mp 4 --rdg 0,2",
     threads: 24
