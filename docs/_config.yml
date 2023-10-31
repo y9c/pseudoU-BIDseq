@@ -3,6 +3,7 @@ ga_tracking: G-EFHY8WFMHK
 ga_tracking_anonymize_ip: true
 color_scheme: light
 favicon_ico: '/favicon.ico'
+footer_content: 'Copyright &copy; 2021-2024, Chang Ye'
 
 callouts:
   warning:
