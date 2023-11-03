@@ -66,7 +66,9 @@ REFTYPE = ["genes", "genome"]
 GROUP2SAMPLE = defaultdict(lambda: defaultdict(list))
 SAMPLE_IDS = []
 SAMPLE2RUN = defaultdict(dict)
-SAMPLE2BARCODE = defaultdict(dict)
+SAMPLE2BARCODE = defaultdict(str)
+# is reverse?
+SAMPLE2STRAND = defaultdict(bool)
 SAMPLE2BAM = defaultdict(dict)
 for s, v2 in config["samples"].items():
     SAMPLE_IDS.append(s)
@@ -81,6 +83,7 @@ for s, v2 in config["samples"].items():
         else:
             GROUP2SAMPLE[v2["group"]]["input"].append(s)
     SAMPLE2BARCODE[s] = parse_barcode(v2.get("barcode", config["barcode"]))
+    SAMPLE2STRAND[s] = v2.get("forward_stranded", config["forward_stranded"])
     for i, v3 in enumerate(v2.get("data", []), 1):
         r = f"run{i}"
         SAMPLE2RUN[s][r] = {
@@ -89,11 +92,6 @@ for s, v2 in config["samples"].items():
             else os.path.relpath(os.path.expanduser(v4), WORKDIR)
             for k4, v4 in v3.items()
         }
-        if not v2.get("forward_stranded", config["forward_stranded"]):
-            SAMPLE2RUN[s][r]["R1"], SAMPLE2RUN[s][r]["R2"] = (
-                SAMPLE2RUN[s][r]["R2"],
-                SAMPLE2RUN[s][r]["R1"],
-            )
     for k, v3 in v2.get("bam", {}).items():
         SAMPLE2BAM[s][k] = (
             os.path.expanduser(v3)
@@ -247,6 +245,20 @@ rule run_cutadapt:
         """
 
 
+rule reverse_reads:
+    input:
+        os.path.join(TEMPDIR, "trimmed_reads/{sample}_{rn}_cut.fq.gz"),
+    output:
+        temp(os.path.join(TEMPDIR, "reversed_reads/{sample}_{rn}.fq.gz")),
+    params:
+        path_rcFastq=config["path"]["rcFastq"],
+    run:
+        if SAMPLE2STRAND[wildcards.sample]:
+            shell("{params.path_rcFastq} {input} {output}")
+        else:
+            shell("ln -sfr {input} {output}")
+
+
 rule build_bowtie2_index:
     input:
         fa=lambda wildcards: REF[wildcards.reftype]["fa"],
@@ -267,7 +279,7 @@ rule build_bowtie2_index:
 
 rule map_to_contamination_by_bowtie2:
     input:
-        fq=os.path.join(TEMPDIR, "trimmed_reads/{sample}_{rn}_cut.fq.gz"),
+        fq=os.path.join(TEMPDIR, "reversed_reads/{sample}_{rn}.fq.gz"),
         idx=lambda wildcards: REF["contamination"].get(
             "bt2", os.path.join(INTERNALDIR, "mapping_index/contamination")
         )
@@ -322,7 +334,7 @@ rule map_to_genes_by_bowtie2:
             os.path.join(TEMPDIR, "mapping_rerun/{sample}_{rn}_contamination.fq"),
         ]
         if "contamination" in REF
-        else os.path.join(TEMPDIR, "trimmed_reads/{sample}_{rn}_cut.fq.gz"),
+        else os.path.join(TEMPDIR, "reversed_reads/{sample}_{rn}.fq.gz"),
         idx=lambda wildcards: REF["genes"].get(
             "bt2", os.path.join(INTERNALDIR, "mapping_index/genes")
         )
@@ -352,7 +364,7 @@ rule map_to_genes_by_bowtie2:
         )
         if "contamination" in REF
         else os.path.join(
-            TEMPDIR, f"trimmed_reads/{wildcards.sample}_{wildcards.rn}_cut.fq.gz"
+            TEMPDIR, f"reversed_reads/{wildcards.sample}_{wildcards.rn}.fq.gz"
         ),
     threads: 24
     shell:

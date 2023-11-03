@@ -48,6 +48,31 @@ samples:
 Sequencing data is combined after read alignment, rather than at the first step of the analysis. This strategy can save computation resources and energy. For example, sometimes you run the sequencing for your libraries but found that the data is not sufficient after the analysis.
 You then add extra sequencing data for this library. In this pipeline, only newly generated data need to be aligned.
 
+## Reverse strands
+
+If the libraries were prepared by reverse stranded strategy, such as cDNA ligation or Stranded RNA-Seq Kit, you can set `forward_stranded` parameter as `false`.
+The default setting is true.
+
+```yaml
+forward_stranded: false
+```
+
+(default `true`)
+
+## Speed up alignment step
+
+Mapping reads into `genes` reference is the time limiting step in this pipeline. Very strigent parameters were used to increase the sensitivity of reads with multiple gaps.
+There are &Psi condense regions in the ribosome, and BID-seq treatment would created condense gaps within one read.
+If these reads fail to align into rRNA sequence, the quantification of rRNA modification would be affected, and might also create false positives in the genome.
+
+However, the strigent parameters would slow down the alignment step. If you are not intested in the stoichiometry of rRNA site, you can set `speedy_mapping` parameter to speed up the analysis.
+
+```yaml
+speedy_mapping: true
+```
+
+(default: `false`)
+
 ## Use pre-analyzed bam file for &Psi; sites detection only
 
 ```yaml

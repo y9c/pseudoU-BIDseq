@@ -78,6 +78,7 @@ path:
   multiqc: /pipeline/micromamba/bin/multiqc
   umicollapse: /bin/umicollapse.jar
   joinFastq: /pipeline/bin/joinFastq
+  rcFastq: /pipeline/bin/rcFastq
   delfilter: /pipeline/bin/deletionFilter
   samfilter: /pipeline/bin/samFilter
   cpup: /pipeline/bin/cpup
