@@ -256,7 +256,7 @@ rule reverse_reads:
         if SAMPLE2STRAND[wildcards.sample]:
             shell("{params.path_rcFastq} {input} {output}")
         else:
-            shell("ln -sfr {input} {output}")
+            shell("cp {input} {output}")
 
 
 rule build_bowtie2_index:
