@@ -96,12 +96,6 @@ The entire analysis can be completed in just three steps:
 
 ## Citation
 
-- cite the protocol
-
-  ```BibTex
-  TBD
-  ```
-  
 - cite this software
 
   ```BibTex
@@ -114,6 +108,21 @@ The entire analysis can be completed in just three steps:
     month = dec,
     year = {2022},
     doi = {10.5281/zenodo.8158036},
+  }
+  ```
+
+- cite the protocol
+
+  ```BibTex
+  @article{dai2023quantitative,
+  title={Quantitative sequencing using BID-seq uncovers abundant pseudouridines in mammalian mRNA at base resolution},
+  author={Dai, Qing and Zhang, Li-Sheng and Sun, Hui-Lung and Pajdzik, Kinga and Yang, Lei and Ye, Chang and Ju, Cheng-Wei and Liu, Shun and Wang, Yuru and Zheng, Zhong and others},
+  journal={Nature Biotechnology},
+  volume={41},
+  number={3},
+  pages={344--354},
+  year={2023},
+  publisher={Nature Publishing Group US New York}
   }
   ```
 
