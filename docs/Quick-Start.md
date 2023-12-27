@@ -61,10 +61,10 @@ nav_order: 2
    >
    > 1. (On the login node with internet connection) Run `module load apptainer` to mount the apptainer utils, if it is not installed by default.
    >
-   > 2. (On the login node with internet connection) Build th `bidseq_latest.sif` file by command `apptainer pull docker://y9ch/bidseq`.
+   > 2. (On the login node with internet connection) Build the `bidseq_latest.sif` file using the command `apptainer pull docker://y9ch/bidseq`.
    >
    > 3. (On the computation node) Run `apptainer run bidseq_lastest.sif -c data.yaml` to start the pipeline.
-   >    Note that most HPC mount the direcotries in a complicated manor, so you need to find out the real path by running `realpath ./` and specific the output into `apptainer` by `apptainer run -B /the/real/path ...`
+   >    Note that most HPC systems mount directories in a complex manner. Therefore, you need to find out the actual path by executing `realpath ./` and specify this output into `apptainer` using `apptainer run -B /the/real/path ...`
 
    {: .note }
 
