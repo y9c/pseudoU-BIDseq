@@ -57,6 +57,17 @@ nav_order: 2
 
    {: .note }
 
+   > How to run apptainer on computation nodes without internet acess?
+   >
+   > 1. (On the login node with internet connection) Run `module load apptainer` to mount the apptainer utils, if it is not installed by default.
+   >
+   > 2. (On the login node with internet connection) Build th `bidseq_latest.sif` file by command `apptainer pull docker://y9ch/bidseq`.
+   >
+   > 3. (On the computation node) Run `apptainer run bidseq_lastest.sif -c data.yaml` to start the pipeline.
+   >    Note that most HPC mount the direcotries in a complicated manor, so you need to find out the real path by running `realpath ./` and specific the output into `apptainer` by `apptainer run -B /the/real/path ...`
+
+   {: .note }
+
    > If your configure file is not named as `data.yaml`, add `-c your_file_name.yaml` arg after the command to customize.
 
 3. **View the analytics reports and filtered sites.**

@@ -254,9 +254,9 @@ rule reverse_reads:
         path_rcFastq=config["path"]["rcFastq"],
     run:
         if SAMPLE2STRAND[wildcards.sample]:
-            shell("{params.path_rcFastq} {input} {output}")
-        else:
             shell("cp {input} {output}")
+        else:
+            shell("{params.path_rcFastq} {input} {output}")
 
 
 rule build_bowtie2_index:
