@@ -419,7 +419,7 @@ rule map_to_genome_by_star:
     threads: 24
     shell:
         """
-        ulimit -n 20000
+        ulimit -n $(ulimit -Hn)
         rm -f {params.un}
         mkfifo {params.un}
         cat {params.un} | gzip > {output.un} &
